@@ -3,6 +3,6 @@
 window.QUINIELA_CONFIG = {
   appName: 'Quiniela Mundialista 2026',
   supabaseUrl: 'https://klbosgthllirmhkuzlkl.supabase.co',
-  supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtsYm9zZ3RobGxpcm1oa3V6bGtsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MTcyNjExMCwiZXhwIjoyMDk3MzAyMTEwfQ.c8jz1pEXHhTe9sCX9DfTDfz9O8VMsUf9DdGVXzlIwYo',
+  supabaseAnonKey: 'eeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtsYm9zZ3RobGxpcm1oa3V6bGtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MjYxMTAsImV4cCI6MjA5NzMwMjExMH0.Y4PH-TVo2MlrWD1IvaR940zeTav44M-v31JrFD1vT1I',
   lockPredictionsAtKickoff: true
 };
