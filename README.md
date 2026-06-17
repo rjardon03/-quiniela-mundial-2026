@@ -1,43 +1,60 @@
-# Quiniela Mundialista 2026 - GitHub Pages
+# Quiniela Mundialista 2026 · GitHub Pages + Supabase
 
-Sitio estático listo para publicar en GitHub Pages. Incluye calendario completo, registro de participantes, pronósticos, resultados reales, ranking y exportación a Excel.
+## 1) Publicar en GitHub Pages
 
-## Publicación rápida
-1. Crear un repositorio nuevo en GitHub.
+1. Crear un repositorio en GitHub, por ejemplo `quiniela-mundial-2026`.
 2. Subir todos los archivos de esta carpeta.
-3. Ir a Settings > Pages.
-4. En Source seleccionar `Deploy from a branch`.
-5. Branch: `main`, folder: `/root`.
-6. Abrir el link público generado por GitHub Pages.
+3. Entrar a **Settings > Pages**.
+4. En **Build and deployment**, seleccionar **Deploy from a branch**.
+5. Seleccionar rama `main` y carpeta `/root`.
+6. Guardar. GitHub generará una URL pública.
 
-## Importante
-GitHub Pages no guarda información centralizada porque es estático. Por defecto, esta versión guarda en el navegador de cada usuario.
+## 2) Crear base de datos Supabase
 
-Para que todos participen desde celular y vean la misma tabla, activar Supabase en `config.js` y crear estas tablas:
+1. Crear proyecto en Supabase.
+2. Ir a **SQL Editor**.
+3. Abrir el archivo `supabase_schema.sql`.
+4. Copiar todo el contenido, pegarlo y ejecutar **Run**.
+5. Cambiar el PIN de administrador ejecutando:
 
 ```sql
-create table participants (
-  id uuid primary key default gen_random_uuid(),
-  name text not null,
-  created_at timestamptz default now()
-);
-
-create table predictions (
-  id uuid primary key default gen_random_uuid(),
-  participant_id uuid references participants(id),
-  match_id int not null,
-  home_goals int,
-  away_goals int,
-  updated_at timestamptz default now(),
-  unique(participant_id, match_id)
-);
-
-create table results (
-  match_id int primary key,
-  home_goals int,
-  away_goals int,
-  updated_at timestamptz default now()
-);
+update public.app_settings
+set value = 'TU-PIN-SECRETO'
+where key = 'admin_pin';
 ```
 
-Activar Row Level Security según el nivel de control que se quiera. Para una quiniela simple y cerrada, puede dejarse con políticas de lectura/escritura pública durante el torneo, o restringirse por password más adelante.
+## 3) Conectar la página con Supabase
+
+1. En Supabase, ir a **Project Settings > API**.
+2. Copiar:
+   - `Project URL`
+   - `anon public key`
+3. Abrir `config.js`.
+4. Completar:
+
+```js
+window.QUINIELA_CONFIG = {
+  appName: 'Quiniela Mundialista 2026',
+  supabaseUrl: 'https://TU-PROYECTO.supabase.co',
+  supabaseAnonKey: 'TU-ANON-KEY',
+  lockPredictionsAtKickoff: true
+};
+```
+
+5. Subir el cambio a GitHub.
+
+## 4) Uso
+
+- Participantes: cualquier persona puede registrarse.
+- Pronósticos: cada participante selecciona su nombre y guarda marcadores.
+- Resultados reales: solo se guardan usando el PIN administrador.
+- Ranking: se recalcula automáticamente con esta regla:
+  - 1 punto por pegar ganador/empate.
+  - 1 punto por pegar goles del equipo local.
+  - 1 punto por pegar goles del equipo visitante.
+  - 1 punto extra por marcador exacto.
+  - Máximo: 4 puntos por partido.
+
+## Nota importante de seguridad
+
+Esta versión está pensada para una quiniela entre amigos/familia/equipo. Permite pronósticos públicos para mantener el flujo simple desde celular. Para una quiniela con dinero real o control estricto, conviene agregar login individual por participante.
