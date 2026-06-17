@@ -1,0 +1,17 @@
+async function testConnection() {
+
+    const { data, error } =
+
+        await supabase
+
+        .from('participants')
+
+        .select('*');
+
+    console.log(data);
+
+    console.log(error);
+
+}
+
+testConnection();
