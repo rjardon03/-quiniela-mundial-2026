@@ -1,32 +1,81 @@
-# Quiniela Mundialista 2026 — V5.5 Hotfix
+# Quiniela Mundialista 2026 · GitHub Pages + Supabase
 
-Corrección sobre V5.5 para restaurar navegación y vistas:
+## 1) Publicar en GitHub Pages
 
-- Pronósticos
-- Eliminatorias
-- Mi Mundial
-- Ranking
-- Admin
+1. Crear un repositorio en GitHub, por ejemplo `quiniela-mundial-2026`.
+2. Subir todos los archivos de esta carpeta.
+3. Entrar a **Settings > Pages**.
+4. En **Build and deployment**, seleccionar **Deploy from a branch**.
+5. Seleccionar rama `main` y carpeta `/root`.
+6. Guardar. GitHub generará una URL pública.
 
-Cambios:
+## 2) Crear base de datos Supabase
 
-- `assets/app.js` ahora protege cada vista con manejo de errores independiente.
-- Si una vista falla, ya no bloquea las demás.
-- Se normaliza el estado local y remoto para evitar errores por datos incompletos.
-- Se mantiene el look & feel V5.5.
-- Se mantienen banderas SVG de England y Scotland.
+1. Crear proyecto en Supabase.
+2. Ir a **SQL Editor**.
+3. Abrir el archivo `supabase_schema.sql`.
+4. Copiar todo el contenido, pegarlo y ejecutar **Run**.
+5. Cambiar el PIN de administrador ejecutando:
 
-Archivos principales a reemplazar en GitHub:
+```sql
+update public.app_settings
+set value = 'TU-PIN-SECRETO'
+where key = 'admin_pin';
+```
 
-- `index.html`
-- `assets/app.js`
-- `assets/styles.css`
-- `data/matches.json`
-- `data/teams.json`
+## 3) Conectar la página con Supabase
 
-Después de subirlos, hacer recarga dura:
+1. En Supabase, ir a **Project Settings > API**.
+2. Copiar:
+   - `Project URL`
+   - `anon public key`
+3. Abrir `config.js`.
+4. Completar:
 
-- Mac: CMD + SHIFT + R
-- Windows: CTRL + F5
+```js
+window.QUINIELA_CONFIG = {
+  appName: 'Quiniela Mundialista 2026',
+  supabaseUrl: 'https://TU-PROYECTO.supabase.co',
+  supabaseAnonKey: 'TU-ANON-KEY',
+  lockPredictionsAtKickoff: true
+};
+```
 
-Si GitHub Pages tarda, esperar 1-2 minutos.
+5. Subir el cambio a GitHub.
+
+## 4) Uso
+
+- Participantes: cualquier persona puede registrarse.
+- Pronósticos: cada participante selecciona su nombre y guarda marcadores.
+- Resultados reales: solo se guardan usando el PIN administrador.
+- Ranking: se recalcula automáticamente con esta regla:
+  - 1 punto por pegar ganador/empate.
+  - 1 punto por pegar goles del equipo local.
+  - 1 punto por pegar goles del equipo visitante.
+  - 1 punto extra por marcador exacto.
+  - Máximo: 4 puntos por partido.
+
+## Nota importante de seguridad
+
+Esta versión está pensada para una quiniela entre amigos/familia/equipo. Permite pronósticos públicos para mantener el flujo simple desde celular. Para una quiniela con dinero real o control estricto, conviene agregar login individual por participante.
+
+
+## Cambios v3
+- Horarios corregidos a Costa Rica (UTC-6), calculados desde el horario ET oficial de FIFA menos 2 horas.
+- Nueva vista **Grupos** con tabla de posiciones por grupo.
+- Reglas de clasificación: victoria 3 pts, empate 1 pt, derrota 0 pts; desempates principales por puntos, diferencia de goles, goles a favor y enfrentamientos directos.
+
+
+## Ajuste de banderas
+- Curaçao corregido a 🇨🇼.
+- England y Scotland usan banderas regionales Unicode.
+- Partidos de eliminación directa mantienen ⚪ porque aún no tienen equipos definidos.
+
+
+## V5.3 / V5.4
+
+Incluye simulación personalizada de **Mi Mundial** usando los pronósticos de cada participante, campeón proyectado, final proyectada, clasificados proyectados y bracket alimentado por marcadores pronosticados.
+
+Incluye dashboard avanzado con KPIs, distribución de puntos, exactos, avance de pronósticos y lectura rápida de desempeño.
+
+Se agregaron banderas SVG para England y Scotland mediante FlagCDN (`gb-eng.svg` y `gb-sct.svg`) para evitar que aparezcan como bandera negra en navegadores que no soportan subdivisiones Unicode.
