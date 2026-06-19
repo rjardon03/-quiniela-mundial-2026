@@ -23,3 +23,21 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.08;bac
 
 /* V5.3/V5.4 — Simulation + Advanced Dashboard */
 .flag-img{width:1.9em;height:1.9em;object-fit:cover;border-radius:999px;box-shadow:0 0 0 1px rgba(255,255,255,.28),0 6px 16px rgba(0,0,0,.28);vertical-align:-.48em;display:inline-block;background:rgba(255,255,255,.08)}.flag-emoji{display:inline-flex;align-items:center;justify-content:center;width:1.9em;height:1.9em;border-radius:999px;background:rgba(255,255,255,.08)}.teams-vs .flag-img{width:3.2em;height:3.2em;margin:0 auto 8px;box-shadow:0 0 0 2px rgba(255,255,255,.16),0 0 24px rgba(100,255,120,.24)}.bracket-team .flag-img{width:28px;height:28px;vertical-align:-.55em}.team-line .flag-img{width:24px;height:24px;vertical-align:-.45em}.qualified-summary .flag-img,.thirds-strip .flag-img{width:22px;height:22px;vertical-align:-.42em}.qualified-summary p{display:flex;gap:8px;flex-wrap:wrap;align-items:center;line-height:1.9}.kpi-grid.advanced{grid-template-columns:repeat(6,minmax(150px,1fr));margin-bottom:16px}.stat-card.tone-cyan{border-color:rgba(0,212,255,.26)}.stat-card.tone-gold{border-color:rgba(212,175,55,.32)}.stat-card.tone-lime{border-color:rgba(132,204,22,.28)}.stat-card.tone-magenta{border-color:rgba(233,64,255,.30)}.analytics-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.analytics-card h3{margin-top:0}.bar-row{display:grid;gap:7px;margin:12px 0}.bar-row__top{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:.86rem}.bar-row__top b{color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bar{height:10px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--magenta),var(--cyan),var(--lime))}.insight-list{display:grid;gap:10px}.insight-list div{display:flex;justify-content:space-between;gap:12px;padding:12px;border-radius:14px;background:rgba(255,255,255,.045);border:1px solid var(--line)}.insight-list span{color:var(--muted)}.simulation-hero{display:grid;grid-template-columns:1.2fr .9fr .9fr;gap:16px;align-items:center;position:relative;overflow:hidden}.simulation-hero:before{content:"";position:absolute;right:-80px;bottom:-90px;width:250px;height:250px;border-radius:999px;background:linear-gradient(135deg,rgba(212,175,55,.20),rgba(233,64,255,.22),rgba(0,212,255,.18));filter:blur(2px)}.simulation-hero>*{position:relative;z-index:1}.simulation-hero h2{font-size:clamp(1.8rem,4vw,3.5rem);margin:.2rem 0;letter-spacing:-.05em}.simulation-hero h2 .flag-img{width:1.2em;height:.82em}.sim-final{display:grid;gap:6px;padding:16px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.05)}.sim-final small{color:var(--gold);text-transform:uppercase;letter-spacing:.12em;font-weight:900}.sim-final span{color:var(--muted);font-weight:900;text-transform:uppercase}.sim-kpis{display:grid;gap:10px}.projected.qualified-summary{grid-template-columns:1fr 1fr;margin-bottom:0}.view#myworld .bracket-board{margin-top:8px}@media(max-width:1200px){.kpi-grid.advanced{grid-template-columns:repeat(3,1fr)}.simulation-hero{grid-template-columns:1fr}.analytics-grid{grid-template-columns:1fr}}@media(max-width:700px){.kpi-grid.advanced{grid-template-columns:1fr}.projected.qualified-summary{grid-template-columns:1fr}.simulation-hero h2{font-size:2rem}}
+
+/* ── Toast notifications ─────────────────────────────────────── */
+.toast{
+  position:fixed;bottom:28px;right:28px;z-index:999;
+  min-width:220px;max-width:380px;
+  padding:14px 18px;border-radius:16px;
+  font-weight:700;font-size:.92rem;
+  background:linear-gradient(135deg,rgba(23,32,51,.98),rgba(15,23,42,.96));
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 22px 60px rgba(0,0,0,.45);
+  color:#f8fafc;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .3s ease,transform .3s ease;
+  pointer-events:none;
+}
+.toast.toast-in{opacity:1;transform:translateY(0)}
+.toast.toast-ok{border-color:rgba(132,204,22,.40);background:linear-gradient(135deg,rgba(15,40,15,.98),rgba(10,25,10,.96))}
+.toast.toast-err{border-color:rgba(239,68,68,.40);background:linear-gradient(135deg,rgba(40,10,10,.98),rgba(25,8,8,.96));color:#fecaca}
