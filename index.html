@@ -1,1 +1,127 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Quiniela Mundialista 2026</title><link rel="stylesheet" href="assets/styles.css"><script src="config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase.js"></script><script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script></head><body><header class="hero"><div class="kicker">FIFA World Cup 2026 · Quiniela</div><h1>Quiniela Mundialista</h1><p>Calendario completo, pronósticos, resultados reales y ranking. Diseñado para publicarse en GitHub Pages y usarse desde celular.</p><div class="status" id="modeStatus">Cargando...</div></header><nav class="tabs"><button data-view="fixture" class="active">Calendario</button><button data-view="players">Participantes</button><button data-view="predictions">Pronósticos</button><button data-view="results">Resultados reales</button><button data-view="ranking">Ranking</button><button data-view="export">Exportar</button></nav><main><section id="fixture" class="view active"><h2>Fase de grupos</h2><div id="groups" class="grid"></div><h2>Eliminación directa</h2><div id="knockout" class="grid"></div></section><section id="players" class="view"><h2>Participantes</h2><div class="card form"><input id="playerName" placeholder="Nombre del participante"><button id="addPlayer">Agregar</button></div><div id="playersList" class="list"></div></section><section id="predictions" class="view"><h2>Pronósticos</h2><div class="card form"><select id="playerSelect"></select><button id="savePredictions">Guardar pronósticos</button></div><div id="predictionsList"></div></section><section id="results" class="view"><h2>Resultados reales</h2><p class="note">Estos resultados los carga el administrador manualmente. Después se recalcula el ranking.</p><div class="card form"><input id="adminPin" type="password" placeholder="PIN administrador"><button id="saveResults">Guardar resultados</button></div><div id="resultsList"></div></section><section id="ranking" class="view"><h2>Ranking</h2><div id="rankingTable" class="tablewrap"></div></section><section id="export" class="view"><h2>Exportar / importar</h2><div class="card actions"><button id="exportExcel">Generar Excel</button><button id="exportJson">Exportar JSON</button><label class="filebtn">Importar JSON<input type="file" id="importJson" accept="application/json"></label></div><p class="note">Excel sirve para respaldo y revisión. JSON sirve para mover la quiniela entre computadoras si no se usa Supabase.</p></section></main><footer>🏆 Quiniela Mundialista 2026 · Horarios en Costa Rica</footer><script src="assets/app.js"></script></body></html>
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quiniela Mundialista 2026</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+  <header class="hero">
+    <div class="heroTop">
+      <div>
+        <div class="kicker">FIFA World Cup 2026 · Quiniela</div>
+        <h1>Quiniela Mundialista</h1>
+        <p>Calendario, pronósticos, resultados reales y ranking para jugar desde el celular.</p>
+      </div>
+      <div class="heroBall">⚽</div>
+    </div>
+    <div class="status" id="modeStatus">Cargando...</div>
+  </header>
+
+  <nav class="tabs">
+    <button data-view="fixture" class="active">🏠 Calendario</button>
+    <button data-view="predictions">🎯 Mis pronósticos</button>
+    <button data-view="ranking">🏆 Ranking</button>
+    <button data-view="admin">⚙️ Admin</button>
+    <button data-view="export">⬇️ Exportar</button>
+  </nav>
+
+  <main>
+    <section id="fixture" class="view active">
+      <div class="sectionHead">
+        <div>
+          <h2>Calendario</h2>
+          <p class="note">Vista pública de partidos. Los marcadores aquí son resultados oficiales cargados por el administrador.</p>
+        </div>
+        <div class="legend">
+          <span><b class="dot pending"></b> Pendiente</span>
+          <span><b class="dot final"></b> Finalizado</span>
+        </div>
+      </div>
+      <h3 class="subhead">Fase de grupos</h3>
+      <div id="groups" class="grid"></div>
+      <h3 class="subhead">Eliminación directa</h3>
+      <div id="knockout" class="grid"></div>
+    </section>
+
+    <section id="predictions" class="view">
+      <div class="sectionHead">
+        <div>
+          <h2>Mis pronósticos</h2>
+          <p class="note">Selecciona tu nombre, completa tus marcadores y guarda. Los pronósticos se calculan contra los resultados reales.</p>
+        </div>
+      </div>
+      <div class="card controlPanel">
+        <div class="controlBlock">
+          <label>Participante</label>
+          <select id="playerSelect"></select>
+        </div>
+        <div class="controlBlock grow">
+          <label>Nuevo participante</label>
+          <div class="inlineForm">
+            <input id="playerName" placeholder="Nombre del participante">
+            <button id="addPlayer">Agregar</button>
+          </div>
+        </div>
+        <button id="savePredictions" class="primaryAction">Guardar pronósticos</button>
+      </div>
+      <div id="predictionsList" class="matchList"></div>
+    </section>
+
+    <section id="ranking" class="view">
+      <div class="sectionHead">
+        <div>
+          <h2>Ranking</h2>
+          <p class="note">Puntuación: ganador/empate 1 punto, goles local 1, goles visitante 1, marcador exacto 1. Máximo 4 puntos por partido.</p>
+        </div>
+      </div>
+      <div id="rankingCards" class="statsGrid"></div>
+      <div id="rankingTable" class="tablewrap"></div>
+    </section>
+
+    <section id="admin" class="view">
+      <div class="sectionHead">
+        <div>
+          <h2>Admin</h2>
+          <p class="note">Usa esta sección para administrar participantes y cargar resultados oficiales.</p>
+        </div>
+      </div>
+      <div class="card controlPanel">
+        <div class="controlBlock">
+          <label>PIN administrador</label>
+          <input id="adminPin" type="password" placeholder="PIN administrador">
+        </div>
+        <button id="saveResults" class="primaryAction">Guardar resultados</button>
+      </div>
+
+      <h3 class="subhead">Participantes</h3>
+      <div id="playersList" class="list"></div>
+
+      <h3 class="subhead">Resultados oficiales</h3>
+      <div id="resultsList" class="matchList"></div>
+    </section>
+
+    <section id="export" class="view">
+      <div class="sectionHead">
+        <div>
+          <h2>Exportar / importar</h2>
+          <p class="note">Excel sirve para respaldo y revisión. JSON sirve para mover la quiniela entre computadoras si no se usa Supabase.</p>
+        </div>
+      </div>
+      <div class="card actions">
+        <button id="exportExcel">Generar Excel</button>
+        <button id="exportJson">Exportar JSON</button>
+        <label class="filebtn">Importar JSON<input type="file" id="importJson" accept="application/json"></label>
+      </div>
+    </section>
+  </main>
+
+  <footer>🏆 Quiniela Mundialista 2026 · Horarios en Costa Rica</footer>
+  <script src="assets/app.js"></script>
+</body>
+</html>
