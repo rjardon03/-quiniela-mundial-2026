@@ -64,7 +64,7 @@ function bindNav(){
 }
 
 function baseStanding(team){
-  return { code:team.code, name:team.name, flag:team.flag, group:team.group, pj:0, g:0, e:0, p:0, gf:0, gc:0, dg:0, pts:0, h2hPts:0, h2hDg:0, h2hGf:0 };
+  return { code:team.code, name:team.name, flag:team.flag, flagUrl:team.flagUrl || '', group:team.group, pj:0, g:0, e:0, p:0, gf:0, gc:0, dg:0, pts:0, h2hPts:0, h2hDg:0, h2hGf:0 };
 }
 function applyResult(row, gf, gc){
   row.pj++; row.gf += gf; row.gc += gc; row.dg = row.gf - row.gc;
@@ -133,7 +133,7 @@ function qualifierMap(){
 
 function cloneTeam(t, slot=''){
   if(!t) return {name:'Por definir', code:'TBD', flag:'⚪', group:'', slot};
-  return {name:t.name, code:t.code, flag:t.flag, group:t.group || t.sourceGroup || '', slot};
+  return {name:t.name, code:t.code, flag:t.flag || '', flagUrl:t.flagUrl || '', group:t.group || t.sourceGroup || '', slot};
 }
 function groupPositionMap(customResults=null){
   const out = {};
@@ -274,7 +274,7 @@ function rankingRows(){
 }
 
 function stat(label,value,sub=''){
-  return `<div class="stat-card"><span>${label}</span><strong>${value}</strong>${sub ? `<small>${sub}</small>`:''}</div>`;
+  return `<div class="stat-card broadcast-stat"><span>${label}</span><strong>${value}</strong>${sub ? `<small>${sub}</small>`:''}</div>`;
 }
 function renderHero(){
   const finished = Object.values(state.results).filter(hasScore).length;
@@ -550,7 +550,7 @@ function exportExcel(){
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(matches.map(m=>({No:m.matchNumber, Fase:stageES(m.stage), Grupo:m.group, Fecha:m.dateCR, HoraCR:m.timeCR, Local:m.home.name, Visitante:m.away.name, RealLocal:state.results[m.id]?.h ?? '', RealVisitante:state.results[m.id]?.a ?? ''}))), 'Partidos');
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(groupLetters().flatMap(g=>standingsForGroup(g).map((r,i)=>({Grupo:g, Pos:i+1, Equipo:r.name, PJ:r.pj, G:r.g, E:r.e, P:r.p, GF:r.gf, GC:r.gc, DG:r.dg, PTS:r.pts})))), 'Grupos');
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rankingRows()), 'Ranking');
-  XLSX.writeFile(wb, 'quiniela_mundial_2026_v54.xlsx');
+  XLSX.writeFile(wb, 'quiniela_mundial_2026_v55.xlsx');
 }
 function renderAll(){ renderHero(); renderDashboard(); renderCalendar(); renderGroups(); renderKnockout(); renderPredictions(); renderMyWorld(); renderRanking(); renderAdmin(); }
 init();

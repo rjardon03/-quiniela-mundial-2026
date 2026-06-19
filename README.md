@@ -1,81 +1,28 @@
-# Quiniela Mundialista 2026 · GitHub Pages + Supabase
+# Quiniela Mundialista 2026 — V5.5 Professional Sports App
 
-## 1) Publicar en GitHub Pages
+## Contenido de la versión
 
-1. Crear un repositorio en GitHub, por ejemplo `quiniela-mundial-2026`.
-2. Subir todos los archivos de esta carpeta.
-3. Entrar a **Settings > Pages**.
-4. En **Build and deployment**, seleccionar **Deploy from a branch**.
-5. Seleccionar rama `main` y carpeta `/root`.
-6. Guardar. GitHub generará una URL pública.
+- Refinamiento visual final tipo aplicación deportiva profesional.
+- Tema oscuro premium con gradientes, glassmorphism y tarjetas optimizadas para desktop y móvil.
+- Conserva Supabase, calendario, participantes, pronósticos, resultados oficiales, grupos FIFA, eliminatorias, Mi Mundial y dashboard avanzado.
+- Mejora de banderas: England y Scotland conservan sus SVG también en tablas, brackets y simulaciones.
+- Exportación Excel actualizada a `quiniela_mundial_2026_v55.xlsx`.
 
-## 2) Crear base de datos Supabase
+## Archivos principales a reemplazar en GitHub
 
-1. Crear proyecto en Supabase.
-2. Ir a **SQL Editor**.
-3. Abrir el archivo `supabase_schema.sql`.
-4. Copiar todo el contenido, pegarlo y ejecutar **Run**.
-5. Cambiar el PIN de administrador ejecutando:
+- `index.html`
+- `assets/styles.css`
+- `assets/app.js`
 
-```sql
-update public.app_settings
-set value = 'TU-PIN-SECRETO'
-where key = 'admin_pin';
-```
+También puedes subir el paquete completo si deseas reemplazar toda la versión.
 
-## 3) Conectar la página con Supabase
+## Nota de marca
 
-1. En Supabase, ir a **Project Settings > API**.
-2. Copiar:
-   - `Project URL`
-   - `anon public key`
-3. Abrir `config.js`.
-4. Completar:
+El diseño es genérico e inspirado en aplicaciones deportivas. No utiliza logos, emblemas, tipografía oficial, mascotas, marcas oficiales ni patrones oficiales protegidos.
 
-```js
-window.QUINIELA_CONFIG = {
-  appName: 'Quiniela Mundialista 2026',
-  supabaseUrl: 'https://TU-PROYECTO.supabase.co',
-  supabaseAnonKey: 'TU-ANON-KEY',
-  lockPredictionsAtKickoff: true
-};
-```
+## Validación técnica realizada
 
-5. Subir el cambio a GitHub.
-
-## 4) Uso
-
-- Participantes: cualquier persona puede registrarse.
-- Pronósticos: cada participante selecciona su nombre y guarda marcadores.
-- Resultados reales: solo se guardan usando el PIN administrador.
-- Ranking: se recalcula automáticamente con esta regla:
-  - 1 punto por pegar ganador/empate.
-  - 1 punto por pegar goles del equipo local.
-  - 1 punto por pegar goles del equipo visitante.
-  - 1 punto extra por marcador exacto.
-  - Máximo: 4 puntos por partido.
-
-## Nota importante de seguridad
-
-Esta versión está pensada para una quiniela entre amigos/familia/equipo. Permite pronósticos públicos para mantener el flujo simple desde celular. Para una quiniela con dinero real o control estricto, conviene agregar login individual por participante.
-
-
-## Cambios v3
-- Horarios corregidos a Costa Rica (UTC-6), calculados desde el horario ET oficial de FIFA menos 2 horas.
-- Nueva vista **Grupos** con tabla de posiciones por grupo.
-- Reglas de clasificación: victoria 3 pts, empate 1 pt, derrota 0 pts; desempates principales por puntos, diferencia de goles, goles a favor y enfrentamientos directos.
-
-
-## Ajuste de banderas
-- Curaçao corregido a 🇨🇼.
-- England y Scotland usan banderas regionales Unicode.
-- Partidos de eliminación directa mantienen ⚪ porque aún no tienen equipos definidos.
-
-
-## V5.3 / V5.4
-
-Incluye simulación personalizada de **Mi Mundial** usando los pronósticos de cada participante, campeón proyectado, final proyectada, clasificados proyectados y bracket alimentado por marcadores pronosticados.
-
-Incluye dashboard avanzado con KPIs, distribución de puntos, exactos, avance de pronósticos y lectura rápida de desempeño.
-
-Se agregaron banderas SVG para England y Scotland mediante FlagCDN (`gb-eng.svg` y `gb-sct.svg`) para evitar que aparezcan como bandera negra en navegadores que no soportan subdivisiones Unicode.
+- JSON de partidos y equipos válido.
+- Sintaxis de `assets/app.js` validada.
+- Estructura principal de vistas conservada.
+- Compatibilidad responsive revisada a nivel de CSS.
