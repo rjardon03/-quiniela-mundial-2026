@@ -124,6 +124,124 @@ function qualifierMap(){
   return map;
 }
 
+function cloneTeam(t, slot=''){
+  if(!t) return {name:'Por definir', code:'TBD', flag:'⚪', group:'', slot};
+  return {name:t.name, code:t.code, flag:t.flag, group:t.group || t.sourceGroup || '', slot};
+}
+function groupPositionMap(customResults=null){
+  const out = {};
+  const thirds = [];
+  groupLetters().forEach(g => {
+    const rows = standingsForGroup(g, customResults);
+    if(rows[0]) out[`1${g}`] = cloneTeam(rows[0], `1${g}`);
+    if(rows[1]) out[`2${g}`] = cloneTeam(rows[1], `2${g}`);
+    if(rows[2]) thirds.push({...cloneTeam(rows[2], `3${g}`), sourceGroup:g, pts:rows[2].pts, dg:rows[2].dg, gf:rows[2].gf});
+  });
+  thirds.sort((a,b)=> b.pts-a.pts || b.dg-a.dg || b.gf-a.gf || a.name.localeCompare(b.name));
+  thirds.slice(0,8).forEach(t => out[`3${t.sourceGroup}`] = cloneTeam(t, `3${t.sourceGroup}`));
+  return {positions:out, bestThirds:thirds};
+}
+function parseSlotCandidates(token){
+  const clean = String(token || '').trim().replace(/\s+/g,'');
+  const m = clean.match(/^([123])([A-L]+)$/);
+  if(!m) return [];
+  const pos = m[1];
+  return [...m[2]].map(g => `${pos}${g}`);
+}
+function round32Assignments(customResults=null){
+  const {positions} = groupPositionMap(customResults);
+  const usedThirds = new Set();
+  const slots = {};
+  const r32 = matches.filter(m=>Number(m.stageId)===2).sort((a,b)=>a.matchNumber-b.matchNumber);
+  r32.forEach(m => {
+    const parts = String(m.label || '').split(/\s+vs\s+/i);
+    ['home','away'].forEach((side, idx) => {
+      const raw = (parts[idx] || '').trim();
+      let team = null;
+      if(/^3[A-L]+$/.test(raw.replace(/\s+/g,''))){
+        for(const cand of parseSlotCandidates(raw)){
+          if(positions[cand] && !usedThirds.has(cand)) { team = positions[cand]; usedThirds.add(cand); break; }
+        }
+        if(!team) team = cloneTeam(null, raw);
+      } else {
+        team = positions[raw] ? cloneTeam(positions[raw], raw) : cloneTeam(null, raw);
+      }
+      slots[`${m.id}_${side}`] = team;
+    });
+  });
+  return slots;
+}
+function winnerOfMatch(matchId, customResults=null, memo={}){
+  if(memo[matchId]) return memo[matchId];
+  const m = matches.find(x=>Number(x.id)===Number(matchId));
+  if(!m) return cloneTeam(null, `W${matchId}`);
+  const teams = resolvedTeamsForMatch(m, customResults, memo);
+  const res = (customResults || state.results)[m.id];
+  if(hasScore(res)){
+    if(res.h > res.a) return memo[matchId] = {...teams.home, slot:`W${m.matchNumber}`};
+    if(res.a > res.h) return memo[matchId] = {...teams.away, slot:`W${m.matchNumber}`};
+    return memo[matchId] = cloneTeam(null, `W${m.matchNumber}`);
+  }
+  return memo[matchId] = cloneTeam(null, `W${m.matchNumber}`);
+}
+function loserOfMatch(matchId, customResults=null, memo={}){
+  const m = matches.find(x=>Number(x.id)===Number(matchId));
+  if(!m) return cloneTeam(null, `RU${matchId}`);
+  const teams = resolvedTeamsForMatch(m, customResults, memo);
+  const res = (customResults || state.results)[m.id];
+  if(hasScore(res)){
+    if(res.h > res.a) return {...teams.away, slot:`RU${m.matchNumber}`};
+    if(res.a > res.h) return {...teams.home, slot:`RU${m.matchNumber}`};
+  }
+  return cloneTeam(null, `RU${m.matchNumber}`);
+}
+function resolvedTeamsForMatch(m, customResults=null, memo={}){
+  if(Number(m.stageId) === 1) return {home: cloneTeam(m.home), away: cloneTeam(m.away)};
+  if(Number(m.stageId) === 2){
+    const map = round32Assignments(customResults);
+    return {home: map[`${m.id}_home`] || cloneTeam(null), away: map[`${m.id}_away`] || cloneTeam(null)};
+  }
+  const parts = String(m.label || '').split(/\s+vs\s+/i).map(x=>x.trim());
+  function resolveToken(t){
+    const w = t.match(/^W(\d+)$/i);
+    const ru = t.match(/^RU(\d+)$/i);
+    if(w) return winnerOfMatch(Number(w[1]), customResults, memo);
+    if(ru) return loserOfMatch(Number(ru[1]), customResults, memo);
+    return cloneTeam(null, t);
+  }
+  return {home: resolveToken(parts[0] || 'TBD'), away: resolveToken(parts[1] || 'TBD')};
+}
+function knockoutRounds(customResults=null){
+  const stageOrder = [2,3,4,5,6,7];
+  return stageOrder.map(stageId => ({
+    stageId,
+    title: stageES(matches.find(m=>Number(m.stageId)===stageId)?.stage || ''),
+    games: matches.filter(m=>Number(m.stageId)===stageId).sort((a,b)=>a.matchNumber-b.matchNumber)
+  })).filter(r=>r.games.length);
+}
+function renderTeamPill(t){
+  const pending = !t || t.code === 'TBD';
+  return `<div class="bracket-team ${pending?'pending':''}"><span>${t?.flag || '⚪'}</span><b>${esc(t?.name || 'Por definir')}</b><small>${esc(t?.slot || t?.code || 'TBD')}</small></div>`;
+}
+function renderBracket(customResults=null){
+  const results = customResults || state.results;
+  return `<div class="bracket-board">${knockoutRounds(customResults).map(round => `
+    <section class="bracket-round stage-${round.stageId}">
+      <h3>${round.title}</h3>
+      ${round.games.map(m=>{
+        const teams = resolvedTeamsForMatch(m, customResults);
+        const r = results[m.id];
+        return `<article class="bracket-match">
+          <div class="bracket-meta"><span>#${m.matchNumber}</span><small>${m.dateCR} · ${m.timeCR} CR</small></div>
+          ${renderTeamPill(teams.home)}
+          <div class="bracket-score">${hasScore(r) ? `${r.h} - ${r.a}` : 'vs'}</div>
+          ${renderTeamPill(teams.away)}
+          <div class="bracket-venue">${esc(m.venue)} · ${esc(m.city)}</div>
+        </article>`;
+      }).join('')}
+    </section>`).join('')}</div>`;
+}
+
 function scoreBreakdown(pred,res){
   if(!hasScore(pred) || !hasScore(res)) return {winner:0,home:0,away:0,exact:0,total:0};
   const winner = Math.sign(pred.h-pred.a) === Math.sign(res.h-res.a) ? 1 : 0;
@@ -238,11 +356,13 @@ function renderGroups(){
     <div class="group-grid">${groupLetters().map(renderGroupTable).join('')}</div>`;
 }
 function renderKnockout(){
-  const direct = [];
-  groupLetters().forEach(g => { const rows = standingsForGroup(g); direct.push(`${g}1 ${rows[0].flag} ${rows[0].code}`); direct.push(`${g}2 ${rows[1].flag} ${rows[1].code}`); });
-  const thirds = thirdPlaceRanking().slice(0,8).map(t=>`3${t.sourceGroup} ${t.flag} ${t.code}`);
-  $('knockout').innerHTML = `<div class="section-head"><div><p class="eyebrow">Base eliminatoria</p><h2>Clasificados a dieciseisavos</h2></div></div>
-    <div class="card"><h3>32 clasificados actuales</h3><div class="slots">${[...direct,...thirds].map(x=>`<span>${x}</span>`).join('')}</div><p class="muted">La llave específica se conectará en V5.2 con el patrón oficial de cruces.</p></div>`;
+  const {bestThirds} = groupPositionMap();
+  $('knockout').innerHTML = `<div class="section-head"><div><p class="eyebrow">V5.2 · Bracket automático</p><h2>Eliminatorias</h2></div><span class="status-chip">Dieciseisavos a Final</span></div>
+    <div class="grid two">
+      <div class="card rules"><h3>Mejores terceros</h3><p>La llave asigna automáticamente los ocho mejores terceros disponibles a los cruces compatibles indicados en el calendario.</p><div class="thirds-strip">${bestThirds.map((t,i)=>`<span class="${i<8?'qualified':'not-qualified'}">${i+1}. ${t.flag} ${t.code} · G${t.sourceGroup} · ${t.pts} pts</span>`).join('')}</div></div>
+      <div class="card rules"><h3>Motor de eliminatorias</h3><p>Los ganadores avanzan por etiquetas W/RU del calendario. Cuando cargues resultados oficiales de eliminatorias, el cuadro se actualizará automáticamente.</p></div>
+    </div>
+    ${renderBracket()}`;
 }
 function participantOptions(id='participantSelect'){
   return `<select id="${id}">${state.participants.map(p=>`<option value="${p.id}" ${p.id===currentParticipant?'selected':''}>${esc(p.name)}</option>`).join('')}</select>`;
@@ -275,12 +395,15 @@ function renderPredictions(){
 function renderMyWorld(){
   if(!state.participants.length){ $('myworld').innerHTML = `<div class="card"><h2>Mi Mundial</h2><p class="muted">Agrega participantes para simular con sus pronósticos.</p></div>`; return; }
   const custom = {};
-  matches.filter(m=>m.stageId===1).forEach(m => {
+  matches.forEach(m => {
     const pred = state.predictions[key(currentParticipant,m.id)];
     if(hasScore(pred)) custom[m.id] = {...pred};
   });
   const groups = groupLetters().map(g => `<div class="card"><div class="group-title"><h3>Grupo ${g} proyectado</h3></div><div class="table-wrap"><table class="standings-table"><thead><tr><th>Pos</th><th>Equipo</th><th>PTS</th><th>DG</th><th>GF</th></tr></thead><tbody>${standingsForGroup(g, custom).map((r,i)=>`<tr><td>${i+1}</td><td>${teamLine(r)}</td><td><b>${r.pts}</b></td><td>${r.dg>0?'+'+r.dg:r.dg}</td><td>${r.gf}</td></tr>`).join('')}</tbody></table></div></div>`).join('');
-  $('myworld').innerHTML = `<div class="section-head"><div><p class="eyebrow">Simulación con pronósticos</p><h2>Mi Mundial</h2></div>${participantOptions('simParticipantSelect')}</div><div class="group-grid">${groups}</div>`;
+  $('myworld').innerHTML = `<div class="section-head"><div><p class="eyebrow">Simulación con pronósticos</p><h2>Mi Mundial</h2></div>${participantOptions('simParticipantSelect')}</div>
+    <div class="card rules"><h3>Proyección personalizada</h3><p>Usa tus pronósticos para calcular grupos y alimentar la base del bracket. Si completas marcadores de eliminatorias también se proyectarán los avances.</p></div>
+    <div class="group-grid">${groups}</div>
+    <div class="section-head"><div><p class="eyebrow">Bracket proyectado</p><h2>Mi cuadro</h2></div></div>${renderBracket(custom)}`;
   $('simParticipantSelect').onchange = e => { currentParticipant = e.target.value; renderMyWorld(); };
 }
 function renderRanking(){
