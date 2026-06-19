@@ -966,9 +966,9 @@
     "stage": "Group Stage",
     "label": "Group C",
     "group": "C",
-    "kickoffISO": "2026-06-19T19:00:00-06:00",
+    "kickoffISO": "2026-06-19T18:30:00-06:00",
     "dateCR": "19/06/2026",
-    "timeCR": "19:00",
+    "timeCR": "18:30",
     "home": {
       "id": 9,
       "name": "Brazil",
