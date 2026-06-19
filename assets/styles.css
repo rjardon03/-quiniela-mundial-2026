@@ -21,3 +21,17 @@ main{max-width:1480px;margin:auto;padding:12px 22px 50px}.view{display:none}.vie
 @media(min-width:1280px){.grid{grid-template-columns:1fr}.groupCard .calendarRows{display:grid;grid-template-columns:1fr;}.calendarGame{grid-template-columns:56px 130px minmax(420px,1fr) 260px 126px}.groupCard{border-radius:26px}}
 @media(max-width:1100px){.grid{grid-template-columns:1fr}.gameRow{grid-template-columns:50px 118px 1fr 160px}.calendarGame .resultPill{grid-column:4}.inputGame{grid-template-columns:50px 118px 1fr}.inputGame .gameVenue{grid-column:3}.statsGrid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:760px){main,.hero{padding-left:14px;padding-right:14px}.sectionHead{display:block}.heroBall{display:none}.teams{grid-template-columns:1fr}.gameRow{grid-template-columns:44px 1fr;gap:8px}.gameDate,.gameTeams,.gameVenue,.resultPill,.inputTeams{grid-column:2}.resultPill{justify-self:start}.inputGame{grid-template-columns:44px 1fr}.inputGame .gameVenue{grid-column:2}.inputTeams{grid-template-columns:1fr;align-items:stretch}.vsBox{justify-self:start}.controlPanel{align-items:stretch}.inlineForm{display:grid}.statsGrid{grid-template-columns:1fr}h1{font-size:52px}}
+
+.ruleBox{margin-bottom:18px;color:#39465a;line-height:1.45}
+.standingsGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.standingsCard{padding:18px}
+.compactTable{box-shadow:none;border-radius:18px}
+.compactTable th,.compactTable td{padding:10px 9px;font-size:14px;white-space:nowrap}
+.compactTable td:nth-child(2){min-width:190px;white-space:normal}
+.compactTable td small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+.compactTable tr.qualified td:first-child{border-left:4px solid #178f55}
+.compactTable tr.thirdPlace td:first-child{border-left:4px solid var(--gold)}
+.standingsNote{font-size:12px;color:var(--muted);font-weight:750;margin:12px 2px 0}
+.badge{display:inline-block;border-radius:999px;padding:3px 7px;font-weight:950;font-size:11px}.badge.qualify{background:#e8f7ef;color:#147747}.badge.third{background:#fff7e2;color:#8a6514}
+@media(max-width:1100px){.standingsGrid{grid-template-columns:1fr}}
+@media(max-width:760px){.compactTable{overflow:auto}.compactTable th,.compactTable td{font-size:13px;padding:9px 8px}.compactTable td:nth-child(2){min-width:160px}}

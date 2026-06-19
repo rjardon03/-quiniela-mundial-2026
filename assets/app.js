@@ -80,6 +80,109 @@ function renderFixture() {
     </div>`).join('');
 }
 
+function baseStanding(team) {
+  return {
+    code: team.code,
+    name: team.name,
+    flag: team.flag,
+    group: team.group,
+    pj: 0, pg: 0, pe: 0, pp: 0,
+    gf: 0, gc: 0, dg: 0, pts: 0,
+    h2hPts: 0, h2hDg: 0, h2hGf: 0
+  };
+}
+
+function applyMatchToStanding(row, gf, gc) {
+  row.pj++;
+  row.gf += gf;
+  row.gc += gc;
+  row.dg = row.gf - row.gc;
+  if (gf > gc) { row.pg++; row.pts += 3; }
+  else if (gf === gc) { row.pe++; row.pts += 1; }
+  else { row.pp++; }
+}
+
+function computeHeadToHead(rows, groupMatches) {
+  rows.forEach(r => { r.h2hPts = 0; r.h2hDg = 0; r.h2hGf = 0; });
+  const tiedCodes = new Set(rows.map(r => r.code));
+  groupMatches.forEach(m => {
+    const r = resultFor(m);
+    if (!hasScore(r)) return;
+    if (!tiedCodes.has(m.home.code) || !tiedCodes.has(m.away.code)) return;
+    const home = rows.find(x => x.code === m.home.code);
+    const away = rows.find(x => x.code === m.away.code);
+    home.h2hGf += r.h; home.h2hDg += r.h - r.a;
+    away.h2hGf += r.a; away.h2hDg += r.a - r.h;
+    if (r.h > r.a) home.h2hPts += 3;
+    else if (r.h < r.a) away.h2hPts += 3;
+    else { home.h2hPts += 1; away.h2hPts += 1; }
+  });
+}
+
+function sortStandings(rows, groupMatches) {
+  // First pass: FIFA-style main criteria: points, goal difference, goals scored.
+  rows.sort((a,b) => b.pts - a.pts || b.dg - a.dg || b.gf - a.gf || a.name.localeCompare(b.name));
+
+  // Second pass: apply head-to-head inside blocks still tied on points, GD and GF.
+  let finalRows = [];
+  for (let i = 0; i < rows.length;) {
+    let j = i + 1;
+    while (j < rows.length && rows[j].pts === rows[i].pts && rows[j].dg === rows[i].dg && rows[j].gf === rows[i].gf) j++;
+    const block = rows.slice(i, j);
+    if (block.length > 1) {
+      computeHeadToHead(block, groupMatches);
+      block.sort((a,b) => b.h2hPts - a.h2hPts || b.h2hDg - a.h2hDg || b.h2hGf - a.h2hGf || a.name.localeCompare(b.name));
+    }
+    finalRows = finalRows.concat(block);
+    i = j;
+  }
+  return finalRows;
+}
+
+function standingsForGroup(group) {
+  const groupTeams = teams.filter(t => t.group === group);
+  const rows = Object.fromEntries(groupTeams.map(t => [t.code, baseStanding(t)]));
+  const groupMatches = matches.filter(m => m.stageId === 1 && m.group === group);
+
+  groupMatches.forEach(m => {
+    const r = resultFor(m);
+    if (!hasScore(r)) return;
+    if (!rows[m.home.code] || !rows[m.away.code]) return;
+    applyMatchToStanding(rows[m.home.code], r.h, r.a);
+    applyMatchToStanding(rows[m.away.code], r.a, r.h);
+  });
+
+  return sortStandings(Object.values(rows), groupMatches);
+}
+
+function renderGroupStandings() {
+  const groups = [...new Set(teams.map(t => t.group))].sort();
+  $('groupStandings').innerHTML = groups.map(g => {
+    const rows = standingsForGroup(g);
+    return `
+      <div class="card standingsCard">
+        <div class="groupHead"><h3>Grupo ${g}</h3><span>📊</span></div>
+        <div class="tablewrap compactTable">
+          <table>
+            <thead>
+              <tr><th>#</th><th>Selección</th><th>PJ</th><th>PG</th><th>PE</th><th>PP</th><th>GF</th><th>GC</th><th>DG</th><th>PTS</th></tr>
+            </thead>
+            <tbody>
+              ${rows.map((r,i) => `
+                <tr class="${i < 2 ? 'qualified' : i === 2 ? 'thirdPlace' : ''}">
+                  <td>${i+1}</td>
+                  <td><b>${r.flag} ${esc(r.name)}</b><small>${esc(r.code)}</small></td>
+                  <td>${r.pj}</td><td>${r.pg}</td><td>${r.pe}</td><td>${r.pp}</td>
+                  <td>${r.gf}</td><td>${r.gc}</td><td>${r.dg > 0 ? '+' + r.dg : r.dg}</td><td><b>${r.pts}</b></td>
+                </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+        <p class="standingsNote"><span class="badge qualify">1º-2º</span> clasifican directo · <span class="badge third">3º</span> puede clasificar entre mejores terceros.</p>
+      </div>`;
+  }).join('');
+}
+
 function teamChip(t) {
   return `<div class="chip"><span>${t.flag}</span><span>${esc(t.name)}</span><b>${esc(t.code)}</b></div>`;
 }
@@ -312,6 +415,7 @@ function exportExcel() {
 
 function renderAll() {
   renderFixture();
+  renderGroupStandings();
   renderPlayers();
   renderPredictions();
   renderResults();
@@ -323,6 +427,7 @@ qsa('.tabs button').forEach(b => b.onclick = () => {
   b.classList.add('active');
   $(b.dataset.view).classList.add('active');
   if (b.dataset.view === 'ranking') renderRanking();
+  if (b.dataset.view === 'groupsView') renderGroupStandings();
 });
 
 $('addPlayer').onclick = addParticipant;
