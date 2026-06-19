@@ -25,6 +25,7 @@
 
   <nav class="tabs">
     <button data-view="fixture" class="active">🏠 Calendario</button>
+    <button data-view="groupsView">📊 Grupos</button>
     <button data-view="predictions">🎯 Mis pronósticos</button>
     <button data-view="ranking">🏆 Ranking</button>
     <button data-view="admin">⚙️ Admin</button>
@@ -36,7 +37,7 @@
       <div class="sectionHead">
         <div>
           <h2>Calendario</h2>
-          <p class="note">Vista pública de partidos. Los marcadores aquí son resultados oficiales cargados por el administrador.</p>
+          <p class="note">Vista pública de partidos. Todos los horarios se muestran en hora de Costa Rica (UTC-6). Los marcadores aquí son resultados oficiales cargados por el administrador.</p>
         </div>
         <div class="legend">
           <span><b class="dot pending"></b> Pendiente</span>
@@ -47,6 +48,20 @@
       <div id="groups" class="grid"></div>
       <h3 class="subhead">Eliminación directa</h3>
       <div id="knockout" class="grid"></div>
+    </section>
+
+
+    <section id="groupsView" class="view">
+      <div class="sectionHead">
+        <div>
+          <h2>Posiciones de grupos</h2>
+          <p class="note">Clasificación calculada con resultados oficiales cargados por el administrador. Criterios: puntos, diferencia de goles, goles a favor y desempates directos entre equipos empatados.</p>
+        </div>
+      </div>
+      <div class="card ruleBox">
+        <strong>Reglas de tabla:</strong> victoria 3 pts, empate 1 pt, derrota 0 pts. Columnas: PJ, PG, PE, PP, GF, GC, DG y PTS.
+      </div>
+      <div id="groupStandings" class="standingsGrid"></div>
     </section>
 
     <section id="predictions" class="view">
@@ -121,7 +136,7 @@
     </section>
   </main>
 
-  <footer>🏆 Quiniela Mundialista 2026 · Horarios en Costa Rica</footer>
+  <footer>🏆 Quiniela Mundialista 2026 · Todos los horarios en Costa Rica (UTC-6)</footer>
   <script src="assets/app.js"></script>
 </body>
 </html>
