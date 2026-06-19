@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="URU flag badge">
+  <defs><clipPath id="clip"><circle cx="32" cy="32" r="30"/></clipPath></defs>
+  <circle cx="32" cy="32" r="31" fill="#0f172a"/>
+  <g clip-path="url(#clip)"><rect x="0" y="0.0" width="64" height="7.21111111111111" fill="#fff"/><rect x="0" y="7.111111111111111" width="64" height="7.21111111111111" fill="#0038a8"/><rect x="0" y="14.222222222222221" width="64" height="7.21111111111111" fill="#fff"/><rect x="0" y="21.333333333333332" width="64" height="7.21111111111111" fill="#0038a8"/><rect x="0" y="28.444444444444443" width="64" height="7.21111111111111" fill="#fff"/><rect x="0" y="35.55555555555556" width="64" height="7.21111111111111" fill="#0038a8"/><rect x="0" y="42.666666666666664" width="64" height="7.21111111111111" fill="#fff"/><rect x="0" y="49.77777777777778" width="64" height="7.21111111111111" fill="#0038a8"/><rect x="0" y="56.888888888888886" width="64" height="7.21111111111111" fill="#fff"/><rect x="0" y="0" width="28" height="28" fill="#fff"/><circle cx="14" cy="14" r="8" fill="#fcd116"/></g>
+  <circle cx="32" cy="32" r="30" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="2"/>
+</svg>

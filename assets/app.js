@@ -11,11 +11,11 @@ const key = (pid, mid) => `${pid}_${mid}`;
 const val = x => x === '' || x == null ? null : Number(x);
 const esc = s => String(s ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 const flagHtml = t => {
-  if(!t) return '<span class="flag-badge flag-empty">⚪</span>';
-  if(t.flagUrl) return `<span class="flag-badge"><img class="flag-img" src="${esc(t.flagUrl)}" alt="${esc(t.code || t.name || 'flag')}" loading="lazy"></span>`;
-  return `<span class="flag-badge flag-emoji">${t.flag || '⚪'}</span>`;
+  if(!t) return '<span class="flag-emoji">⚪</span>';
+  if(t.flagUrl) return `<img class="flag-img" src="${esc(t.flagUrl)}" alt="${esc(t.code || t.name || 'flag')}">`;
+  return `<span class="flag-emoji">${t.flag || '⚪'}</span>`;
 };
-const teamText = t => `${t?.flag || ''} ${t?.name || 'Por definir'}`.trim();
+const teamText = t => `${t?.name || 'Por definir'}`.trim();
 
 const hasScore = r => r && r.h != null && r.a != null && !Number.isNaN(r.h) && !Number.isNaN(r.a);
 const resultFor = m => state.results[m.id];
@@ -132,8 +132,8 @@ function qualifierMap(){
 }
 
 function cloneTeam(t, slot=''){
-  if(!t) return {name:'Por definir', code:'TBD', flag:'⚪', group:'', slot};
-  return {name:t.name, code:t.code, flag:t.flag, flagUrl:t.flagUrl, group:t.group || t.sourceGroup || '', slot};
+  if(!t) return {name:'Por definir', code:'TBD', flag:'⚪', flagUrl:'', group:'', slot};
+  return {name:t.name, code:t.code, flag:t.flag || '', flagUrl:t.flagUrl || '', group:t.group || t.sourceGroup || '', slot};
 }
 function groupPositionMap(customResults=null){
   const out = {};

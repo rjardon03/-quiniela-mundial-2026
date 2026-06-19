@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="CAN flag badge">
+  <defs><clipPath id="clip"><circle cx="32" cy="32" r="30"/></clipPath></defs>
+  <circle cx="32" cy="32" r="31" fill="#0f172a"/>
+  <g clip-path="url(#clip)"><rect x="0.0" y="0" width="21.433333333333334" height="64" fill="#d52b1e"/><rect x="21.333333333333332" y="0" width="21.433333333333334" height="64" fill="#fff"/><rect x="42.666666666666664" y="0" width="21.433333333333334" height="64" fill="#d52b1e"/><polygon points="32.00,23.00 33.77,29.73 39.78,26.22 36.27,32.23 43.00,34.00 36.27,35.77 39.78,41.78 33.77,38.27 32.00,45.00 30.23,38.27 24.22,41.78 27.73,35.77 21.00,34.00 27.73,32.23 24.22,26.22 30.23,29.73" fill="#d52b1e"/></g>
+  <circle cx="32" cy="32" r="30" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="2"/>
+</svg>

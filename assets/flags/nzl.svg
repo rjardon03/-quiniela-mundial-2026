@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="NZL flag badge">
+  <defs><clipPath id="clip"><circle cx="32" cy="32" r="30"/></clipPath></defs>
+  <circle cx="32" cy="32" r="31" fill="#0f172a"/>
+  <g clip-path="url(#clip)"><rect x="0" y="0" width="64" height="64" fill="#00247d"/><g transform="translate(0,0) scale(0.5,0.6)"><rect x="0" y="0" width="60" height="40" fill="#012169"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#fff" stroke-width="8"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#c8102e" stroke-width="4"/><rect x="25" y="0" width="10" height="40" fill="#fff"/><rect x="0" y="15" width="60" height="10" fill="#fff"/><rect x="28" y="0" width="4" height="40" fill="#c8102e"/><rect x="0" y="18" width="60" height="4" fill="#c8102e"/></g><polygon points="48.00,18.00 48.99,20.64 51.80,20.76 49.60,22.52 50.35,25.24 48.00,23.68 45.65,25.24 46.40,22.52 44.20,20.76 47.01,20.64" fill="#cc142b"/><polygon points="43.00,41.00 43.74,42.98 45.85,43.07 44.20,44.39 44.76,46.43 43.00,45.26 41.24,46.43 41.80,44.39 40.15,43.07 42.26,42.98" fill="#cc142b"/><polygon points="55.00,34.00 55.74,35.98 57.85,36.07 56.20,37.39 56.76,39.43 55.00,38.26 53.24,39.43 53.80,37.39 52.15,36.07 54.26,35.98" fill="#cc142b"/></g>
+  <circle cx="32" cy="32" r="30" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="2"/>
+</svg>

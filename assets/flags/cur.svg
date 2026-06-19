@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="CUR flag badge">
+  <defs><clipPath id="clip"><circle cx="32" cy="32" r="30"/></clipPath></defs>
+  <circle cx="32" cy="32" r="31" fill="#0f172a"/>
+  <g clip-path="url(#clip)"><rect x="0" y="0" width="64" height="64" fill="#002b7f"/><rect x="0" y="43" width="64" height="6" fill="#f9e814"/><polygon points="18.00,13.00 19.23,16.30 22.76,16.45 20.00,18.65 20.94,22.05 18.00,20.10 15.06,22.05 16.00,18.65 13.24,16.45 16.77,16.30" fill="#fff"/><polygon points="28.00,22.00 28.74,23.98 30.85,24.07 29.20,25.39 29.76,27.43 28.00,26.26 26.24,27.43 26.80,25.39 25.15,24.07 27.26,23.98" fill="#fff"/></g>
+  <circle cx="32" cy="32" r="30" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="2"/>
+</svg>
