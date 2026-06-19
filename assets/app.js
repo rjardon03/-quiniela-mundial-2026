@@ -165,12 +165,10 @@ function renderPlayers() {
   $('playerSelect').innerHTML = opts;
 }
 
-function groupedInputList(type) {
-  const groups = [...new Set(matches.map(m => m.stageId === 1 ? `Grupo ${m.group}` : stageES(m.stage)))];
-  return groups.map(group => {
-    const gm = matches.filter(m => (m.stageId === 1 ? `Grupo ${m.group}` : stageES(m.stage)) === group);
-    return `<div class="card slimCard"><div class="slimHead">${group}</div>${gm.map(m => inputRow(m, type)).join('')}</div>`;
-  }).join('');
+function orderedInputList(type) {
+  const title = type === 'real' ? 'Resultados oficiales · orden por número de partido' : 'Mis pronósticos · orden por número de partido';
+  const ordered = [...matches].sort((a, b) => Number(a.matchNumber) - Number(b.matchNumber));
+  return `<div class="card slimCard"><div class="slimHead">${title}</div>${ordered.map(m => inputRow(m, type)).join('')}</div>`;
 }
 
 function renderPredictions() {
@@ -178,11 +176,11 @@ function renderPredictions() {
     $('predictionsList').innerHTML = '<div class="card emptyState"><h3>Agrega participantes</h3><p class="note">Primero crea al menos un participante para poder capturar pronósticos.</p></div>';
     return;
   }
-  $('predictionsList').innerHTML = groupedInputList('pred');
+  $('predictionsList').innerHTML = orderedInputList('pred');
 }
 
 function renderResults() {
-  $('resultsList').innerHTML = groupedInputList('real');
+  $('resultsList').innerHTML = orderedInputList('real');
 }
 
 function score(pred, res) {
