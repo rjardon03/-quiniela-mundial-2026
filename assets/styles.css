@@ -43,3 +43,35 @@
   .groupHead{margin:-14px -14px 12px;padding:14px}
   .score input{width:48px;min-width:48px}
 }
+
+/* Ajuste v3 escritorio: evita tarjetas comprimidas y marcador cortado */
+main,.hero{max-width:1500px}
+.grid{
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,760px),1fr));
+  gap:22px;
+}
+.match{
+  display:grid;
+  grid-template-columns:56px 130px minmax(260px,1fr) minmax(180px,220px) minmax(112px,130px);
+  gap:10px 14px;
+  align-items:center;
+}
+.score{
+  grid-column:auto;
+  justify-content:flex-end;
+  white-space:nowrap;
+  padding-top:0;
+}
+.score input{width:50px;min-width:50px;height:40px}
+.teamsline{line-height:1.25}
+.venue{line-height:1.15}
+
+@media(max-width:900px){
+  .grid{grid-template-columns:1fr}
+  .match{grid-template-columns:48px 118px minmax(220px,1fr) minmax(150px,190px) minmax(104px,120px)}
+}
+@media(max-width:760px){
+  .match{grid-template-columns:42px 1fr;gap:6px 10px;align-items:start}
+  .date,.teamsline,.venue,.score{grid-column:2/3}
+  .score{justify-content:flex-start}
+}
