@@ -74,10 +74,10 @@
     },
     "away": {
       "id": 6,
-      "name": "Winner UEFA Playoff A",
-      "code": "UEPA",
+      "name": "Bosnia & Herzegovina",
+      "code": "BIH",
       "group": "B",
-      "flag": "🏳️"
+      "flag": "🇧🇦"
     },
     "venue": "BMO Field",
     "city": "Toronto",
@@ -214,10 +214,10 @@
     },
     "away": {
       "id": 16,
-      "name": "Winner UEFA Playoff C",
-      "code": "UEPC",
+      "name": "Türkiye",
+      "code": "TUR",
       "group": "D",
-      "flag": "🏳️"
+      "flag": "🇹🇷"
     },
     "venue": "BC Place",
     "city": "Vancouver",
@@ -319,10 +319,10 @@
     "timeCR": "22:00",
     "home": {
       "id": 23,
-      "name": "Winner UEFA Playoff B",
-      "code": "UEPB",
+      "name": "Sweden",
+      "code": "SWE",
       "group": "F",
-      "flag": "🏳️"
+      "flag": "🇸🇪"
     },
     "away": {
       "id": 24,
@@ -487,10 +487,10 @@
     "timeCR": "16:00",
     "home": {
       "id": 35,
-      "name": "Winner FIFA Playoff 2",
-      "code": "FP02",
+      "name": "Iraq",
+      "code": "IRQ",
       "group": "I",
-      "flag": "🏳️"
+      "flag": "🇮🇶"
     },
     "away": {
       "id": 36,
@@ -578,10 +578,10 @@
     },
     "away": {
       "id": 42,
-      "name": "Winner FIFA Playoff 1",
-      "code": "FP01",
+      "name": "Congo DR",
+      "code": "COD",
       "group": "K",
-      "flag": "🏳️"
+      "flag": "🇨🇩"
     },
     "venue": "NRG Stadium",
     "city": "Houston",
@@ -718,10 +718,10 @@
     },
     "away": {
       "id": 6,
-      "name": "Winner UEFA Playoff A",
-      "code": "UEPA",
+      "name": "Bosnia & Herzegovina",
+      "code": "BIH",
       "group": "B",
-      "flag": "🏳️"
+      "flag": "🇧🇦"
     },
     "venue": "SoFi Stadium",
     "city": "Los Angeles",
@@ -879,10 +879,10 @@
     "timeCR": "01:00",
     "home": {
       "id": 16,
-      "name": "Winner UEFA Playoff C",
-      "code": "UEPC",
+      "name": "Türkiye",
+      "code": "TUR",
       "group": "D",
-      "flag": "🏳️"
+      "flag": "🇹🇷"
     },
     "away": {
       "id": 14,
@@ -914,10 +914,10 @@
     },
     "away": {
       "id": 23,
-      "name": "Winner UEFA Playoff B",
-      "code": "UEPB",
+      "name": "Sweden",
+      "code": "SWE",
       "group": "F",
-      "flag": "🏳️"
+      "flag": "🇸🇪"
     },
     "venue": "NRG Stadium",
     "city": "Houston",
@@ -1166,10 +1166,10 @@
     },
     "away": {
       "id": 35,
-      "name": "Winner FIFA Playoff 2",
-      "code": "FP02",
+      "name": "Iraq",
+      "code": "IRQ",
       "group": "I",
-      "flag": "🏳️"
+      "flag": "🇮🇶"
     },
     "venue": "Lincoln Financial Field",
     "city": "Philadelphia",
@@ -1334,10 +1334,10 @@
     },
     "away": {
       "id": 42,
-      "name": "Winner FIFA Playoff 1",
-      "code": "FP01",
+      "name": "Congo DR",
+      "code": "COD",
       "group": "K",
-      "flag": "🏳️"
+      "flag": "🇨🇩"
     },
     "venue": "Estadio Akron",
     "city": "Guadalajara",
@@ -1383,10 +1383,10 @@
     "timeCR": "16:00",
     "home": {
       "id": 6,
-      "name": "Winner UEFA Playoff A",
-      "code": "UEPA",
+      "name": "Bosnia & Herzegovina",
+      "code": "BIH",
       "group": "B",
-      "flag": "🏳️"
+      "flag": "🇧🇦"
     },
     "away": {
       "id": 7,
@@ -1586,10 +1586,10 @@
     },
     "away": {
       "id": 23,
-      "name": "Winner UEFA Playoff B",
-      "code": "UEPB",
+      "name": "Sweden",
+      "code": "SWE",
       "group": "F",
-      "flag": "🏳️"
+      "flag": "🇸🇪"
     },
     "venue": "AT&T Stadium",
     "city": "Dallas",
@@ -1635,10 +1635,10 @@
     "timeCR": "23:00",
     "home": {
       "id": 16,
-      "name": "Winner UEFA Playoff C",
-      "code": "UEPC",
+      "name": "Türkiye",
+      "code": "TUR",
       "group": "D",
-      "flag": "🏳️"
+      "flag": "🇹🇷"
     },
     "away": {
       "id": 13,
@@ -1726,10 +1726,10 @@
     },
     "away": {
       "id": 35,
-      "name": "Winner FIFA Playoff 2",
-      "code": "FP02",
+      "name": "Iraq",
+      "code": "IRQ",
       "group": "I",
-      "flag": "🏳️"
+      "flag": "🇮🇶"
     },
     "venue": "BMO Field",
     "city": "Toronto",
@@ -1943,10 +1943,10 @@
     "timeCR": "17:30",
     "home": {
       "id": 42,
-      "name": "Winner FIFA Playoff 1",
-      "code": "FP01",
+      "name": "Congo DR",
+      "code": "COD",
       "group": "K",
-      "flag": "🏳️"
+      "flag": "🇨🇩"
     },
     "away": {
       "id": 43,

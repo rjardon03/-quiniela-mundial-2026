@@ -36,10 +36,10 @@
   },
   {
     "id": 6,
-    "name": "Winner UEFA Playoff A",
-    "code": "UEPA",
+    "name": "Bosnia & Herzegovina",
+    "code": "BIH",
     "group": "B",
-    "flag": "🏳️"
+    "flag": "🇧🇦"
   },
   {
     "id": 7,
@@ -106,10 +106,10 @@
   },
   {
     "id": 16,
-    "name": "Winner UEFA Playoff C",
-    "code": "UEPC",
+    "name": "Türkiye",
+    "code": "TUR",
     "group": "D",
-    "flag": "🏳️"
+    "flag": "🇹🇷"
   },
   {
     "id": 17,
@@ -155,10 +155,10 @@
   },
   {
     "id": 23,
-    "name": "Winner UEFA Playoff B",
-    "code": "UEPB",
+    "name": "Sweden",
+    "code": "SWE",
     "group": "F",
-    "flag": "🏳️"
+    "flag": "🇸🇪"
   },
   {
     "id": 24,
@@ -239,10 +239,10 @@
   },
   {
     "id": 35,
-    "name": "Winner FIFA Playoff 2",
-    "code": "FP02",
+    "name": "Iraq",
+    "code": "IRQ",
     "group": "I",
-    "flag": "🏳️"
+    "flag": "🇮🇶"
   },
   {
     "id": 36,
@@ -288,10 +288,10 @@
   },
   {
     "id": 42,
-    "name": "Winner FIFA Playoff 1",
-    "code": "FP01",
+    "name": "Congo DR",
+    "code": "COD",
     "group": "K",
-    "flag": "🏳️"
+    "flag": "🇨🇩"
   },
   {
     "id": 43,
