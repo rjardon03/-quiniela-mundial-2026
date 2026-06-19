@@ -202,7 +202,7 @@
       "code": "SCO",
       "group": "C",
       "flag": "",
-      "flagUrl": "https://flagcdn.com/gb-sct.svg"
+      "flagUrl": "assets/flags/scotland.svg"
     },
     "venue": "Gillette Stadium",
     "city": "Boston",
@@ -646,7 +646,7 @@
       "code": "ENG",
       "group": "L",
       "flag": "",
-      "flagUrl": "https://flagcdn.com/gb-eng.svg"
+      "flagUrl": "assets/flags/england.svg"
     },
     "away": {
       "id": 46,
@@ -887,7 +887,7 @@
       "code": "SCO",
       "group": "C",
       "flag": "",
-      "flagUrl": "https://flagcdn.com/gb-sct.svg"
+      "flagUrl": "assets/flags/scotland.svg"
     },
     "away": {
       "id": 10,
@@ -1368,7 +1368,7 @@
       "code": "ENG",
       "group": "L",
       "flag": "",
-      "flagUrl": "https://flagcdn.com/gb-eng.svg"
+      "flagUrl": "assets/flags/england.svg"
     },
     "away": {
       "id": 47,
@@ -1519,7 +1519,7 @@
       "code": "SCO",
       "group": "C",
       "flag": "",
-      "flagUrl": "https://flagcdn.com/gb-sct.svg"
+      "flagUrl": "assets/flags/scotland.svg"
     },
     "away": {
       "id": 9,
@@ -2007,7 +2007,7 @@
       "code": "ENG",
       "group": "L",
       "flag": "",
-      "flagUrl": "https://flagcdn.com/gb-eng.svg"
+      "flagUrl": "assets/flags/england.svg"
     },
     "venue": "MetLife Stadium",
     "city": "New York/New Jersey",
