@@ -4,77 +4,88 @@
     "name": "Mexico",
     "code": "MEX",
     "group": "A",
-    "flag": "🇲🇽"
+    "flag": "",
+    "flagUrl": "assets/flags/mex.svg"
   },
   {
     "id": 2,
     "name": "South Africa",
     "code": "RSA",
     "group": "A",
-    "flag": "🇿🇦"
+    "flag": "",
+    "flagUrl": "assets/flags/rsa.svg"
   },
   {
     "id": 3,
     "name": "South Korea",
     "code": "KOR",
     "group": "A",
-    "flag": "🇰🇷"
+    "flag": "",
+    "flagUrl": "assets/flags/kor.svg"
   },
   {
     "id": 4,
     "name": "Czechia",
     "code": "CZE",
     "group": "A",
-    "flag": "🇨🇿"
+    "flag": "",
+    "flagUrl": "assets/flags/cze.svg"
   },
   {
     "id": 5,
     "name": "Canada",
     "code": "CAN",
     "group": "B",
-    "flag": "🇨🇦"
+    "flag": "",
+    "flagUrl": "assets/flags/can.svg"
   },
   {
     "id": 6,
     "name": "Bosnia & Herzegovina",
     "code": "BIH",
     "group": "B",
-    "flag": "🇧🇦"
+    "flag": "",
+    "flagUrl": "assets/flags/bih.svg"
   },
   {
     "id": 7,
     "name": "Qatar",
     "code": "QAT",
     "group": "B",
-    "flag": "🇶🇦"
+    "flag": "",
+    "flagUrl": "assets/flags/qat.svg"
   },
   {
     "id": 8,
     "name": "Switzerland",
     "code": "SUI",
     "group": "B",
-    "flag": "🇨🇭"
+    "flag": "",
+    "flagUrl": "assets/flags/sui.svg"
   },
   {
     "id": 9,
     "name": "Brazil",
     "code": "BRA",
     "group": "C",
-    "flag": "🇧🇷"
+    "flag": "",
+    "flagUrl": "assets/flags/bra.svg"
   },
   {
     "id": 10,
     "name": "Morocco",
     "code": "MAR",
     "group": "C",
-    "flag": "🇲🇦"
+    "flag": "",
+    "flagUrl": "assets/flags/mar.svg"
   },
   {
     "id": 11,
     "name": "Haiti",
     "code": "HAI",
     "group": "C",
-    "flag": "🇭🇹"
+    "flag": "",
+    "flagUrl": "assets/flags/hai.svg"
   },
   {
     "id": 12,
@@ -82,231 +93,263 @@
     "code": "SCO",
     "group": "C",
     "flag": "",
-    "flagUrl": "assets/flags/scotland.svg"
+    "flagUrl": "assets/flags/sco.svg"
   },
   {
     "id": 13,
     "name": "USA",
     "code": "USA",
     "group": "D",
-    "flag": "🇺🇸"
+    "flag": "",
+    "flagUrl": "assets/flags/usa.svg"
   },
   {
     "id": 14,
     "name": "Paraguay",
     "code": "PAR",
     "group": "D",
-    "flag": "🇵🇾"
+    "flag": "",
+    "flagUrl": "assets/flags/par.svg"
   },
   {
     "id": 15,
     "name": "Australia",
     "code": "AUS",
     "group": "D",
-    "flag": "🇦🇺"
+    "flag": "",
+    "flagUrl": "assets/flags/aus.svg"
   },
   {
     "id": 16,
     "name": "Türkiye",
     "code": "TUR",
     "group": "D",
-    "flag": "🇹🇷"
+    "flag": "",
+    "flagUrl": "assets/flags/tur.svg"
   },
   {
     "id": 17,
     "name": "Germany",
     "code": "GER",
     "group": "E",
-    "flag": "🇩🇪"
+    "flag": "",
+    "flagUrl": "assets/flags/ger.svg"
   },
   {
     "id": 18,
     "name": "Curaçao",
     "code": "CUR",
     "group": "E",
-    "flag": "🇨🇼"
+    "flag": "",
+    "flagUrl": "assets/flags/cur.svg"
   },
   {
     "id": 19,
     "name": "Côte d'Ivoire",
     "code": "CIV",
     "group": "E",
-    "flag": "🇨🇮"
+    "flag": "",
+    "flagUrl": "assets/flags/civ.svg"
   },
   {
     "id": 20,
     "name": "Ecuador",
     "code": "ECU",
     "group": "E",
-    "flag": "🇪🇨"
+    "flag": "",
+    "flagUrl": "assets/flags/ecu.svg"
   },
   {
     "id": 21,
     "name": "Netherlands",
     "code": "NED",
     "group": "F",
-    "flag": "🇳🇱"
+    "flag": "",
+    "flagUrl": "assets/flags/ned.svg"
   },
   {
     "id": 22,
     "name": "Japan",
     "code": "JPN",
     "group": "F",
-    "flag": "🇯🇵"
+    "flag": "",
+    "flagUrl": "assets/flags/jpn.svg"
   },
   {
     "id": 23,
     "name": "Sweden",
     "code": "SWE",
     "group": "F",
-    "flag": "🇸🇪"
+    "flag": "",
+    "flagUrl": "assets/flags/swe.svg"
   },
   {
     "id": 24,
     "name": "Tunisia",
     "code": "TUN",
     "group": "F",
-    "flag": "🇹🇳"
+    "flag": "",
+    "flagUrl": "assets/flags/tun.svg"
   },
   {
     "id": 25,
     "name": "Belgium",
     "code": "BEL",
     "group": "G",
-    "flag": "🇧🇪"
+    "flag": "",
+    "flagUrl": "assets/flags/bel.svg"
   },
   {
     "id": 26,
     "name": "Egypt",
     "code": "EGY",
     "group": "G",
-    "flag": "🇪🇬"
+    "flag": "",
+    "flagUrl": "assets/flags/egy.svg"
   },
   {
     "id": 27,
     "name": "IR Iran",
     "code": "IRN",
     "group": "G",
-    "flag": "🇮🇷"
+    "flag": "",
+    "flagUrl": "assets/flags/irn.svg"
   },
   {
     "id": 28,
     "name": "New Zealand",
     "code": "NZL",
     "group": "G",
-    "flag": "🇳🇿"
+    "flag": "",
+    "flagUrl": "assets/flags/nzl.svg"
   },
   {
     "id": 29,
     "name": "Spain",
     "code": "ESP",
     "group": "H",
-    "flag": "🇪🇸"
+    "flag": "",
+    "flagUrl": "assets/flags/esp.svg"
   },
   {
     "id": 30,
     "name": "Cabo Verde",
     "code": "CPV",
     "group": "H",
-    "flag": "🇨🇻"
+    "flag": "",
+    "flagUrl": "assets/flags/cpv.svg"
   },
   {
     "id": 31,
     "name": "Saudi Arabia",
     "code": "KSA",
     "group": "H",
-    "flag": "🇸🇦"
+    "flag": "",
+    "flagUrl": "assets/flags/ksa.svg"
   },
   {
     "id": 32,
     "name": "Uruguay",
     "code": "URU",
     "group": "H",
-    "flag": "🇺🇾"
+    "flag": "",
+    "flagUrl": "assets/flags/uru.svg"
   },
   {
     "id": 33,
     "name": "France",
     "code": "FRA",
     "group": "I",
-    "flag": "🇫🇷"
+    "flag": "",
+    "flagUrl": "assets/flags/fra.svg"
   },
   {
     "id": 34,
     "name": "Senegal",
     "code": "SEN",
     "group": "I",
-    "flag": "🇸🇳"
+    "flag": "",
+    "flagUrl": "assets/flags/sen.svg"
   },
   {
     "id": 35,
     "name": "Iraq",
     "code": "IRQ",
     "group": "I",
-    "flag": "🇮🇶"
+    "flag": "",
+    "flagUrl": "assets/flags/irq.svg"
   },
   {
     "id": 36,
     "name": "Norway",
     "code": "NOR",
     "group": "I",
-    "flag": "🇳🇴"
+    "flag": "",
+    "flagUrl": "assets/flags/nor.svg"
   },
   {
     "id": 37,
     "name": "Argentina",
     "code": "ARG",
     "group": "J",
-    "flag": "🇦🇷"
+    "flag": "",
+    "flagUrl": "assets/flags/arg.svg"
   },
   {
     "id": 38,
     "name": "Algeria",
     "code": "ALG",
     "group": "J",
-    "flag": "🇩🇿"
+    "flag": "",
+    "flagUrl": "assets/flags/alg.svg"
   },
   {
     "id": 39,
     "name": "Austria",
     "code": "AUT",
     "group": "J",
-    "flag": "🇦🇹"
+    "flag": "",
+    "flagUrl": "assets/flags/aut.svg"
   },
   {
     "id": 40,
     "name": "Jordan",
     "code": "JOR",
     "group": "J",
-    "flag": "🇯🇴"
+    "flag": "",
+    "flagUrl": "assets/flags/jor.svg"
   },
   {
     "id": 41,
     "name": "Portugal",
     "code": "POR",
     "group": "K",
-    "flag": "🇵🇹"
+    "flag": "",
+    "flagUrl": "assets/flags/por.svg"
   },
   {
     "id": 42,
     "name": "Congo DR",
     "code": "COD",
     "group": "K",
-    "flag": "🇨🇩"
+    "flag": "",
+    "flagUrl": "assets/flags/cod.svg"
   },
   {
     "id": 43,
     "name": "Uzbekistan",
     "code": "UZB",
     "group": "K",
-    "flag": "🇺🇿"
+    "flag": "",
+    "flagUrl": "assets/flags/uzb.svg"
   },
   {
     "id": 44,
     "name": "Colombia",
     "code": "COL",
     "group": "K",
-    "flag": "🇨🇴"
+    "flag": "",
+    "flagUrl": "assets/flags/col.svg"
   },
   {
     "id": 45,
@@ -314,27 +357,30 @@
     "code": "ENG",
     "group": "L",
     "flag": "",
-    "flagUrl": "assets/flags/england.svg"
+    "flagUrl": "assets/flags/eng.svg"
   },
   {
     "id": 46,
     "name": "Croatia",
     "code": "CRO",
     "group": "L",
-    "flag": "🇭🇷"
+    "flag": "",
+    "flagUrl": "assets/flags/cro.svg"
   },
   {
     "id": 47,
     "name": "Ghana",
     "code": "GHA",
     "group": "L",
-    "flag": "🇬🇭"
+    "flag": "",
+    "flagUrl": "assets/flags/gha.svg"
   },
   {
     "id": 48,
     "name": "Panama",
     "code": "PAN",
     "group": "L",
-    "flag": "🇵🇦"
+    "flag": "",
+    "flagUrl": "assets/flags/pan.svg"
   }
 ]

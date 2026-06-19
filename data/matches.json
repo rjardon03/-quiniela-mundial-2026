@@ -14,14 +14,16 @@
       "name": "Mexico",
       "code": "MEX",
       "group": "A",
-      "flag": "🇲🇽"
+      "flag": "",
+      "flagUrl": "assets/flags/mex.svg"
     },
     "away": {
       "id": 2,
       "name": "South Africa",
       "code": "RSA",
       "group": "A",
-      "flag": "🇿🇦"
+      "flag": "",
+      "flagUrl": "assets/flags/rsa.svg"
     },
     "venue": "Estadio Azteca",
     "city": "Mexico City",
@@ -44,14 +46,16 @@
       "name": "South Korea",
       "code": "KOR",
       "group": "A",
-      "flag": "🇰🇷"
+      "flag": "",
+      "flagUrl": "assets/flags/kor.svg"
     },
     "away": {
       "id": 4,
       "name": "Czechia",
       "code": "CZE",
       "group": "A",
-      "flag": "🇨🇿"
+      "flag": "",
+      "flagUrl": "assets/flags/cze.svg"
     },
     "venue": "Estadio Akron",
     "city": "Guadalajara",
@@ -74,14 +78,16 @@
       "name": "Canada",
       "code": "CAN",
       "group": "B",
-      "flag": "🇨🇦"
+      "flag": "",
+      "flagUrl": "assets/flags/can.svg"
     },
     "away": {
       "id": 6,
       "name": "Bosnia & Herzegovina",
       "code": "BIH",
       "group": "B",
-      "flag": "🇧🇦"
+      "flag": "",
+      "flagUrl": "assets/flags/bih.svg"
     },
     "venue": "BMO Field",
     "city": "Toronto",
@@ -104,14 +110,16 @@
       "name": "USA",
       "code": "USA",
       "group": "D",
-      "flag": "🇺🇸"
+      "flag": "",
+      "flagUrl": "assets/flags/usa.svg"
     },
     "away": {
       "id": 14,
       "name": "Paraguay",
       "code": "PAR",
       "group": "D",
-      "flag": "🇵🇾"
+      "flag": "",
+      "flagUrl": "assets/flags/par.svg"
     },
     "venue": "SoFi Stadium",
     "city": "Los Angeles",
@@ -134,14 +142,16 @@
       "name": "Qatar",
       "code": "QAT",
       "group": "B",
-      "flag": "🇶🇦"
+      "flag": "",
+      "flagUrl": "assets/flags/qat.svg"
     },
     "away": {
       "id": 8,
       "name": "Switzerland",
       "code": "SUI",
       "group": "B",
-      "flag": "🇨🇭"
+      "flag": "",
+      "flagUrl": "assets/flags/sui.svg"
     },
     "venue": "Levi's Stadium",
     "city": "San Francisco Bay Area",
@@ -164,14 +174,16 @@
       "name": "Brazil",
       "code": "BRA",
       "group": "C",
-      "flag": "🇧🇷"
+      "flag": "",
+      "flagUrl": "assets/flags/bra.svg"
     },
     "away": {
       "id": 10,
       "name": "Morocco",
       "code": "MAR",
       "group": "C",
-      "flag": "🇲🇦"
+      "flag": "",
+      "flagUrl": "assets/flags/mar.svg"
     },
     "venue": "MetLife Stadium",
     "city": "New York/New Jersey",
@@ -194,7 +206,8 @@
       "name": "Haiti",
       "code": "HAI",
       "group": "C",
-      "flag": "🇭🇹"
+      "flag": "",
+      "flagUrl": "assets/flags/hai.svg"
     },
     "away": {
       "id": 12,
@@ -202,7 +215,7 @@
       "code": "SCO",
       "group": "C",
       "flag": "",
-      "flagUrl": "assets/flags/scotland.svg"
+      "flagUrl": "assets/flags/sco.svg"
     },
     "venue": "Gillette Stadium",
     "city": "Boston",
@@ -225,14 +238,16 @@
       "name": "Australia",
       "code": "AUS",
       "group": "D",
-      "flag": "🇦🇺"
+      "flag": "",
+      "flagUrl": "assets/flags/aus.svg"
     },
     "away": {
       "id": 16,
       "name": "Türkiye",
       "code": "TUR",
       "group": "D",
-      "flag": "🇹🇷"
+      "flag": "",
+      "flagUrl": "assets/flags/tur.svg"
     },
     "venue": "BC Place",
     "city": "Vancouver",
@@ -255,14 +270,16 @@
       "name": "Germany",
       "code": "GER",
       "group": "E",
-      "flag": "🇩🇪"
+      "flag": "",
+      "flagUrl": "assets/flags/ger.svg"
     },
     "away": {
       "id": 18,
       "name": "Curaçao",
       "code": "CUR",
       "group": "E",
-      "flag": "🇨🇼"
+      "flag": "",
+      "flagUrl": "assets/flags/cur.svg"
     },
     "venue": "NRG Stadium",
     "city": "Houston",
@@ -285,14 +302,16 @@
       "name": "Netherlands",
       "code": "NED",
       "group": "F",
-      "flag": "🇳🇱"
+      "flag": "",
+      "flagUrl": "assets/flags/ned.svg"
     },
     "away": {
       "id": 22,
       "name": "Japan",
       "code": "JPN",
       "group": "F",
-      "flag": "🇯🇵"
+      "flag": "",
+      "flagUrl": "assets/flags/jpn.svg"
     },
     "venue": "AT&T Stadium",
     "city": "Dallas",
@@ -315,14 +334,16 @@
       "name": "Côte d'Ivoire",
       "code": "CIV",
       "group": "E",
-      "flag": "🇨🇮"
+      "flag": "",
+      "flagUrl": "assets/flags/civ.svg"
     },
     "away": {
       "id": 20,
       "name": "Ecuador",
       "code": "ECU",
       "group": "E",
-      "flag": "🇪🇨"
+      "flag": "",
+      "flagUrl": "assets/flags/ecu.svg"
     },
     "venue": "Lincoln Financial Field",
     "city": "Philadelphia",
@@ -345,14 +366,16 @@
       "name": "Sweden",
       "code": "SWE",
       "group": "F",
-      "flag": "🇸🇪"
+      "flag": "",
+      "flagUrl": "assets/flags/swe.svg"
     },
     "away": {
       "id": 24,
       "name": "Tunisia",
       "code": "TUN",
       "group": "F",
-      "flag": "🇹🇳"
+      "flag": "",
+      "flagUrl": "assets/flags/tun.svg"
     },
     "venue": "Estadio BBVA",
     "city": "Monterrey",
@@ -375,14 +398,16 @@
       "name": "Spain",
       "code": "ESP",
       "group": "H",
-      "flag": "🇪🇸"
+      "flag": "",
+      "flagUrl": "assets/flags/esp.svg"
     },
     "away": {
       "id": 30,
       "name": "Cabo Verde",
       "code": "CPV",
       "group": "H",
-      "flag": "🇨🇻"
+      "flag": "",
+      "flagUrl": "assets/flags/cpv.svg"
     },
     "venue": "Mercedes-Benz Stadium",
     "city": "Atlanta",
@@ -405,14 +430,16 @@
       "name": "Belgium",
       "code": "BEL",
       "group": "G",
-      "flag": "🇧🇪"
+      "flag": "",
+      "flagUrl": "assets/flags/bel.svg"
     },
     "away": {
       "id": 26,
       "name": "Egypt",
       "code": "EGY",
       "group": "G",
-      "flag": "🇪🇬"
+      "flag": "",
+      "flagUrl": "assets/flags/egy.svg"
     },
     "venue": "Lumen Field",
     "city": "Seattle",
@@ -435,14 +462,16 @@
       "name": "Saudi Arabia",
       "code": "KSA",
       "group": "H",
-      "flag": "🇸🇦"
+      "flag": "",
+      "flagUrl": "assets/flags/ksa.svg"
     },
     "away": {
       "id": 32,
       "name": "Uruguay",
       "code": "URU",
       "group": "H",
-      "flag": "🇺🇾"
+      "flag": "",
+      "flagUrl": "assets/flags/uru.svg"
     },
     "venue": "Hard Rock Stadium",
     "city": "Miami",
@@ -465,14 +494,16 @@
       "name": "IR Iran",
       "code": "IRN",
       "group": "G",
-      "flag": "🇮🇷"
+      "flag": "",
+      "flagUrl": "assets/flags/irn.svg"
     },
     "away": {
       "id": 28,
       "name": "New Zealand",
       "code": "NZL",
       "group": "G",
-      "flag": "🇳🇿"
+      "flag": "",
+      "flagUrl": "assets/flags/nzl.svg"
     },
     "venue": "SoFi Stadium",
     "city": "Los Angeles",
@@ -495,14 +526,16 @@
       "name": "France",
       "code": "FRA",
       "group": "I",
-      "flag": "🇫🇷"
+      "flag": "",
+      "flagUrl": "assets/flags/fra.svg"
     },
     "away": {
       "id": 34,
       "name": "Senegal",
       "code": "SEN",
       "group": "I",
-      "flag": "🇸🇳"
+      "flag": "",
+      "flagUrl": "assets/flags/sen.svg"
     },
     "venue": "MetLife Stadium",
     "city": "New York/New Jersey",
@@ -525,14 +558,16 @@
       "name": "Iraq",
       "code": "IRQ",
       "group": "I",
-      "flag": "🇮🇶"
+      "flag": "",
+      "flagUrl": "assets/flags/irq.svg"
     },
     "away": {
       "id": 36,
       "name": "Norway",
       "code": "NOR",
       "group": "I",
-      "flag": "🇳🇴"
+      "flag": "",
+      "flagUrl": "assets/flags/nor.svg"
     },
     "venue": "Gillette Stadium",
     "city": "Boston",
@@ -555,14 +590,16 @@
       "name": "Argentina",
       "code": "ARG",
       "group": "J",
-      "flag": "🇦🇷"
+      "flag": "",
+      "flagUrl": "assets/flags/arg.svg"
     },
     "away": {
       "id": 38,
       "name": "Algeria",
       "code": "ALG",
       "group": "J",
-      "flag": "🇩🇿"
+      "flag": "",
+      "flagUrl": "assets/flags/alg.svg"
     },
     "venue": "Arrowhead Stadium",
     "city": "Kansas City",
@@ -585,14 +622,16 @@
       "name": "Austria",
       "code": "AUT",
       "group": "J",
-      "flag": "🇦🇹"
+      "flag": "",
+      "flagUrl": "assets/flags/aut.svg"
     },
     "away": {
       "id": 40,
       "name": "Jordan",
       "code": "JOR",
       "group": "J",
-      "flag": "🇯🇴"
+      "flag": "",
+      "flagUrl": "assets/flags/jor.svg"
     },
     "venue": "Levi's Stadium",
     "city": "San Francisco Bay Area",
@@ -615,14 +654,16 @@
       "name": "Portugal",
       "code": "POR",
       "group": "K",
-      "flag": "🇵🇹"
+      "flag": "",
+      "flagUrl": "assets/flags/por.svg"
     },
     "away": {
       "id": 42,
       "name": "Congo DR",
       "code": "COD",
       "group": "K",
-      "flag": "🇨🇩"
+      "flag": "",
+      "flagUrl": "assets/flags/cod.svg"
     },
     "venue": "NRG Stadium",
     "city": "Houston",
@@ -646,14 +687,15 @@
       "code": "ENG",
       "group": "L",
       "flag": "",
-      "flagUrl": "assets/flags/england.svg"
+      "flagUrl": "assets/flags/eng.svg"
     },
     "away": {
       "id": 46,
       "name": "Croatia",
       "code": "CRO",
       "group": "L",
-      "flag": "🇭🇷"
+      "flag": "",
+      "flagUrl": "assets/flags/cro.svg"
     },
     "venue": "AT&T Stadium",
     "city": "Dallas",
@@ -676,14 +718,16 @@
       "name": "Ghana",
       "code": "GHA",
       "group": "L",
-      "flag": "🇬🇭"
+      "flag": "",
+      "flagUrl": "assets/flags/gha.svg"
     },
     "away": {
       "id": 48,
       "name": "Panama",
       "code": "PAN",
       "group": "L",
-      "flag": "🇵🇦"
+      "flag": "",
+      "flagUrl": "assets/flags/pan.svg"
     },
     "venue": "BMO Field",
     "city": "Toronto",
@@ -706,14 +750,16 @@
       "name": "Uzbekistan",
       "code": "UZB",
       "group": "K",
-      "flag": "🇺🇿"
+      "flag": "",
+      "flagUrl": "assets/flags/uzb.svg"
     },
     "away": {
       "id": 44,
       "name": "Colombia",
       "code": "COL",
       "group": "K",
-      "flag": "🇨🇴"
+      "flag": "",
+      "flagUrl": "assets/flags/col.svg"
     },
     "venue": "Estadio Azteca",
     "city": "Mexico City",
@@ -736,14 +782,16 @@
       "name": "Czechia",
       "code": "CZE",
       "group": "A",
-      "flag": "🇨🇿"
+      "flag": "",
+      "flagUrl": "assets/flags/cze.svg"
     },
     "away": {
       "id": 2,
       "name": "South Africa",
       "code": "RSA",
       "group": "A",
-      "flag": "🇿🇦"
+      "flag": "",
+      "flagUrl": "assets/flags/rsa.svg"
     },
     "venue": "Mercedes-Benz Stadium",
     "city": "Atlanta",
@@ -766,14 +814,16 @@
       "name": "Switzerland",
       "code": "SUI",
       "group": "B",
-      "flag": "🇨🇭"
+      "flag": "",
+      "flagUrl": "assets/flags/sui.svg"
     },
     "away": {
       "id": 6,
       "name": "Bosnia & Herzegovina",
       "code": "BIH",
       "group": "B",
-      "flag": "🇧🇦"
+      "flag": "",
+      "flagUrl": "assets/flags/bih.svg"
     },
     "venue": "SoFi Stadium",
     "city": "Los Angeles",
@@ -796,14 +846,16 @@
       "name": "Canada",
       "code": "CAN",
       "group": "B",
-      "flag": "🇨🇦"
+      "flag": "",
+      "flagUrl": "assets/flags/can.svg"
     },
     "away": {
       "id": 7,
       "name": "Qatar",
       "code": "QAT",
       "group": "B",
-      "flag": "🇶🇦"
+      "flag": "",
+      "flagUrl": "assets/flags/qat.svg"
     },
     "venue": "BC Place",
     "city": "Vancouver",
@@ -826,14 +878,16 @@
       "name": "Mexico",
       "code": "MEX",
       "group": "A",
-      "flag": "🇲🇽"
+      "flag": "",
+      "flagUrl": "assets/flags/mex.svg"
     },
     "away": {
       "id": 3,
       "name": "South Korea",
       "code": "KOR",
       "group": "A",
-      "flag": "🇰🇷"
+      "flag": "",
+      "flagUrl": "assets/flags/kor.svg"
     },
     "venue": "Estadio Akron",
     "city": "Guadalajara",
@@ -856,14 +910,16 @@
       "name": "USA",
       "code": "USA",
       "group": "D",
-      "flag": "🇺🇸"
+      "flag": "",
+      "flagUrl": "assets/flags/usa.svg"
     },
     "away": {
       "id": 15,
       "name": "Australia",
       "code": "AUS",
       "group": "D",
-      "flag": "🇦🇺"
+      "flag": "",
+      "flagUrl": "assets/flags/aus.svg"
     },
     "venue": "Lumen Field",
     "city": "Seattle",
@@ -887,14 +943,15 @@
       "code": "SCO",
       "group": "C",
       "flag": "",
-      "flagUrl": "assets/flags/scotland.svg"
+      "flagUrl": "assets/flags/sco.svg"
     },
     "away": {
       "id": 10,
       "name": "Morocco",
       "code": "MAR",
       "group": "C",
-      "flag": "🇲🇦"
+      "flag": "",
+      "flagUrl": "assets/flags/mar.svg"
     },
     "venue": "Gillette Stadium",
     "city": "Boston",
@@ -917,14 +974,16 @@
       "name": "Brazil",
       "code": "BRA",
       "group": "C",
-      "flag": "🇧🇷"
+      "flag": "",
+      "flagUrl": "assets/flags/bra.svg"
     },
     "away": {
       "id": 11,
       "name": "Haiti",
       "code": "HAI",
       "group": "C",
-      "flag": "🇭🇹"
+      "flag": "",
+      "flagUrl": "assets/flags/hai.svg"
     },
     "venue": "Lincoln Financial Field",
     "city": "Philadelphia",
@@ -947,14 +1006,16 @@
       "name": "Türkiye",
       "code": "TUR",
       "group": "D",
-      "flag": "🇹🇷"
+      "flag": "",
+      "flagUrl": "assets/flags/tur.svg"
     },
     "away": {
       "id": 14,
       "name": "Paraguay",
       "code": "PAR",
       "group": "D",
-      "flag": "🇵🇾"
+      "flag": "",
+      "flagUrl": "assets/flags/par.svg"
     },
     "venue": "Levi's Stadium",
     "city": "San Francisco Bay Area",
@@ -977,14 +1038,16 @@
       "name": "Netherlands",
       "code": "NED",
       "group": "F",
-      "flag": "🇳🇱"
+      "flag": "",
+      "flagUrl": "assets/flags/ned.svg"
     },
     "away": {
       "id": 23,
       "name": "Sweden",
       "code": "SWE",
       "group": "F",
-      "flag": "🇸🇪"
+      "flag": "",
+      "flagUrl": "assets/flags/swe.svg"
     },
     "venue": "NRG Stadium",
     "city": "Houston",
@@ -1007,14 +1070,16 @@
       "name": "Germany",
       "code": "GER",
       "group": "E",
-      "flag": "🇩🇪"
+      "flag": "",
+      "flagUrl": "assets/flags/ger.svg"
     },
     "away": {
       "id": 19,
       "name": "Côte d'Ivoire",
       "code": "CIV",
       "group": "E",
-      "flag": "🇨🇮"
+      "flag": "",
+      "flagUrl": "assets/flags/civ.svg"
     },
     "venue": "BMO Field",
     "city": "Toronto",
@@ -1037,14 +1102,16 @@
       "name": "Ecuador",
       "code": "ECU",
       "group": "E",
-      "flag": "🇪🇨"
+      "flag": "",
+      "flagUrl": "assets/flags/ecu.svg"
     },
     "away": {
       "id": 18,
       "name": "Curaçao",
       "code": "CUR",
       "group": "E",
-      "flag": "🇨🇼"
+      "flag": "",
+      "flagUrl": "assets/flags/cur.svg"
     },
     "venue": "Arrowhead Stadium",
     "city": "Kansas City",
@@ -1067,14 +1134,16 @@
       "name": "Tunisia",
       "code": "TUN",
       "group": "F",
-      "flag": "🇹🇳"
+      "flag": "",
+      "flagUrl": "assets/flags/tun.svg"
     },
     "away": {
       "id": 22,
       "name": "Japan",
       "code": "JPN",
       "group": "F",
-      "flag": "🇯🇵"
+      "flag": "",
+      "flagUrl": "assets/flags/jpn.svg"
     },
     "venue": "Estadio BBVA",
     "city": "Monterrey",
@@ -1097,14 +1166,16 @@
       "name": "Spain",
       "code": "ESP",
       "group": "H",
-      "flag": "🇪🇸"
+      "flag": "",
+      "flagUrl": "assets/flags/esp.svg"
     },
     "away": {
       "id": 31,
       "name": "Saudi Arabia",
       "code": "KSA",
       "group": "H",
-      "flag": "🇸🇦"
+      "flag": "",
+      "flagUrl": "assets/flags/ksa.svg"
     },
     "venue": "Mercedes-Benz Stadium",
     "city": "Atlanta",
@@ -1127,14 +1198,16 @@
       "name": "Belgium",
       "code": "BEL",
       "group": "G",
-      "flag": "🇧🇪"
+      "flag": "",
+      "flagUrl": "assets/flags/bel.svg"
     },
     "away": {
       "id": 27,
       "name": "IR Iran",
       "code": "IRN",
       "group": "G",
-      "flag": "🇮🇷"
+      "flag": "",
+      "flagUrl": "assets/flags/irn.svg"
     },
     "venue": "SoFi Stadium",
     "city": "Los Angeles",
@@ -1157,14 +1230,16 @@
       "name": "Uruguay",
       "code": "URU",
       "group": "H",
-      "flag": "🇺🇾"
+      "flag": "",
+      "flagUrl": "assets/flags/uru.svg"
     },
     "away": {
       "id": 30,
       "name": "Cabo Verde",
       "code": "CPV",
       "group": "H",
-      "flag": "🇨🇻"
+      "flag": "",
+      "flagUrl": "assets/flags/cpv.svg"
     },
     "venue": "Hard Rock Stadium",
     "city": "Miami",
@@ -1187,14 +1262,16 @@
       "name": "New Zealand",
       "code": "NZL",
       "group": "G",
-      "flag": "🇳🇿"
+      "flag": "",
+      "flagUrl": "assets/flags/nzl.svg"
     },
     "away": {
       "id": 26,
       "name": "Egypt",
       "code": "EGY",
       "group": "G",
-      "flag": "🇪🇬"
+      "flag": "",
+      "flagUrl": "assets/flags/egy.svg"
     },
     "venue": "BC Place",
     "city": "Vancouver",
@@ -1217,14 +1294,16 @@
       "name": "Argentina",
       "code": "ARG",
       "group": "J",
-      "flag": "🇦🇷"
+      "flag": "",
+      "flagUrl": "assets/flags/arg.svg"
     },
     "away": {
       "id": 39,
       "name": "Austria",
       "code": "AUT",
       "group": "J",
-      "flag": "🇦🇹"
+      "flag": "",
+      "flagUrl": "assets/flags/aut.svg"
     },
     "venue": "AT&T Stadium",
     "city": "Dallas",
@@ -1247,14 +1326,16 @@
       "name": "France",
       "code": "FRA",
       "group": "I",
-      "flag": "🇫🇷"
+      "flag": "",
+      "flagUrl": "assets/flags/fra.svg"
     },
     "away": {
       "id": 35,
       "name": "Iraq",
       "code": "IRQ",
       "group": "I",
-      "flag": "🇮🇶"
+      "flag": "",
+      "flagUrl": "assets/flags/irq.svg"
     },
     "venue": "Lincoln Financial Field",
     "city": "Philadelphia",
@@ -1277,14 +1358,16 @@
       "name": "Norway",
       "code": "NOR",
       "group": "I",
-      "flag": "🇳🇴"
+      "flag": "",
+      "flagUrl": "assets/flags/nor.svg"
     },
     "away": {
       "id": 34,
       "name": "Senegal",
       "code": "SEN",
       "group": "I",
-      "flag": "🇸🇳"
+      "flag": "",
+      "flagUrl": "assets/flags/sen.svg"
     },
     "venue": "MetLife Stadium",
     "city": "New York/New Jersey",
@@ -1307,14 +1390,16 @@
       "name": "Jordan",
       "code": "JOR",
       "group": "J",
-      "flag": "🇯🇴"
+      "flag": "",
+      "flagUrl": "assets/flags/jor.svg"
     },
     "away": {
       "id": 38,
       "name": "Algeria",
       "code": "ALG",
       "group": "J",
-      "flag": "🇩🇿"
+      "flag": "",
+      "flagUrl": "assets/flags/alg.svg"
     },
     "venue": "Levi's Stadium",
     "city": "San Francisco Bay Area",
@@ -1337,14 +1422,16 @@
       "name": "Portugal",
       "code": "POR",
       "group": "K",
-      "flag": "🇵🇹"
+      "flag": "",
+      "flagUrl": "assets/flags/por.svg"
     },
     "away": {
       "id": 43,
       "name": "Uzbekistan",
       "code": "UZB",
       "group": "K",
-      "flag": "🇺🇿"
+      "flag": "",
+      "flagUrl": "assets/flags/uzb.svg"
     },
     "venue": "NRG Stadium",
     "city": "Houston",
@@ -1368,14 +1455,15 @@
       "code": "ENG",
       "group": "L",
       "flag": "",
-      "flagUrl": "assets/flags/england.svg"
+      "flagUrl": "assets/flags/eng.svg"
     },
     "away": {
       "id": 47,
       "name": "Ghana",
       "code": "GHA",
       "group": "L",
-      "flag": "🇬🇭"
+      "flag": "",
+      "flagUrl": "assets/flags/gha.svg"
     },
     "venue": "Gillette Stadium",
     "city": "Boston",
@@ -1398,14 +1486,16 @@
       "name": "Panama",
       "code": "PAN",
       "group": "L",
-      "flag": "🇵🇦"
+      "flag": "",
+      "flagUrl": "assets/flags/pan.svg"
     },
     "away": {
       "id": 46,
       "name": "Croatia",
       "code": "CRO",
       "group": "L",
-      "flag": "🇭🇷"
+      "flag": "",
+      "flagUrl": "assets/flags/cro.svg"
     },
     "venue": "BMO Field",
     "city": "Toronto",
@@ -1428,14 +1518,16 @@
       "name": "Colombia",
       "code": "COL",
       "group": "K",
-      "flag": "🇨🇴"
+      "flag": "",
+      "flagUrl": "assets/flags/col.svg"
     },
     "away": {
       "id": 42,
       "name": "Congo DR",
       "code": "COD",
       "group": "K",
-      "flag": "🇨🇩"
+      "flag": "",
+      "flagUrl": "assets/flags/cod.svg"
     },
     "venue": "Estadio Akron",
     "city": "Guadalajara",
@@ -1458,14 +1550,16 @@
       "name": "Switzerland",
       "code": "SUI",
       "group": "B",
-      "flag": "🇨🇭"
+      "flag": "",
+      "flagUrl": "assets/flags/sui.svg"
     },
     "away": {
       "id": 5,
       "name": "Canada",
       "code": "CAN",
       "group": "B",
-      "flag": "🇨🇦"
+      "flag": "",
+      "flagUrl": "assets/flags/can.svg"
     },
     "venue": "BC Place",
     "city": "Vancouver",
@@ -1488,14 +1582,16 @@
       "name": "Bosnia & Herzegovina",
       "code": "BIH",
       "group": "B",
-      "flag": "🇧🇦"
+      "flag": "",
+      "flagUrl": "assets/flags/bih.svg"
     },
     "away": {
       "id": 7,
       "name": "Qatar",
       "code": "QAT",
       "group": "B",
-      "flag": "🇶🇦"
+      "flag": "",
+      "flagUrl": "assets/flags/qat.svg"
     },
     "venue": "Lumen Field",
     "city": "Seattle",
@@ -1519,14 +1615,15 @@
       "code": "SCO",
       "group": "C",
       "flag": "",
-      "flagUrl": "assets/flags/scotland.svg"
+      "flagUrl": "assets/flags/sco.svg"
     },
     "away": {
       "id": 9,
       "name": "Brazil",
       "code": "BRA",
       "group": "C",
-      "flag": "🇧🇷"
+      "flag": "",
+      "flagUrl": "assets/flags/bra.svg"
     },
     "venue": "Hard Rock Stadium",
     "city": "Miami",
@@ -1549,14 +1646,16 @@
       "name": "Morocco",
       "code": "MAR",
       "group": "C",
-      "flag": "🇲🇦"
+      "flag": "",
+      "flagUrl": "assets/flags/mar.svg"
     },
     "away": {
       "id": 11,
       "name": "Haiti",
       "code": "HAI",
       "group": "C",
-      "flag": "🇭🇹"
+      "flag": "",
+      "flagUrl": "assets/flags/hai.svg"
     },
     "venue": "Mercedes-Benz Stadium",
     "city": "Atlanta",
@@ -1579,14 +1678,16 @@
       "name": "Czechia",
       "code": "CZE",
       "group": "A",
-      "flag": "🇨🇿"
+      "flag": "",
+      "flagUrl": "assets/flags/cze.svg"
     },
     "away": {
       "id": 1,
       "name": "Mexico",
       "code": "MEX",
       "group": "A",
-      "flag": "🇲🇽"
+      "flag": "",
+      "flagUrl": "assets/flags/mex.svg"
     },
     "venue": "Estadio Azteca",
     "city": "Mexico City",
@@ -1609,14 +1710,16 @@
       "name": "South Africa",
       "code": "RSA",
       "group": "A",
-      "flag": "🇿🇦"
+      "flag": "",
+      "flagUrl": "assets/flags/rsa.svg"
     },
     "away": {
       "id": 3,
       "name": "South Korea",
       "code": "KOR",
       "group": "A",
-      "flag": "🇰🇷"
+      "flag": "",
+      "flagUrl": "assets/flags/kor.svg"
     },
     "venue": "Estadio BBVA",
     "city": "Monterrey",
@@ -1639,14 +1742,16 @@
       "name": "Curaçao",
       "code": "CUR",
       "group": "E",
-      "flag": "🇨🇼"
+      "flag": "",
+      "flagUrl": "assets/flags/cur.svg"
     },
     "away": {
       "id": 19,
       "name": "Côte d'Ivoire",
       "code": "CIV",
       "group": "E",
-      "flag": "🇨🇮"
+      "flag": "",
+      "flagUrl": "assets/flags/civ.svg"
     },
     "venue": "Lincoln Financial Field",
     "city": "Philadelphia",
@@ -1669,14 +1774,16 @@
       "name": "Ecuador",
       "code": "ECU",
       "group": "E",
-      "flag": "🇪🇨"
+      "flag": "",
+      "flagUrl": "assets/flags/ecu.svg"
     },
     "away": {
       "id": 17,
       "name": "Germany",
       "code": "GER",
       "group": "E",
-      "flag": "🇩🇪"
+      "flag": "",
+      "flagUrl": "assets/flags/ger.svg"
     },
     "venue": "MetLife Stadium",
     "city": "New York/New Jersey",
@@ -1699,14 +1806,16 @@
       "name": "Japan",
       "code": "JPN",
       "group": "F",
-      "flag": "🇯🇵"
+      "flag": "",
+      "flagUrl": "assets/flags/jpn.svg"
     },
     "away": {
       "id": 23,
       "name": "Sweden",
       "code": "SWE",
       "group": "F",
-      "flag": "🇸🇪"
+      "flag": "",
+      "flagUrl": "assets/flags/swe.svg"
     },
     "venue": "AT&T Stadium",
     "city": "Dallas",
@@ -1729,14 +1838,16 @@
       "name": "Tunisia",
       "code": "TUN",
       "group": "F",
-      "flag": "🇹🇳"
+      "flag": "",
+      "flagUrl": "assets/flags/tun.svg"
     },
     "away": {
       "id": 21,
       "name": "Netherlands",
       "code": "NED",
       "group": "F",
-      "flag": "🇳🇱"
+      "flag": "",
+      "flagUrl": "assets/flags/ned.svg"
     },
     "venue": "Arrowhead Stadium",
     "city": "Kansas City",
@@ -1759,14 +1870,16 @@
       "name": "Türkiye",
       "code": "TUR",
       "group": "D",
-      "flag": "🇹🇷"
+      "flag": "",
+      "flagUrl": "assets/flags/tur.svg"
     },
     "away": {
       "id": 13,
       "name": "USA",
       "code": "USA",
       "group": "D",
-      "flag": "🇺🇸"
+      "flag": "",
+      "flagUrl": "assets/flags/usa.svg"
     },
     "venue": "SoFi Stadium",
     "city": "Los Angeles",
@@ -1789,14 +1902,16 @@
       "name": "Paraguay",
       "code": "PAR",
       "group": "D",
-      "flag": "🇵🇾"
+      "flag": "",
+      "flagUrl": "assets/flags/par.svg"
     },
     "away": {
       "id": 15,
       "name": "Australia",
       "code": "AUS",
       "group": "D",
-      "flag": "🇦🇺"
+      "flag": "",
+      "flagUrl": "assets/flags/aus.svg"
     },
     "venue": "Levi's Stadium",
     "city": "San Francisco Bay Area",
@@ -1819,14 +1934,16 @@
       "name": "Norway",
       "code": "NOR",
       "group": "I",
-      "flag": "🇳🇴"
+      "flag": "",
+      "flagUrl": "assets/flags/nor.svg"
     },
     "away": {
       "id": 33,
       "name": "France",
       "code": "FRA",
       "group": "I",
-      "flag": "🇫🇷"
+      "flag": "",
+      "flagUrl": "assets/flags/fra.svg"
     },
     "venue": "Gillette Stadium",
     "city": "Boston",
@@ -1849,14 +1966,16 @@
       "name": "Senegal",
       "code": "SEN",
       "group": "I",
-      "flag": "🇸🇳"
+      "flag": "",
+      "flagUrl": "assets/flags/sen.svg"
     },
     "away": {
       "id": 35,
       "name": "Iraq",
       "code": "IRQ",
       "group": "I",
-      "flag": "🇮🇶"
+      "flag": "",
+      "flagUrl": "assets/flags/irq.svg"
     },
     "venue": "BMO Field",
     "city": "Toronto",
@@ -1879,14 +1998,16 @@
       "name": "Cabo Verde",
       "code": "CPV",
       "group": "H",
-      "flag": "🇨🇻"
+      "flag": "",
+      "flagUrl": "assets/flags/cpv.svg"
     },
     "away": {
       "id": 31,
       "name": "Saudi Arabia",
       "code": "KSA",
       "group": "H",
-      "flag": "🇸🇦"
+      "flag": "",
+      "flagUrl": "assets/flags/ksa.svg"
     },
     "venue": "NRG Stadium",
     "city": "Houston",
@@ -1909,14 +2030,16 @@
       "name": "Uruguay",
       "code": "URU",
       "group": "H",
-      "flag": "🇺🇾"
+      "flag": "",
+      "flagUrl": "assets/flags/uru.svg"
     },
     "away": {
       "id": 29,
       "name": "Spain",
       "code": "ESP",
       "group": "H",
-      "flag": "🇪🇸"
+      "flag": "",
+      "flagUrl": "assets/flags/esp.svg"
     },
     "venue": "Estadio Akron",
     "city": "Guadalajara",
@@ -1939,14 +2062,16 @@
       "name": "Egypt",
       "code": "EGY",
       "group": "G",
-      "flag": "🇪🇬"
+      "flag": "",
+      "flagUrl": "assets/flags/egy.svg"
     },
     "away": {
       "id": 27,
       "name": "IR Iran",
       "code": "IRN",
       "group": "G",
-      "flag": "🇮🇷"
+      "flag": "",
+      "flagUrl": "assets/flags/irn.svg"
     },
     "venue": "Lumen Field",
     "city": "Seattle",
@@ -1969,14 +2094,16 @@
       "name": "New Zealand",
       "code": "NZL",
       "group": "G",
-      "flag": "🇳🇿"
+      "flag": "",
+      "flagUrl": "assets/flags/nzl.svg"
     },
     "away": {
       "id": 25,
       "name": "Belgium",
       "code": "BEL",
       "group": "G",
-      "flag": "🇧🇪"
+      "flag": "",
+      "flagUrl": "assets/flags/bel.svg"
     },
     "venue": "BC Place",
     "city": "Vancouver",
@@ -1999,7 +2126,8 @@
       "name": "Panama",
       "code": "PAN",
       "group": "L",
-      "flag": "🇵🇦"
+      "flag": "",
+      "flagUrl": "assets/flags/pan.svg"
     },
     "away": {
       "id": 45,
@@ -2007,7 +2135,7 @@
       "code": "ENG",
       "group": "L",
       "flag": "",
-      "flagUrl": "assets/flags/england.svg"
+      "flagUrl": "assets/flags/eng.svg"
     },
     "venue": "MetLife Stadium",
     "city": "New York/New Jersey",
@@ -2030,14 +2158,16 @@
       "name": "Croatia",
       "code": "CRO",
       "group": "L",
-      "flag": "🇭🇷"
+      "flag": "",
+      "flagUrl": "assets/flags/cro.svg"
     },
     "away": {
       "id": 47,
       "name": "Ghana",
       "code": "GHA",
       "group": "L",
-      "flag": "🇬🇭"
+      "flag": "",
+      "flagUrl": "assets/flags/gha.svg"
     },
     "venue": "Lincoln Financial Field",
     "city": "Philadelphia",
@@ -2060,14 +2190,16 @@
       "name": "Colombia",
       "code": "COL",
       "group": "K",
-      "flag": "🇨🇴"
+      "flag": "",
+      "flagUrl": "assets/flags/col.svg"
     },
     "away": {
       "id": 41,
       "name": "Portugal",
       "code": "POR",
       "group": "K",
-      "flag": "🇵🇹"
+      "flag": "",
+      "flagUrl": "assets/flags/por.svg"
     },
     "venue": "Hard Rock Stadium",
     "city": "Miami",
@@ -2090,14 +2222,16 @@
       "name": "Congo DR",
       "code": "COD",
       "group": "K",
-      "flag": "🇨🇩"
+      "flag": "",
+      "flagUrl": "assets/flags/cod.svg"
     },
     "away": {
       "id": 43,
       "name": "Uzbekistan",
       "code": "UZB",
       "group": "K",
-      "flag": "🇺🇿"
+      "flag": "",
+      "flagUrl": "assets/flags/uzb.svg"
     },
     "venue": "Mercedes-Benz Stadium",
     "city": "Atlanta",
@@ -2120,14 +2254,16 @@
       "name": "Algeria",
       "code": "ALG",
       "group": "J",
-      "flag": "🇩🇿"
+      "flag": "",
+      "flagUrl": "assets/flags/alg.svg"
     },
     "away": {
       "id": 39,
       "name": "Austria",
       "code": "AUT",
       "group": "J",
-      "flag": "🇦🇹"
+      "flag": "",
+      "flagUrl": "assets/flags/aut.svg"
     },
     "venue": "Arrowhead Stadium",
     "city": "Kansas City",
@@ -2150,14 +2286,16 @@
       "name": "Jordan",
       "code": "JOR",
       "group": "J",
-      "flag": "🇯🇴"
+      "flag": "",
+      "flagUrl": "assets/flags/jor.svg"
     },
     "away": {
       "id": 37,
       "name": "Argentina",
       "code": "ARG",
       "group": "J",
-      "flag": "🇦🇷"
+      "flag": "",
+      "flagUrl": "assets/flags/arg.svg"
     },
     "venue": "AT&T Stadium",
     "city": "Dallas",
