@@ -58,3 +58,15 @@ window.QUINIELA_CONFIG = {
 ## Nota importante de seguridad
 
 Esta versión está pensada para una quiniela entre amigos/familia/equipo. Permite pronósticos públicos para mantener el flujo simple desde celular. Para una quiniela con dinero real o control estricto, conviene agregar login individual por participante.
+
+
+## Cambios v3
+- Horarios corregidos a Costa Rica (UTC-6), calculados desde el horario ET oficial de FIFA menos 2 horas.
+- Nueva vista **Grupos** con tabla de posiciones por grupo.
+- Reglas de clasificación: victoria 3 pts, empate 1 pt, derrota 0 pts; desempates principales por puntos, diferencia de goles, goles a favor y enfrentamientos directos.
+
+
+## Ajuste de banderas
+- Curaçao corregido a 🇨🇼.
+- England y Scotland usan banderas regionales Unicode.
+- Partidos de eliminación directa mantienen ⚪ porque aún no tienen equipos definidos.

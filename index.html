@@ -1,142 +1,15 @@
-<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Quiniela Mundialista 2026</title>
-  <link rel="stylesheet" href="assets/styles.css">
-  <script src="config.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-</head>
-<body>
-  <header class="hero">
-    <div class="heroTop">
-      <div>
-        <div class="kicker">FIFA World Cup 2026 · Quiniela</div>
-        <h1>Quiniela Mundialista</h1>
-        <p>Calendario, pronósticos, resultados reales y ranking para jugar desde el celular.</p>
-      </div>
-      <div class="heroBall">⚽</div>
-    </div>
-    <div class="status" id="modeStatus">Cargando...</div>
-  </header>
-
-  <nav class="tabs">
-    <button data-view="fixture" class="active">🏠 Calendario</button>
-    <button data-view="groupsView">📊 Grupos</button>
-    <button data-view="predictions">🎯 Mis pronósticos</button>
-    <button data-view="ranking">🏆 Ranking</button>
-    <button data-view="admin">⚙️ Admin</button>
-    <button data-view="export">⬇️ Exportar</button>
-  </nav>
-
-  <main>
-    <section id="fixture" class="view active">
-      <div class="sectionHead">
-        <div>
-          <h2>Calendario</h2>
-          <p class="note">Vista pública de partidos. Todos los horarios se muestran en hora de Costa Rica (UTC-6). Los marcadores aquí son resultados oficiales cargados por el administrador.</p>
-        </div>
-        <div class="legend">
-          <span><b class="dot pending"></b> Pendiente</span>
-          <span><b class="dot final"></b> Finalizado</span>
-        </div>
-      </div>
-      <h3 class="subhead">Fase de grupos</h3>
-      <div id="groups" class="grid"></div>
-      <h3 class="subhead">Eliminación directa</h3>
-      <div id="knockout" class="grid"></div>
-    </section>
-
-
-    <section id="groupsView" class="view">
-      <div class="sectionHead">
-        <div>
-          <h2>Posiciones de grupos</h2>
-          <p class="note">Clasificación calculada con resultados oficiales cargados por el administrador. Criterios: puntos, diferencia de goles, goles a favor y desempates directos entre equipos empatados.</p>
-        </div>
-      </div>
-      <div class="card ruleBox">
-        <strong>Reglas de tabla:</strong> victoria 3 pts, empate 1 pt, derrota 0 pts. Columnas: PJ, PG, PE, PP, GF, GC, DG y PTS.
-      </div>
-      <div id="groupStandings" class="standingsGrid"></div>
-    </section>
-
-    <section id="predictions" class="view">
-      <div class="sectionHead">
-        <div>
-          <h2>Mis pronósticos</h2>
-          <p class="note">Selecciona tu nombre, completa tus marcadores y guarda. Los pronósticos se calculan contra los resultados reales.</p>
-        </div>
-      </div>
-      <div class="card controlPanel">
-        <div class="controlBlock">
-          <label>Participante</label>
-          <select id="playerSelect"></select>
-        </div>
-        <div class="controlBlock grow">
-          <label>Nuevo participante</label>
-          <div class="inlineForm">
-            <input id="playerName" placeholder="Nombre del participante">
-            <button id="addPlayer">Agregar</button>
-          </div>
-        </div>
-        <button id="savePredictions" class="primaryAction">Guardar pronósticos</button>
-      </div>
-      <div id="predictionsList" class="matchList"></div>
-    </section>
-
-    <section id="ranking" class="view">
-      <div class="sectionHead">
-        <div>
-          <h2>Ranking</h2>
-          <p class="note">Puntuación: ganador/empate 1 punto, goles local 1, goles visitante 1, marcador exacto 1. Máximo 4 puntos por partido.</p>
-        </div>
-      </div>
-      <div id="rankingCards" class="statsGrid"></div>
-      <div id="rankingTable" class="tablewrap"></div>
-    </section>
-
-    <section id="admin" class="view">
-      <div class="sectionHead">
-        <div>
-          <h2>Admin</h2>
-          <p class="note">Usa esta sección para administrar participantes y cargar resultados oficiales.</p>
-        </div>
-      </div>
-      <div class="card controlPanel">
-        <div class="controlBlock">
-          <label>PIN administrador</label>
-          <input id="adminPin" type="password" placeholder="PIN administrador">
-        </div>
-        <button id="saveResults" class="primaryAction">Guardar resultados</button>
-      </div>
-
-      <h3 class="subhead">Participantes</h3>
-      <div id="playersList" class="list"></div>
-
-      <h3 class="subhead">Resultados oficiales</h3>
-      <div id="resultsList" class="matchList"></div>
-    </section>
-
-    <section id="export" class="view">
-      <div class="sectionHead">
-        <div>
-          <h2>Exportar / importar</h2>
-          <p class="note">Excel sirve para respaldo y revisión. JSON sirve para mover la quiniela entre computadoras si no se usa Supabase.</p>
-        </div>
-      </div>
-      <div class="card actions">
-        <button id="exportExcel">Generar Excel</button>
-        <button id="exportJson">Exportar JSON</button>
-        <label class="filebtn">Importar JSON<input type="file" id="importJson" accept="application/json"></label>
-      </div>
-    </section>
-  </main>
-
-  <footer>🏆 Quiniela Mundialista 2026 · Todos los horarios en Costa Rica (UTC-6)</footer>
-  <script src="assets/app.js"></script>
-</body>
-</html>
+<!DOCTYPE html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>Quiniela Mundialista 2026</title>
+<link rel='stylesheet' href='assets/styles.css'></head><body>
+<header class='hero'><h1>🏆 Quiniela Mundialista 2026</h1><p>Costa Rica Edition</p></header>
+<nav class='nav'>
+<button data-view='calendar'>🏠 Calendario</button>
+<button data-view='predictions'>🎯 Pronósticos</button>
+<button data-view='groups'>📊 Grupos</button>
+<button data-view='myworld'>🌎 Mi Mundial</button>
+<button data-view='ranking'>🏆 Ranking</button>
+<button data-view='dashboard'>📈 Dashboard</button>
+<button data-view='admin'>⚙️ Admin</button>
+</nav>
+<main id='view'></main>
+<script src='assets/app.js'></script></body></html>
