@@ -3,17 +3,6 @@ const sb = window.quinielaSupabase || null;
 let matches = [];
 let teams = [];
 let state = { participants: [], predictions: {}, results: {} };
-function normalizeState(){
-  state = state || {};
-  state.participants = Array.isArray(state.participants) ? state.participants : [];
-  state.predictions = state.predictions && typeof state.predictions === 'object' ? state.predictions : {};
-  state.results = state.results && typeof state.results === 'object' ? state.results : {};
-}
-function showViewError(id, err){
-  console.error(`[Quiniela] Error rendering ${id}:`, err);
-  const el = $(id);
-  if(el) el.innerHTML = `<div class="card empty error-card"><h2>Vista no disponible</h2><p class="muted">Hubo un problema cargando esta sección. Recarga la página. Si persiste, abre la consola para ver el detalle técnico.</p><pre>${esc(err?.message || err)}</pre></div>`;
-}
 let currentParticipant = '';
 
 const $ = id => document.getElementById(id);
@@ -35,11 +24,7 @@ const groupMatches = g => matches.filter(m => Number(m.stageId) === 1 && m.group
 const groupTeams = g => teams.filter(t => t.group === g).sort((a,b)=>a.name.localeCompare(b.name));
 
 function store(){ localStorage.setItem('quiniela2026_v5', JSON.stringify(state)); }
-function loadLocal(){
-  try { state = JSON.parse(localStorage.getItem('quiniela2026_v5') || JSON.stringify(state)); }
-  catch(e){ console.warn('[Quiniela] Estado local corrupto. Se reinicia.', e); state = {participants:[], predictions:{}, results:{}}; }
-  normalizeState();
-}
+function loadLocal(){ state = JSON.parse(localStorage.getItem('quiniela2026_v5') || JSON.stringify(state)); }
 
 function stageES(s){
   return ({'Group Stage':'Fase de grupos','Round of 32':'Dieciseisavos','Round of 16':'Octavos de final','Quarterfinals':'Cuartos de final','Semifinals':'Semifinales','Third Place Playoff':'Tercer lugar','Final':'Final'})[s] || s;
@@ -57,26 +42,16 @@ async function init(){
 }
 
 async function loadRemote(){
-  try {
-    const [p, pr, re] = await Promise.all([
-      sb.from('participants').select('*').order('created_at'),
-      sb.from('predictions').select('*'),
-      sb.from('results').select('*')
-    ]);
-    if(p.error) throw p.error;
-    if(pr.error) throw pr.error;
-    if(re.error) throw re.error;
-    state.participants = (p.data || []).map(x=>({id:x.id, name:x.name || x.display_name || 'Participante'}));
-    state.predictions = {};
-    (pr.data || []).forEach(x => state.predictions[key(x.participant_id, x.match_id)] = {h:x.home_goals, a:x.away_goals});
-    state.results = {};
-    (re.data || []).forEach(x => state.results[x.match_id] = {h:x.home_goals, a:x.away_goals});
-    normalizeState();
-  } catch(e) {
-    console.error('[Quiniela] Error cargando Supabase:', e);
-    normalizeState();
-    alert('No se pudieron cargar los datos de Supabase. Revisa la consola del navegador.');
-  }
+  const [p, pr, re] = await Promise.all([
+    sb.from('participants').select('*').order('created_at'),
+    sb.from('predictions').select('*'),
+    sb.from('results').select('*')
+  ]);
+  state.participants = (p.data || []).map(x=>({id:x.id, name:x.name}));
+  state.predictions = {};
+  (pr.data || []).forEach(x => state.predictions[key(x.participant_id, x.match_id)] = {h:x.home_goals, a:x.away_goals});
+  state.results = {};
+  (re.data || []).forEach(x => state.results[x.match_id] = {h:x.home_goals, a:x.away_goals});
 }
 
 function bindNav(){
@@ -89,7 +64,7 @@ function bindNav(){
 }
 
 function baseStanding(team){
-  return { code:team.code, name:team.name, flag:team.flag, flagUrl:team.flagUrl || '', group:team.group, pj:0, g:0, e:0, p:0, gf:0, gc:0, dg:0, pts:0, h2hPts:0, h2hDg:0, h2hGf:0 };
+  return { code:team.code, name:team.name, flag:team.flag, group:team.group, pj:0, g:0, e:0, p:0, gf:0, gc:0, dg:0, pts:0, h2hPts:0, h2hDg:0, h2hGf:0 };
 }
 function applyResult(row, gf, gc){
   row.pj++; row.gf += gf; row.gc += gc; row.dg = row.gf - row.gc;
@@ -158,7 +133,7 @@ function qualifierMap(){
 
 function cloneTeam(t, slot=''){
   if(!t) return {name:'Por definir', code:'TBD', flag:'⚪', group:'', slot};
-  return {name:t.name, code:t.code, flag:t.flag || '', flagUrl:t.flagUrl || '', group:t.group || t.sourceGroup || '', slot};
+  return {name:t.name, code:t.code, flag:t.flag, group:t.group || t.sourceGroup || '', slot};
 }
 function groupPositionMap(customResults=null){
   const out = {};
@@ -204,28 +179,43 @@ function round32Assignments(customResults=null){
   return slots;
 }
 function winnerOfMatch(matchId, customResults=null, memo={}){
-  if(memo[matchId]) return memo[matchId];
-  const m = matches.find(x=>Number(x.id)===Number(matchId));
-  if(!m) return cloneTeam(null, `W${matchId}`);
+  const id = Number(matchId);
+  if(memo[id]) return memo[id];
+  memo.__stack = memo.__stack || new Set();
+  if(memo.__stack.has(id)) return cloneTeam(null, `W${id}`);
+  memo.__stack.add(id);
+  const m = matches.find(x=>Number(x.id)===id || Number(x.matchNumber)===id);
+  if(!m){ memo.__stack.delete(id); return cloneTeam(null, `W${id}`); }
   const teams = resolvedTeamsForMatch(m, customResults, memo);
   const res = (customResults || state.results)[m.id];
+  let winner;
   if(hasScore(res)){
-    if(res.h > res.a) return memo[matchId] = {...teams.home, slot:`W${m.matchNumber}`};
-    if(res.a > res.h) return memo[matchId] = {...teams.away, slot:`W${m.matchNumber}`};
-    return memo[matchId] = cloneTeam(null, `W${m.matchNumber}`);
+    if(res.h > res.a) winner = {...teams.home, slot:`W${m.matchNumber}`};
+    else if(res.a > res.h) winner = {...teams.away, slot:`W${m.matchNumber}`};
+    else winner = cloneTeam(null, `W${m.matchNumber}`);
+  } else {
+    winner = cloneTeam(null, `W${m.matchNumber}`);
   }
-  return memo[matchId] = cloneTeam(null, `W${m.matchNumber}`);
+  memo.__stack.delete(id);
+  memo[id] = winner;
+  return winner;
 }
 function loserOfMatch(matchId, customResults=null, memo={}){
-  const m = matches.find(x=>Number(x.id)===Number(matchId));
-  if(!m) return cloneTeam(null, `RU${matchId}`);
+  const id = Number(matchId);
+  memo.__stack = memo.__stack || new Set();
+  if(memo.__stack.has(id)) return cloneTeam(null, `RU${id}`);
+  memo.__stack.add(id);
+  const m = matches.find(x=>Number(x.id)===id || Number(x.matchNumber)===id);
+  if(!m){ memo.__stack.delete(id); return cloneTeam(null, `RU${id}`); }
   const teams = resolvedTeamsForMatch(m, customResults, memo);
   const res = (customResults || state.results)[m.id];
+  let loser = cloneTeam(null, `RU${m.matchNumber}`);
   if(hasScore(res)){
-    if(res.h > res.a) return {...teams.away, slot:`RU${m.matchNumber}`};
-    if(res.a > res.h) return {...teams.home, slot:`RU${m.matchNumber}`};
+    if(res.h > res.a) loser = {...teams.away, slot:`RU${m.matchNumber}`};
+    else if(res.a > res.h) loser = {...teams.home, slot:`RU${m.matchNumber}`};
   }
-  return cloneTeam(null, `RU${m.matchNumber}`);
+  memo.__stack.delete(id);
+  return loser;
 }
 function resolvedTeamsForMatch(m, customResults=null, memo={}){
   if(Number(m.stageId) === 1) return {home: cloneTeam(m.home), away: cloneTeam(m.away)};
@@ -299,7 +289,7 @@ function rankingRows(){
 }
 
 function stat(label,value,sub=''){
-  return `<div class="stat-card broadcast-stat"><span>${label}</span><strong>${value}</strong>${sub ? `<small>${sub}</small>`:''}</div>`;
+  return `<div class="stat-card"><span>${label}</span><strong>${value}</strong>${sub ? `<small>${sub}</small>`:''}</div>`;
 }
 function renderHero(){
   const finished = Object.values(state.results).filter(hasScore).length;
@@ -575,22 +565,7 @@ function exportExcel(){
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(matches.map(m=>({No:m.matchNumber, Fase:stageES(m.stage), Grupo:m.group, Fecha:m.dateCR, HoraCR:m.timeCR, Local:m.home.name, Visitante:m.away.name, RealLocal:state.results[m.id]?.h ?? '', RealVisitante:state.results[m.id]?.a ?? ''}))), 'Partidos');
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(groupLetters().flatMap(g=>standingsForGroup(g).map((r,i)=>({Grupo:g, Pos:i+1, Equipo:r.name, PJ:r.pj, G:r.g, E:r.e, P:r.p, GF:r.gf, GC:r.gc, DG:r.dg, PTS:r.pts})))), 'Grupos');
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rankingRows()), 'Ranking');
-  XLSX.writeFile(wb, 'quiniela_mundial_2026_v55.xlsx');
+  XLSX.writeFile(wb, 'quiniela_mundial_2026_v54.xlsx');
 }
-function renderSafe(id, fn){
-  try { fn(); } catch(e) { showViewError(id, e); }
-}
-function renderAll(){
-  normalizeState();
-  renderSafe('heroStats', renderHero);
-  renderSafe('dashboard', renderDashboard);
-  renderSafe('calendar', renderCalendar);
-  renderSafe('groups', renderGroups);
-  renderSafe('knockout', renderKnockout);
-  renderSafe('predictions', renderPredictions);
-  renderSafe('myworld', renderMyWorld);
-  renderSafe('ranking', renderRanking);
-  renderSafe('admin', renderAdmin);
-}
-if(window.addEventListener) window.addEventListener('error', e => console.error('[Quiniela] Error global:', e.error || e.message));
-init().catch(e => { console.error('[Quiniela] Error inicializando:', e); alert('Error inicializando la quiniela. Revisa la consola.'); });
+function renderAll(){ renderHero(); renderDashboard(); renderCalendar(); renderGroups(); renderKnockout(); renderPredictions(); renderMyWorld(); renderRanking(); renderAdmin(); }
+init();
