@@ -3,6 +3,17 @@ const sb = window.quinielaSupabase || null;
 let matches = [];
 let teams = [];
 let state = { participants: [], predictions: {}, results: {} };
+function normalizeState(){
+  state = state || {};
+  state.participants = Array.isArray(state.participants) ? state.participants : [];
+  state.predictions = state.predictions && typeof state.predictions === 'object' ? state.predictions : {};
+  state.results = state.results && typeof state.results === 'object' ? state.results : {};
+}
+function showViewError(id, err){
+  console.error(`[Quiniela] Error rendering ${id}:`, err);
+  const el = $(id);
+  if(el) el.innerHTML = `<div class="card empty error-card"><h2>Vista no disponible</h2><p class="muted">Hubo un problema cargando esta sección. Recarga la página. Si persiste, abre la consola para ver el detalle técnico.</p><pre>${esc(err?.message || err)}</pre></div>`;
+}
 let currentParticipant = '';
 
 const $ = id => document.getElementById(id);
@@ -24,7 +35,11 @@ const groupMatches = g => matches.filter(m => Number(m.stageId) === 1 && m.group
 const groupTeams = g => teams.filter(t => t.group === g).sort((a,b)=>a.name.localeCompare(b.name));
 
 function store(){ localStorage.setItem('quiniela2026_v5', JSON.stringify(state)); }
-function loadLocal(){ state = JSON.parse(localStorage.getItem('quiniela2026_v5') || JSON.stringify(state)); }
+function loadLocal(){
+  try { state = JSON.parse(localStorage.getItem('quiniela2026_v5') || JSON.stringify(state)); }
+  catch(e){ console.warn('[Quiniela] Estado local corrupto. Se reinicia.', e); state = {participants:[], predictions:{}, results:{}}; }
+  normalizeState();
+}
 
 function stageES(s){
   return ({'Group Stage':'Fase de grupos','Round of 32':'Dieciseisavos','Round of 16':'Octavos de final','Quarterfinals':'Cuartos de final','Semifinals':'Semifinales','Third Place Playoff':'Tercer lugar','Final':'Final'})[s] || s;
@@ -42,16 +57,26 @@ async function init(){
 }
 
 async function loadRemote(){
-  const [p, pr, re] = await Promise.all([
-    sb.from('participants').select('*').order('created_at'),
-    sb.from('predictions').select('*'),
-    sb.from('results').select('*')
-  ]);
-  state.participants = (p.data || []).map(x=>({id:x.id, name:x.name}));
-  state.predictions = {};
-  (pr.data || []).forEach(x => state.predictions[key(x.participant_id, x.match_id)] = {h:x.home_goals, a:x.away_goals});
-  state.results = {};
-  (re.data || []).forEach(x => state.results[x.match_id] = {h:x.home_goals, a:x.away_goals});
+  try {
+    const [p, pr, re] = await Promise.all([
+      sb.from('participants').select('*').order('created_at'),
+      sb.from('predictions').select('*'),
+      sb.from('results').select('*')
+    ]);
+    if(p.error) throw p.error;
+    if(pr.error) throw pr.error;
+    if(re.error) throw re.error;
+    state.participants = (p.data || []).map(x=>({id:x.id, name:x.name || x.display_name || 'Participante'}));
+    state.predictions = {};
+    (pr.data || []).forEach(x => state.predictions[key(x.participant_id, x.match_id)] = {h:x.home_goals, a:x.away_goals});
+    state.results = {};
+    (re.data || []).forEach(x => state.results[x.match_id] = {h:x.home_goals, a:x.away_goals});
+    normalizeState();
+  } catch(e) {
+    console.error('[Quiniela] Error cargando Supabase:', e);
+    normalizeState();
+    alert('No se pudieron cargar los datos de Supabase. Revisa la consola del navegador.');
+  }
 }
 
 function bindNav(){
@@ -552,5 +577,20 @@ function exportExcel(){
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rankingRows()), 'Ranking');
   XLSX.writeFile(wb, 'quiniela_mundial_2026_v55.xlsx');
 }
-function renderAll(){ renderHero(); renderDashboard(); renderCalendar(); renderGroups(); renderKnockout(); renderPredictions(); renderMyWorld(); renderRanking(); renderAdmin(); }
-init();
+function renderSafe(id, fn){
+  try { fn(); } catch(e) { showViewError(id, e); }
+}
+function renderAll(){
+  normalizeState();
+  renderSafe('heroStats', renderHero);
+  renderSafe('dashboard', renderDashboard);
+  renderSafe('calendar', renderCalendar);
+  renderSafe('groups', renderGroups);
+  renderSafe('knockout', renderKnockout);
+  renderSafe('predictions', renderPredictions);
+  renderSafe('myworld', renderMyWorld);
+  renderSafe('ranking', renderRanking);
+  renderSafe('admin', renderAdmin);
+}
+if(window.addEventListener) window.addEventListener('error', e => console.error('[Quiniela] Error global:', e.error || e.message));
+init().catch(e => { console.error('[Quiniela] Error inicializando:', e); alert('Error inicializando la quiniela. Revisa la consola.'); });
