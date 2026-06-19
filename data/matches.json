@@ -2980,7 +2980,7 @@
     "matchNumber": 100,
     "stageId": 4,
     "stage": "Quarterfinals",
-    "label": "W95 vs W100",
+    "label": "W95 vs W96",
     "group": "",
     "kickoffISO": "2026-07-11T19:00:00-06:00",
     "dateCR": "11/07/2026",
@@ -3003,7 +3003,8 @@
     "city": "Kansas City",
     "country": "USA",
     "timezone": "CR",
-    "timeNote": "Hora Costa Rica"
+    "timeNote": "Hora Costa Rica",
+    "fixNote": "Corrected self-reference in bracket path; match 100 must receive winners of 95 and 96."
   },
   {
     "id": 101,
