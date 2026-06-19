@@ -261,7 +261,7 @@
       "name": "Curaçao",
       "code": "CUR",
       "group": "E",
-      "flag": "🏳️"
+      "flag": "🇨🇼"
     },
     "venue": "NRG Stadium",
     "city": "Houston",
@@ -1041,7 +1041,7 @@
       "name": "Curaçao",
       "code": "CUR",
       "group": "E",
-      "flag": "🏳️"
+      "flag": "🇨🇼"
     },
     "venue": "Arrowhead Stadium",
     "city": "Kansas City",
@@ -1634,7 +1634,7 @@
       "name": "Curaçao",
       "code": "CUR",
       "group": "E",
-      "flag": "🏳️"
+      "flag": "🇨🇼"
     },
     "away": {
       "id": 19,
@@ -2174,14 +2174,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "SoFi Stadium",
     "city": "Los Angeles",
@@ -2204,14 +2204,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "NRG Stadium",
     "city": "Houston",
@@ -2234,14 +2234,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "Gillette Stadium",
     "city": "Boston",
@@ -2264,14 +2264,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "Estadio BBVA",
     "city": "Monterrey",
@@ -2294,14 +2294,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "AT&T Stadium",
     "city": "Dallas",
@@ -2324,14 +2324,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "MetLife Stadium",
     "city": "New York/New Jersey",
@@ -2354,14 +2354,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "Estadio Azteca",
     "city": "Mexico City",
@@ -2384,14 +2384,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "Mercedes-Benz Stadium",
     "city": "Atlanta",
@@ -2414,14 +2414,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "Lumen Field",
     "city": "Seattle",
@@ -2444,14 +2444,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "Levi's Stadium",
     "city": "San Francisco Bay Area",
@@ -2474,14 +2474,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "SoFi Stadium",
     "city": "Los Angeles",
@@ -2504,14 +2504,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "BMO Field",
     "city": "Toronto",
@@ -2534,14 +2534,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "BC Place",
     "city": "Vancouver",
@@ -2564,14 +2564,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "AT&T Stadium",
     "city": "Dallas",
@@ -2594,14 +2594,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "Hard Rock Stadium",
     "city": "Miami",
@@ -2624,14 +2624,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "Arrowhead Stadium",
     "city": "Kansas City",
@@ -2654,14 +2654,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "NRG Stadium",
     "city": "Houston",
@@ -2684,14 +2684,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "Lincoln Financial Field",
     "city": "Philadelphia",
@@ -2714,14 +2714,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "MetLife Stadium",
     "city": "New York/New Jersey",
@@ -2744,14 +2744,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "Estadio Azteca",
     "city": "Mexico City",
@@ -2774,14 +2774,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "AT&T Stadium",
     "city": "Dallas",
@@ -2804,14 +2804,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "Lumen Field",
     "city": "Seattle",
@@ -2834,14 +2834,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "Mercedes-Benz Stadium",
     "city": "Atlanta",
@@ -2864,14 +2864,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "BC Place",
     "city": "Vancouver",
@@ -2894,14 +2894,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "Gillette Stadium",
     "city": "Boston",
@@ -2924,14 +2924,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "SoFi Stadium",
     "city": "Los Angeles",
@@ -2954,14 +2954,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "Hard Rock Stadium",
     "city": "Miami",
@@ -2984,14 +2984,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "Arrowhead Stadium",
     "city": "Kansas City",
@@ -3014,14 +3014,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "AT&T Stadium",
     "city": "Dallas",
@@ -3044,14 +3044,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "Mercedes-Benz Stadium",
     "city": "Atlanta",
@@ -3074,14 +3074,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "Hard Rock Stadium",
     "city": "Miami",
@@ -3104,14 +3104,14 @@
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "away": {
       "id": null,
       "name": "Por definir",
       "code": "TBD",
       "group": "",
-      "flag": "🏳️"
+      "flag": "⚪"
     },
     "venue": "MetLife Stadium",
     "city": "New York/New Jersey",
