@@ -30,14 +30,6 @@ function stageES(s){
   return ({'Group Stage':'Fase de grupos','Round of 32':'Dieciseisavos','Round of 16':'Octavos de final','Quarterfinals':'Cuartos de final','Semifinals':'Semifinales','Third Place Playoff':'Tercer lugar','Final':'Final'})[s] || s;
 }
 
-function toast(msg, type='ok', duration=3200){
-  const t = document.createElement('div');
-  t.className = 'toast toast-' + type;
-  t.textContent = msg;
-  document.body.appendChild(t);
-  requestAnimationFrame(() => t.classList.add('toast-in'));
-  setTimeout(() => { t.classList.remove('toast-in'); setTimeout(() => t.remove(), 400); }, duration);
-}
 async function init(){
   matches = await fetch('data/matches.json').then(r=>r.json());
   teams = await fetch('data/teams.json').then(r=>r.json());
@@ -62,25 +54,23 @@ async function loadRemote(){
   (re.data || []).forEach(x => state.results[x.match_id] = {h:x.home_goals, a:x.away_goals});
 }
 
-function renderView(viewId){
-  renderHero();
-  if(viewId==='dashboard')    renderDashboard();
-  else if(viewId==='calendar')     renderCalendar();
-  else if(viewId==='predictions')  renderPredictions();
-  else if(viewId==='groups')       renderGroups();
-  else if(viewId==='knockout')     renderKnockout();
-  else if(viewId==='myworld')      renderMyWorld();
-  else if(viewId==='ranking')      renderRanking();
-  else if(viewId==='admin')        renderAdmin();
-}
 function bindNav(){
-  qsa('.nav button').forEach(btn => btn.onclick = () => {
-    qsa('.nav button,.view').forEach(x=>x.classList.remove('active'));
+  qsa('.nav button[data-view]').forEach(btn => btn.onclick = () => {
+    qsa('.nav button[data-view],.view').forEach(x=>x.classList.remove('active'));
     btn.classList.add('active');
-    const viewId = btn.dataset.view;
-    $(viewId).classList.add('active');
-    renderView(viewId);
+    currentView = btn.dataset.view;
+    $(currentView).classList.add('active');
+    updateTopSaveButton();
+    renderAll();
   });
+  const topSave = $('topSavePredictions');
+  if(topSave){ topSave.onclick = () => savePredictions(); }
+  updateTopSaveButton();
+}
+function updateTopSaveButton(){
+  const topSave = $('topSavePredictions');
+  if(!topSave) return;
+  topSave.style.display = currentView === 'predictions' ? 'inline-flex' : 'none';
 }
 
 function baseStanding(team){
@@ -206,12 +196,12 @@ function winnerOfMatch(matchId, customResults=null, memo={}){
   memo.__stack.add(id);
   const m = matches.find(x=>Number(x.id)===id || Number(x.matchNumber)===id);
   if(!m){ memo.__stack.delete(id); return cloneTeam(null, `W${id}`); }
-  const resolvedTeams = resolvedTeamsForMatch(m, customResults, memo);
+  const teams = resolvedTeamsForMatch(m, customResults, memo);
   const res = (customResults || state.results)[m.id];
   let winner;
   if(hasScore(res)){
-    if(res.h > res.a) winner = {...resolvedTeams.home, slot:`W${m.matchNumber}`};
-    else if(res.a > res.h) winner = {...resolvedTeams.away, slot:`W${m.matchNumber}`};
+    if(res.h > res.a) winner = {...teams.home, slot:`W${m.matchNumber}`};
+    else if(res.a > res.h) winner = {...teams.away, slot:`W${m.matchNumber}`};
     else winner = cloneTeam(null, `W${m.matchNumber}`);
   } else {
     winner = cloneTeam(null, `W${m.matchNumber}`);
@@ -227,12 +217,12 @@ function loserOfMatch(matchId, customResults=null, memo={}){
   memo.__stack.add(id);
   const m = matches.find(x=>Number(x.id)===id || Number(x.matchNumber)===id);
   if(!m){ memo.__stack.delete(id); return cloneTeam(null, `RU${id}`); }
-  const resolvedTeams = resolvedTeamsForMatch(m, customResults, memo);
+  const teams = resolvedTeamsForMatch(m, customResults, memo);
   const res = (customResults || state.results)[m.id];
   let loser = cloneTeam(null, `RU${m.matchNumber}`);
   if(hasScore(res)){
-    if(res.h > res.a) loser = {...resolvedTeams.away, slot:`RU${m.matchNumber}`};
-    else if(res.a > res.h) loser = {...resolvedTeams.home, slot:`RU${m.matchNumber}`};
+    if(res.h > res.a) loser = {...teams.away, slot:`RU${m.matchNumber}`};
+    else if(res.a > res.h) loser = {...teams.home, slot:`RU${m.matchNumber}`};
   }
   memo.__stack.delete(id);
   return loser;
@@ -400,25 +390,9 @@ function matchCard(m){
 }
 function renderCalendar(){
   const groups = groupLetters();
-  const koStages = [
-    {id:2, label:'Dieciseisavos de final'},
-    {id:3, label:'Octavos de final'},
-    {id:4, label:'Cuartos de final'},
-    {id:5, label:'Semifinales'},
-    {id:6, label:'Tercer lugar'},
-    {id:7, label:'Final'},
-  ];
-  const koCards = koStages.map(s => {
-    const ms = matches.filter(m=>Number(m.stageId)===s.id).sort((a,b)=>a.matchNumber-b.matchNumber);
-    if(!ms.length) return '';
-    return `<div class="card"><div class="group-title"><h3>${s.label}</h3><span>${ms.length} partido${ms.length>1?'s':''}</span></div><div class="match-grid">${ms.map(matchCard).join('')}</div></div>`;
-  }).join('');
   $('calendar').innerHTML = `
-    <div class="section-head"><div><p class="eyebrow">Todos los horarios en Costa Rica</p><h2>Calendario completo</h2></div><span class="status-chip">${matches.length} partidos</span></div>
-    <div class="section-head" style="margin-top:24px"><div><p class="eyebrow">72 partidos · 12 grupos</p><h2 style="font-size:1.4rem">Fase de grupos</h2></div></div>
-    ${groups.map(g=>`<div class="card"><div class="group-title"><h3>Grupo ${g}</h3><span>${groupMatches(g).length} partidos</span></div><div class="match-grid">${groupMatches(g).map(matchCard).join('')}</div></div>`).join('')}
-    <div class="section-head" style="margin-top:24px"><div><p class="eyebrow">32 partidos · eliminación directa</p><h2 style="font-size:1.4rem">Fase eliminatoria</h2></div></div>
-    ${koCards}`;
+    <div class="section-head"><div><p class="eyebrow">Todos los horarios en Costa Rica</p><h2>Calendario</h2></div></div>
+    ${groups.map(g=>`<div class="card"><div class="group-title"><h3>Grupo ${g}</h3><span>${groupMatches(g).length} partidos</span></div><div class="match-grid">${groupMatches(g).map(matchCard).join('')}</div></div>`).join('')}`;
 }
 function statusBadge(type){
   if(type === 'direct') return `<span class="badge direct">Clasifica</span>`;
@@ -468,16 +442,26 @@ function renderKnockout(){
     ${renderBracket()}`;
 }
 function participantOptions(id='participantSelect'){
-  return `<select id="${id}">${state.participants.map(p=>`<option value="${p.id}" ${p.id===currentParticipant?'selected':''}>${esc(p.name)}</option>`).join('')}</select>`;
+  return `<div class="player-picker"><span>Jugador</span><select id="${id}">${state.participants.map(p=>`<option value="${p.id}" ${p.id===currentParticipant?'selected':''}>${esc(p.name)}</option>`).join('')}</select></div>`;
+}
+function predictionPointsBadge(m){
+  const pred = state.predictions[key(currentParticipant,m.id)];
+  const res = state.results[m.id];
+  const s = scoreBreakdown(pred,res);
+  const detail = hasScore(res) ? `${s.total}/4 pts · G:${s.winner} Local:${s.home} Visita:${s.away} Exacto:${s.exact}` : 'Pendiente de resultado oficial';
+  const cls = !hasScore(res) ? 'pending' : (s.total >= 4 ? 'perfect' : (s.total > 0 ? 'scored' : 'zero'));
+  return `<div class="points-panel ${cls}"><span>Puntos</span><b>${hasScore(res) ? s.total : '—'}</b><small>${detail}</small></div>`;
 }
 function inputMatchRow(m,type){
   const pid = currentParticipant;
   const v = type === 'real' ? state.results[m.id] || {} : state.predictions[key(pid,m.id)] || {};
-  return `<article class="input-row">
-    <div><b>#${m.matchNumber}</b><small>${m.dateCR} · ${m.timeCR} CR</small></div>
+  const points = type === 'pred' ? predictionPointsBadge(m) : '';
+  return `<article class="input-row ${type === 'pred' ? 'prediction-row' : ''}">
+    <div class="match-index"><b>#${m.matchNumber}</b><small>${m.dateCR} · ${m.timeCR} CR</small></div>
     <label>${flagHtml(m.home)} ${esc(m.home.name)}<input type="number" min="0" inputmode="numeric" data-type="${type}" data-mid="${m.id}" data-side="h" value="${v.h ?? ''}"></label>
     <span class="vs-small">-</span>
     <label>${flagHtml(m.away)} ${esc(m.away.name)}<input type="number" min="0" inputmode="numeric" data-type="${type}" data-mid="${m.id}" data-side="a" value="${v.a ?? ''}"></label>
+    ${points}
   </article>`;
 }
 function predictionProgress(pid){
@@ -488,10 +472,10 @@ function predictionProgress(pid){
 function renderPredictions(){
   if(!state.participants.length){ $('predictions').innerHTML = `<div class="card empty"><h2>Primero agrega participantes</h2><p class="muted">Ve a Admin y crea al menos un participante.</p></div>`; return; }
   const p = predictionProgress(currentParticipant);
-  $('predictions').innerHTML = `<div class="section-head"><div><p class="eyebrow">Ordenado por número de partido</p><h2>Mis Pronósticos</h2></div>${participantOptions('participantSelect')}</div>
-    <div class="card"><div class="progress-head"><b>${p.done}/${p.total} completados</b><span>${p.pct}%</span></div><div class="progress"><i style="width:${p.pct}%"></i></div></div>
-    <div class="card input-list">${matches.map(m=>inputMatchRow(m,'pred')).join('')}</div>
-    <button class="primary fixed-action" id="savePredictions">Guardar pronósticos</button>`;
+  $('predictions').innerHTML = `<div class="section-head predictions-head"><div><p class="eyebrow">Ordenado por número de partido</p><h2>Mis Pronósticos</h2><p class="muted">Selecciona el jugador, completa marcadores y guarda desde el botón superior.</p></div>${participantOptions('participantSelect')}</div>
+    <div class="card progress-card"><div class="progress-head"><b>${p.done}/${p.total} completados</b><span>${p.pct}%</span></div><div class="progress"><i style="width:${p.pct}%"></i></div></div>
+    <div class="card input-list predictions-list">${matches.map(m=>inputMatchRow(m,'pred')).join('')}</div>
+    <button class="primary fixed-action" id="savePredictions">💾 Guardar pronósticos</button>`;
   $('participantSelect').onchange = e => { currentParticipant = e.target.value; renderPredictions(); };
   $('savePredictions').onclick = savePredictions;
 }
@@ -554,7 +538,7 @@ function renderAdmin(){
   $('admin').innerHTML = `<div class="section-head"><div><p class="eyebrow">Administración</p><h2>Panel Admin</h2></div></div>
     <div class="grid two"><div class="card"><h3>Participantes</h3><div class="admin-line"><input id="playerName" placeholder="Nombre del participante"><button id="addPlayer" class="primary">Agregar</button></div><div class="mini-list">${state.participants.map(p=>`<div><b>${esc(p.name)}</b><button class="danger" data-del="${p.id}">Eliminar</button></div>`).join('') || '<p class="muted">Sin participantes.</p>'}</div></div>
     <div class="card"><h3>Exportar</h3><button id="exportExcel" class="primary">Exportar Excel</button></div></div>
-    <div class="card"><h3>Resultados oficiales</h3><p class="muted">Ordenados por número de partido. Estos resultados alimentan grupos, ranking y clasificados.</p><input id="adminPin" class="pin" placeholder="PIN administrador" type="password" value="${sessionStorage.getItem('adminPin')||''}"> <div class="input-list">${matches.map(m=>inputMatchRow(m,'real')).join('')}</div><button class="primary fixed-action" id="saveResults">Guardar resultados</button></div>`;
+    <div class="card"><h3>Resultados oficiales</h3><p class="muted">Ordenados por número de partido. Estos resultados alimentan grupos, ranking y clasificados.</p><input id="adminPin" class="pin" placeholder="PIN administrador" type="password"> <div class="input-list">${matches.map(m=>inputMatchRow(m,'real')).join('')}</div><button class="primary fixed-action" id="saveResults">Guardar resultados</button></div>`;
   $('addPlayer').onclick = addParticipant;
   $('saveResults').onclick = saveResults;
   $('exportExcel').onclick = exportExcel;
@@ -562,15 +546,15 @@ function renderAdmin(){
 }
 async function addParticipant(){
   const name = $('playerName').value.trim(); if(!name) return;
-  if(sb){ const {data,error}=await sb.from('participants').insert({name}).select().single(); if(error){ toast(error.message,'err'); return; } state.participants.push({id:data.id,name:data.name}); }
+  if(sb){ const {data,error}=await sb.from('participants').insert({name}).select().single(); if(error) return alert(error.message); state.participants.push({id:data.id,name:data.name}); }
   else { state.participants.push({id:crypto.randomUUID(),name}); store(); }
   currentParticipant = state.participants.at(-1).id; renderAll();
 }
 async function delParticipant(id){
   if(!confirm('¿Eliminar participante y sus pronósticos?')) return;
   if(sb){
-    const admin_pin = $('adminPin')?.value || prompt('PIN administrador'); if(!admin_pin) return; if(admin_pin) sessionStorage.setItem('adminPin', admin_pin);
-    const {error} = await sb.rpc('admin_delete_participant', {admin_pin, participant:id}); if(error){ toast(error.message,'err'); return; } await loadRemote();
+    const admin_pin = $('adminPin')?.value || prompt('PIN administrador'); if(!admin_pin) return;
+    const {error} = await sb.rpc('admin_delete_participant', {admin_pin, participant:id}); if(error) return alert(error.message); await loadRemote();
   } else {
     state.participants = state.participants.filter(p=>p.id!==id);
     Object.keys(state.predictions).forEach(k=>{ if(k.startsWith(id+'_')) delete state.predictions[k]; }); store();
@@ -578,22 +562,22 @@ async function delParticipant(id){
   currentParticipant = state.participants[0]?.id || ''; renderAll();
 }
 async function savePredictions(){
-  const pid = currentParticipant; if(!pid){ toast('Selecciona un participante','err'); return; }
+  const pid = currentParticipant; if(!pid) return alert('Selecciona un participante.');
   qsa('input[data-type="pred"]').forEach(i => { const k=key(pid,i.dataset.mid); state.predictions[k]=state.predictions[k]||{}; state.predictions[k][i.dataset.side]=val(i.value); });
   if(sb){
     const rows = matches.map(m=>({participant_id:pid, match_id:m.id, home_goals:state.predictions[key(pid,m.id)]?.h, away_goals:state.predictions[key(pid,m.id)]?.a, updated_at:new Date().toISOString()}));
-    const {error}=await sb.from('predictions').upsert(rows,{onConflict:'participant_id,match_id'}); if(error){ toast(error.message,'err'); return; }
+    const {error}=await sb.from('predictions').upsert(rows,{onConflict:'participant_id,match_id'}); if(error) return alert(error.message);
   } else store();
-  toast('✅ Pronósticos guardados'); renderAll();
+  alert('Pronósticos guardados'); renderAll();
 }
 async function saveResults(){
   qsa('input[data-type="real"]').forEach(i => { state.results[i.dataset.mid]=state.results[i.dataset.mid]||{}; state.results[i.dataset.mid][i.dataset.side]=val(i.value); });
   if(sb){
     const admin_pin = $('adminPin')?.value || prompt('PIN administrador'); if(!admin_pin) return;
     const payload = Object.entries(state.results).map(([mid,r])=>({match_id:Number(mid), home_goals:r.h, away_goals:r.a}));
-    const {error}=await sb.rpc('admin_upsert_results', {admin_pin, payload}); if(error){ toast(error.message,'err'); return; } await loadRemote();
+    const {error}=await sb.rpc('admin_upsert_results', {admin_pin, payload}); if(error) return alert(error.message); await loadRemote();
   } else store();
-  toast('✅ Resultados guardados'); renderAll();
+  alert('Resultados guardados'); renderAll();
 }
 function exportExcel(){
   const wb = XLSX.utils.book_new();
@@ -603,5 +587,5 @@ function exportExcel(){
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rankingRows()), 'Ranking');
   XLSX.writeFile(wb, 'quiniela_mundial_2026_v54.xlsx');
 }
-function renderAll(){ renderHero(); renderDashboard(); renderCalendar(); renderGroups(); renderKnockout(); renderPredictions(); renderMyWorld(); renderRanking(); renderAdmin(); }
+function renderAll(){ renderHero(); renderDashboard(); renderCalendar(); renderGroups(); renderKnockout(); renderPredictions(); renderMyWorld(); renderRanking(); renderAdmin(); updateTopSaveButton(); }
 init();
