@@ -11,9 +11,9 @@ const key = (pid, mid) => `${pid}_${mid}`;
 const val = x => x === '' || x == null ? null : Number(x);
 const esc = s => String(s ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 const flagHtml = t => {
-  if(!t) return '<span class="flag-emoji">⚪</span>';
-  if(t.flagUrl) return `<img class="flag-img" src="${esc(t.flagUrl)}" alt="${esc(t.code || t.name || 'flag')}">`;
-  return `<span class="flag-emoji">${t.flag || '⚪'}</span>`;
+  if(!t) return '<span class="flag-badge flag-empty">⚪</span>';
+  if(t.flagUrl) return `<span class="flag-badge"><img class="flag-img" src="${esc(t.flagUrl)}" alt="${esc(t.code || t.name || 'flag')}" loading="lazy"></span>`;
+  return `<span class="flag-badge flag-emoji">${t.flag || '⚪'}</span>`;
 };
 const teamText = t => `${t?.flag || ''} ${t?.name || 'Por definir'}`.trim();
 
@@ -64,7 +64,7 @@ function bindNav(){
 }
 
 function baseStanding(team){
-  return { code:team.code, name:team.name, flag:team.flag, group:team.group, pj:0, g:0, e:0, p:0, gf:0, gc:0, dg:0, pts:0, h2hPts:0, h2hDg:0, h2hGf:0 };
+  return { code:team.code, name:team.name, flag:team.flag, flagUrl:team.flagUrl, group:team.group, pj:0, g:0, e:0, p:0, gf:0, gc:0, dg:0, pts:0, h2hPts:0, h2hDg:0, h2hGf:0 };
 }
 function applyResult(row, gf, gc){
   row.pj++; row.gf += gf; row.gc += gc; row.dg = row.gf - row.gc;
@@ -133,7 +133,7 @@ function qualifierMap(){
 
 function cloneTeam(t, slot=''){
   if(!t) return {name:'Por definir', code:'TBD', flag:'⚪', group:'', slot};
-  return {name:t.name, code:t.code, flag:t.flag, group:t.group || t.sourceGroup || '', slot};
+  return {name:t.name, code:t.code, flag:t.flag, flagUrl:t.flagUrl, group:t.group || t.sourceGroup || '', slot};
 }
 function groupPositionMap(customResults=null){
   const out = {};
