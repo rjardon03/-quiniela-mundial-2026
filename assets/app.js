@@ -10,6 +10,13 @@ const qsa = s => [...document.querySelectorAll(s)];
 const key = (pid, mid) => `${pid}_${mid}`;
 const val = x => x === '' || x == null ? null : Number(x);
 const esc = s => String(s ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const flagHtml = t => {
+  if(!t) return '<span class="flag-emoji">⚪</span>';
+  if(t.flagUrl) return `<img class="flag-img" src="${esc(t.flagUrl)}" alt="${esc(t.code || t.name || 'flag')}">`;
+  return `<span class="flag-emoji">${t.flag || '⚪'}</span>`;
+};
+const teamText = t => `${t?.flag || ''} ${t?.name || 'Por definir'}`.trim();
+
 const hasScore = r => r && r.h != null && r.a != null && !Number.isNaN(r.h) && !Number.isNaN(r.a);
 const resultFor = m => state.results[m.id];
 const groupLetters = () => [...new Set(teams.map(t => t.group).filter(Boolean))].sort();
@@ -221,7 +228,7 @@ function knockoutRounds(customResults=null){
 }
 function renderTeamPill(t){
   const pending = !t || t.code === 'TBD';
-  return `<div class="bracket-team ${pending?'pending':''}"><span>${t?.flag || '⚪'}</span><b>${esc(t?.name || 'Por definir')}</b><small>${esc(t?.slot || t?.code || 'TBD')}</small></div>`;
+  return `<div class="bracket-team ${pending?'pending':''}">${flagHtml(t)}<b>${esc(t?.name || 'Por definir')}</b><small>${esc(t?.slot || t?.code || 'TBD')}</small></div>`;
 }
 function renderBracket(customResults=null){
   const results = customResults || state.results;
@@ -278,22 +285,67 @@ function renderHero(){
     stat('Líder', leader ? esc(leader.name) : '—')
   ].join('');
 }
+
+function finishedMatches(){ return matches.filter(m => hasScore(state.results[m.id])); }
+function predictionCompleteness(){
+  const total = matches.length || 1;
+  return state.participants.map(p => ({...p, done: matches.filter(m => hasScore(state.predictions[key(p.id,m.id)])).length, total}));
+}
+function statCard(label,value,sub='',tone=''){
+  return `<div class="stat-card ${tone}"><span>${label}</span><strong>${value}</strong>${sub ? `<small>${sub}</small>`:''}</div>`;
+}
+function barRow(label,value,max,sub=''){
+  const pct = max ? Math.round((value/max)*100) : 0;
+  return `<div class="bar-row"><div class="bar-row__top"><b>${label}</b><span>${value}${sub}</span></div><div class="bar"><i style="width:${pct}%"></i></div></div>`;
+}
+function dashboardMetrics(){
+  const finished = finishedMatches();
+  const rows = rankingRows();
+  const leader = rows[0];
+  const totalPoints = rows.reduce((s,r)=>s+r.pts,0);
+  const totalExact = rows.reduce((s,r)=>s+r.exact,0);
+  const totalWinner = rows.reduce((s,r)=>s+r.winner,0);
+  const possibleWinner = Math.max(1, finished.length * Math.max(1,state.participants.length));
+  return {finished, rows, leader, totalPoints, totalExact, totalWinner, avg: rows.length ? (totalPoints/rows.length).toFixed(1) : '0.0', winnerPct: Math.round(totalWinner/possibleWinner*100)};
+}
+function renderAdvancedAnalytics(){
+  const m = dashboardMetrics();
+  const maxPts = Math.max(1, ...m.rows.map(r=>r.pts));
+  const maxExact = Math.max(1, ...m.rows.map(r=>r.exact));
+  const completion = predictionCompleteness();
+  return `<div class="analytics-grid">
+    <div class="card analytics-card"><h3>Distribución de puntos</h3>${m.rows.slice(0,10).map(r=>barRow(esc(r.name), r.pts, maxPts, ' pts')).join('') || '<p class="muted">Sin datos.</p>'}</div>
+    <div class="card analytics-card"><h3>Marcadores exactos</h3>${m.rows.slice(0,10).map(r=>barRow(esc(r.name), r.exact, maxExact, ' exactos')).join('') || '<p class="muted">Sin datos.</p>'}</div>
+    <div class="card analytics-card"><h3>Avance de pronósticos</h3>${completion.slice(0,10).map(r=>barRow(esc(r.name), r.done, r.total, `/${r.total}`)).join('') || '<p class="muted">Sin participantes.</p>'}</div>
+    <div class="card analytics-card"><h3>Lectura rápida</h3>
+      <div class="insight-list">
+        <div><span>Promedio por participante</span><b>${m.avg} pts</b></div>
+        <div><span>Acierto de ganador global</span><b>${m.winnerPct}%</b></div>
+        <div><span>Exactos totales</span><b>${m.totalExact}</b></div>
+        <div><span>Resultados cargados</span><b>${m.finished.length}/${matches.length}</b></div>
+      </div>
+    </div>
+  </div>`;
+}
 function renderDashboard(){
-  const finished = Object.values(state.results).filter(hasScore).length;
-  const groupFinished = matches.filter(m=>m.stageId===1 && hasScore(state.results[m.id])).length;
-  const leader = rankingRows()[0];
+  const m = dashboardMetrics();
+  const groupFinished = matches.filter(x=>Number(x.stageId)===1 && hasScore(state.results[x.id])).length;
+  const participantProgress = state.participants.length ? Math.round(predictionCompleteness().reduce((s,p)=>s+p.done,0)/(state.participants.length*matches.length)*100) : 0;
   $('dashboard').innerHTML = `
-    <div class="section-head"><div><p class="eyebrow">Panel general</p><h2>Dashboard</h2></div><span class="status-chip">${sb ? 'Modo grupo · Supabase' : 'Modo local'}</span></div>
-    <div class="kpi-grid">
-      ${stat('Participantes', state.participants.length, 'Jugadores inscritos')}
-      ${stat('Partidos jugados', finished, `${matches.length - finished} pendientes`)}
-      ${stat('Fase de grupos', `${groupFinished}/72`, 'Resultados cargados')}
-      ${stat('Líder actual', leader ? esc(leader.name) : '—', leader ? `${leader.pts} puntos` : 'Sin ranking')}
+    <div class="section-head"><div><p class="eyebrow">Panel general · V5.4</p><h2>Dashboard avanzado</h2></div><span class="status-chip">${sb ? 'Modo grupo · Supabase' : 'Modo local'}</span></div>
+    <div class="kpi-grid advanced">
+      ${statCard('Participantes', state.participants.length, 'Jugadores inscritos', 'tone-cyan')}
+      ${statCard('Partidos jugados', m.finished.length, `${matches.length - m.finished.length} pendientes`, 'tone-gold')}
+      ${statCard('Fase de grupos', `${groupFinished}/72`, 'Resultados cargados', 'tone-lime')}
+      ${statCard('Líder actual', m.leader ? esc(m.leader.name) : '—', m.leader ? `${m.leader.pts} puntos` : 'Sin ranking', 'tone-magenta')}
+      ${statCard('Promedio', m.avg, 'Puntos por participante', 'tone-cyan')}
+      ${statCard('Pronósticos', `${participantProgress}%`, 'Completitud global', 'tone-lime')}
     </div>
     <div class="grid two">
       <div class="card"><h3>Clasificados actuales</h3>${renderQualifiedSummary()}</div>
       <div class="card"><h3>Top ranking</h3>${renderMiniRanking()}</div>
-    </div>`;
+    </div>
+    ${renderAdvancedAnalytics()}`;
 }
 function renderMiniRanking(){
   const rows = rankingRows().slice(0,5);
@@ -301,12 +353,12 @@ function renderMiniRanking(){
   return `<div class="mini-list">${rows.map((r,i)=>`<div><b>${['🥇','🥈','🥉'][i] || '#'+(i+1)} ${esc(r.name)}</b><span>${r.pts} pts</span></div>`).join('')}</div>`;
 }
 
-function teamLine(t){ return `<span class="team-line"><span class="flag">${t.flag}</span><b>${esc(t.name)}</b><small>${esc(t.code)}</small></span>`; }
+function teamLine(t){ return `<span class="team-line">${flagHtml(t)}<b>${esc(t.name)}</b><small>${esc(t.code)}</small></span>`; }
 function matchCard(m){
   const r = state.results[m.id];
   return `<article class="match-card">
     <div class="match-top"><span>#${m.matchNumber}</span><span>${stageES(m.stage)}</span></div>
-    <div class="teams-vs"><div>${m.home.flag}<b>${esc(m.home.name)}</b></div><span>VS</span><div>${m.away.flag}<b>${esc(m.away.name)}</b></div></div>
+    <div class="teams-vs"><div>${flagHtml(m.home)}<b>${esc(m.home.name)}</b></div><span>VS</span><div>${flagHtml(m.away)}<b>${esc(m.away.name)}</b></div></div>
     <div class="match-meta"><span>🗓️ ${m.dateCR}</span><span>🕒 ${m.timeCR} CR</span><span>🏟️ ${esc(m.venue)}</span><span>📍 ${esc(m.city)}</span></div>
     <div class="result ${hasScore(r)?'done':'pending'}">${hasScore(r) ? `${r.h} - ${r.a}` : '⏳ Pendiente'}</div>
   </article>`;
@@ -344,8 +396,8 @@ function renderQualifiedSummary(){
   });
   const best = thirds.slice(0,8);
   return `<div class="qualified-summary">
-    <div><h4>Clasificación directa</h4><p>${direct.map(t=>`${t.flag} ${esc(t.code)}`).join(' · ')}</p></div>
-    <div><h4>Mejores terceros actuales</h4><p>${best.map(t=>`${t.flag} ${esc(t.code)} (${t.sourceGroup})`).join(' · ') || '—'}</p></div>
+    <div><h4>Clasificación directa</h4><p>${direct.map(t=>`${flagHtml(t)} ${esc(t.code)}`).join(' · ')}</p></div>
+    <div><h4>Mejores terceros actuales</h4><p>${best.map(t=>`${flagHtml(t)} ${esc(t.code)} (${t.sourceGroup})`).join(' · ') || '—'}</p></div>
   </div>`;
 }
 function renderGroups(){
@@ -359,7 +411,7 @@ function renderKnockout(){
   const {bestThirds} = groupPositionMap();
   $('knockout').innerHTML = `<div class="section-head"><div><p class="eyebrow">V5.2 · Bracket automático</p><h2>Eliminatorias</h2></div><span class="status-chip">Dieciseisavos a Final</span></div>
     <div class="grid two">
-      <div class="card rules"><h3>Mejores terceros</h3><p>La llave asigna automáticamente los ocho mejores terceros disponibles a los cruces compatibles indicados en el calendario.</p><div class="thirds-strip">${bestThirds.map((t,i)=>`<span class="${i<8?'qualified':'not-qualified'}">${i+1}. ${t.flag} ${t.code} · G${t.sourceGroup} · ${t.pts} pts</span>`).join('')}</div></div>
+      <div class="card rules"><h3>Mejores terceros</h3><p>La llave asigna automáticamente los ocho mejores terceros disponibles a los cruces compatibles indicados en el calendario.</p><div class="thirds-strip">${bestThirds.map((t,i)=>`<span class="${i<8?'qualified':'not-qualified'}">${i+1}. ${flagHtml(t)} ${t.code} · G${t.sourceGroup} · ${t.pts} pts</span>`).join('')}</div></div>
       <div class="card rules"><h3>Motor de eliminatorias</h3><p>Los ganadores avanzan por etiquetas W/RU del calendario. Cuando cargues resultados oficiales de eliminatorias, el cuadro se actualizará automáticamente.</p></div>
     </div>
     ${renderBracket()}`;
@@ -372,9 +424,9 @@ function inputMatchRow(m,type){
   const v = type === 'real' ? state.results[m.id] || {} : state.predictions[key(pid,m.id)] || {};
   return `<article class="input-row">
     <div><b>#${m.matchNumber}</b><small>${m.dateCR} · ${m.timeCR} CR</small></div>
-    <label>${m.home.flag} ${esc(m.home.name)}<input type="number" min="0" inputmode="numeric" data-type="${type}" data-mid="${m.id}" data-side="h" value="${v.h ?? ''}"></label>
+    <label>${flagHtml(m.home)} ${esc(m.home.name)}<input type="number" min="0" inputmode="numeric" data-type="${type}" data-mid="${m.id}" data-side="h" value="${v.h ?? ''}"></label>
     <span class="vs-small">-</span>
-    <label>${m.away.flag} ${esc(m.away.name)}<input type="number" min="0" inputmode="numeric" data-type="${type}" data-mid="${m.id}" data-side="a" value="${v.a ?? ''}"></label>
+    <label>${flagHtml(m.away)} ${esc(m.away.name)}<input type="number" min="0" inputmode="numeric" data-type="${type}" data-mid="${m.id}" data-side="a" value="${v.a ?? ''}"></label>
   </article>`;
 }
 function predictionProgress(pid){
@@ -392,18 +444,53 @@ function renderPredictions(){
   $('participantSelect').onchange = e => { currentParticipant = e.target.value; renderPredictions(); };
   $('savePredictions').onclick = savePredictions;
 }
-function renderMyWorld(){
-  if(!state.participants.length){ $('myworld').innerHTML = `<div class="card"><h2>Mi Mundial</h2><p class="muted">Agrega participantes para simular con sus pronósticos.</p></div>`; return; }
+
+function customResultsForParticipant(pid){
   const custom = {};
   matches.forEach(m => {
-    const pred = state.predictions[key(currentParticipant,m.id)];
+    const pred = state.predictions[key(pid,m.id)];
     if(hasScore(pred)) custom[m.id] = {...pred};
   });
-  const groups = groupLetters().map(g => `<div class="card"><div class="group-title"><h3>Grupo ${g} proyectado</h3></div><div class="table-wrap"><table class="standings-table"><thead><tr><th>Pos</th><th>Equipo</th><th>PTS</th><th>DG</th><th>GF</th></tr></thead><tbody>${standingsForGroup(g, custom).map((r,i)=>`<tr><td>${i+1}</td><td>${teamLine(r)}</td><td><b>${r.pts}</b></td><td>${r.dg>0?'+'+r.dg:r.dg}</td><td>${r.gf}</td></tr>`).join('')}</tbody></table></div></div>`).join('');
-  $('myworld').innerHTML = `<div class="section-head"><div><p class="eyebrow">Simulación con pronósticos</p><h2>Mi Mundial</h2></div>${participantOptions('simParticipantSelect')}</div>
-    <div class="card rules"><h3>Proyección personalizada</h3><p>Usa tus pronósticos para calcular grupos y alimentar la base del bracket. Si completas marcadores de eliminatorias también se proyectarán los avances.</p></div>
+  return custom;
+}
+function simulationSummary(custom){
+  const groupPred = matches.filter(m=>Number(m.stageId)===1 && hasScore(custom[m.id])).length;
+  const koPred = matches.filter(m=>Number(m.stageId)>1 && hasScore(custom[m.id])).length;
+  const final = matches.find(m=>Number(m.stageId)===7);
+  const champion = final ? winnerOfMatch(final.id, custom, {}) : cloneTeam(null,'Campeón');
+  const finalists = final ? resolvedTeamsForMatch(final, custom, {}) : {home:cloneTeam(null), away:cloneTeam(null)};
+  return {groupPred, koPred, champion, finalists};
+}
+function renderSimulationHighlights(pid, custom){
+  const s = simulationSummary(custom);
+  return `<div class="simulation-hero card">
+    <div><p class="eyebrow">Campeón proyectado</p><h2>${flagHtml(s.champion)} ${esc(s.champion.name)}</h2><p class="muted">Según los pronósticos registrados para este participante.</p></div>
+    <div class="sim-final"><small>Final proyectada</small><b>${flagHtml(s.finalists.home)} ${esc(s.finalists.home.name)}</b><span>vs</span><b>${flagHtml(s.finalists.away)} ${esc(s.finalists.away.name)}</b></div>
+    <div class="sim-kpis">
+      ${statCard('Grupos simulados', `${s.groupPred}/72`, 'Partidos con pronóstico')}
+      ${statCard('Eliminatorias', `${s.koPred}/32`, 'Partidos con pronóstico')}
+    </div>
+  </div>`;
+}
+function renderProjectedQualified(custom){
+  const pos = groupPositionMap(custom);
+  const firstSecond = [];
+  groupLetters().forEach(g=>{ if(pos.positions[`1${g}`]) firstSecond.push(pos.positions[`1${g}`]); if(pos.positions[`2${g}`]) firstSecond.push(pos.positions[`2${g}`]); });
+  return `<div class="card"><h3>Clasificados proyectados</h3><div class="qualified-summary projected">
+    <div><h4>Primeros y segundos</h4><p>${firstSecond.map(t=>`${flagHtml(t)} ${esc(t.code)}`).join(' · ')}</p></div>
+    <div><h4>Mejores terceros</h4><p>${pos.bestThirds.slice(0,8).map(t=>`${flagHtml(t)} ${esc(t.code)} (${t.sourceGroup})`).join(' · ')}</p></div>
+  </div></div>`;
+}
+function renderMyWorld(){
+  if(!state.participants.length){ $('myworld').innerHTML = `<div class="card"><h2>Mi Mundial</h2><p class="muted">Agrega participantes para simular con sus pronósticos.</p></div>`; return; }
+  const custom = customResultsForParticipant(currentParticipant);
+  const groups = groupLetters().map(g => `<div class="card"><div class="group-title"><h3>Grupo ${g} proyectado</h3><span>Simulación personalizada</span></div><div class="table-wrap"><table class="standings-table"><thead><tr><th>Pos</th><th>Equipo</th><th>PJ</th><th>PTS</th><th>DG</th><th>GF</th></tr></thead><tbody>${standingsForGroup(g, custom).map((r,i)=>`<tr class="${i<2?'direct':i===2?'third':'out'}"><td>${i+1}</td><td>${teamLine(r)}</td><td>${r.pj}</td><td><b>${r.pts}</b></td><td>${r.dg>0?'+'+r.dg:r.dg}</td><td>${r.gf}</td></tr>`).join('')}</tbody></table></div></div>`).join('');
+  $('myworld').innerHTML = `<div class="section-head"><div><p class="eyebrow">V5.3 · Simulación personalizada</p><h2>Mi Mundial</h2></div>${participantOptions('simParticipantSelect')}</div>
+    ${renderSimulationHighlights(currentParticipant, custom)}
+    ${renderProjectedQualified(custom)}
+    <div class="section-head"><div><p class="eyebrow">Grupos proyectados</p><h2>Posiciones según pronóstico</h2></div></div>
     <div class="group-grid">${groups}</div>
-    <div class="section-head"><div><p class="eyebrow">Bracket proyectado</p><h2>Mi cuadro</h2></div></div>${renderBracket(custom)}`;
+    <div class="section-head"><div><p class="eyebrow">Bracket proyectado</p><h2>Mi cuadro</h2></div><span class="status-chip">Se alimenta de tus marcadores</span></div>${renderBracket(custom)}`;
   $('simParticipantSelect').onchange = e => { currentParticipant = e.target.value; renderMyWorld(); };
 }
 function renderRanking(){
@@ -463,7 +550,7 @@ function exportExcel(){
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(matches.map(m=>({No:m.matchNumber, Fase:stageES(m.stage), Grupo:m.group, Fecha:m.dateCR, HoraCR:m.timeCR, Local:m.home.name, Visitante:m.away.name, RealLocal:state.results[m.id]?.h ?? '', RealVisitante:state.results[m.id]?.a ?? ''}))), 'Partidos');
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(groupLetters().flatMap(g=>standingsForGroup(g).map((r,i)=>({Grupo:g, Pos:i+1, Equipo:r.name, PJ:r.pj, G:r.g, E:r.e, P:r.p, GF:r.gf, GC:r.gc, DG:r.dg, PTS:r.pts})))), 'Grupos');
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rankingRows()), 'Ranking');
-  XLSX.writeFile(wb, 'quiniela_mundial_2026_v51.xlsx');
+  XLSX.writeFile(wb, 'quiniela_mundial_2026_v54.xlsx');
 }
 function renderAll(){ renderHero(); renderDashboard(); renderCalendar(); renderGroups(); renderKnockout(); renderPredictions(); renderMyWorld(); renderRanking(); renderAdmin(); }
 init();

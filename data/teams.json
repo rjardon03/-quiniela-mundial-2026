@@ -81,7 +81,8 @@
     "name": "Scotland",
     "code": "SCO",
     "group": "C",
-    "flag": "🏴"
+    "flag": "",
+    "flagUrl": "https://flagcdn.com/gb-sct.svg"
   },
   {
     "id": 13,
@@ -312,7 +313,8 @@
     "name": "England",
     "code": "ENG",
     "group": "L",
-    "flag": "🏴"
+    "flag": "",
+    "flagUrl": "https://flagcdn.com/gb-eng.svg"
   },
   {
     "id": 46,

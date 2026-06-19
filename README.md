@@ -70,3 +70,12 @@ Esta versión está pensada para una quiniela entre amigos/familia/equipo. Permi
 - Curaçao corregido a 🇨🇼.
 - England y Scotland usan banderas regionales Unicode.
 - Partidos de eliminación directa mantienen ⚪ porque aún no tienen equipos definidos.
+
+
+## V5.3 / V5.4
+
+Incluye simulación personalizada de **Mi Mundial** usando los pronósticos de cada participante, campeón proyectado, final proyectada, clasificados proyectados y bracket alimentado por marcadores pronosticados.
+
+Incluye dashboard avanzado con KPIs, distribución de puntos, exactos, avance de pronósticos y lectura rápida de desempeño.
+
+Se agregaron banderas SVG para England y Scotland mediante FlagCDN (`gb-eng.svg` y `gb-sct.svg`) para evitar que aparezcan como bandera negra en navegadores que no soportan subdivisiones Unicode.
