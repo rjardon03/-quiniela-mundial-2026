@@ -1,15 +1,52 @@
-<!DOCTYPE html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>
-<title>Quiniela Mundialista 2026</title>
-<link rel='stylesheet' href='assets/styles.css'></head><body>
-<header class='hero'><h1>🏆 Quiniela Mundialista 2026</h1><p>Costa Rica Edition</p></header>
-<nav class='nav'>
-<button data-view='calendar'>🏠 Calendario</button>
-<button data-view='predictions'>🎯 Pronósticos</button>
-<button data-view='groups'>📊 Grupos</button>
-<button data-view='myworld'>🌎 Mi Mundial</button>
-<button data-view='ranking'>🏆 Ranking</button>
-<button data-view='dashboard'>📈 Dashboard</button>
-<button data-view='admin'>⚙️ Admin</button>
-</nav>
-<main id='view'></main>
-<script src='assets/app.js'></script></body></html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quiniela Mundialista 2026 · Costa Rica Edition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div class="hero__content">
+        <div class="eyebrow">Costa Rica Edition · Horarios UTC-6</div>
+        <h1>🏆 Quiniela Mundialista 2026</h1>
+        <p>Calendario, pronósticos, ranking y posiciones automáticas de grupos.</p>
+      </div>
+      <div class="hero__stats" id="heroStats"></div>
+    </header>
+
+    <nav class="nav" aria-label="Navegación principal">
+      <button class="active" data-view="dashboard">📈 Dashboard</button>
+      <button data-view="calendar">🏠 Calendario</button>
+      <button data-view="predictions">🎯 Pronósticos</button>
+      <button data-view="groups">📊 Grupos</button>
+      <button data-view="knockout">🌎 Eliminatorias</button>
+      <button data-view="myworld">🔮 Mi Mundial</button>
+      <button data-view="ranking">🏆 Ranking</button>
+      <button data-view="admin">⚙️ Admin</button>
+    </nav>
+
+    <main>
+      <section class="view active" id="dashboard"></section>
+      <section class="view" id="calendar"></section>
+      <section class="view" id="predictions"></section>
+      <section class="view" id="groups"></section>
+      <section class="view" id="knockout"></section>
+      <section class="view" id="myworld"></section>
+      <section class="view" id="ranking"></section>
+      <section class="view" id="admin"></section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="config.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
