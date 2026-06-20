@@ -6,6 +6,7 @@ let state = { participants: [], predictions: {}, results: {} };
 let currentParticipant = '';
 let currentView = 'dashboard';
 let predictionDateFilter = 'all';
+let comparisonFilter = 'all';
 let resultsRealtimeChannel = null;
 let resultsRefreshTimer = null;
 let resultsRefreshInFlight = false;
@@ -189,6 +190,7 @@ function renderView(viewId){
   else if(viewId==='knockout')    renderKnockout();
   else if(viewId==='myworld')     renderMyWorld();
   else if(viewId==='ranking')     renderRanking();
+  else if(viewId==='comparison')  renderComparison();
   else if(viewId==='admin')       renderAdmin();
 }
 function bindNav(){
@@ -807,5 +809,89 @@ function exportExcel(){
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rankingRows()), 'Ranking');
   XLSX.writeFile(wb, 'quiniela_mundial_2026_v557.xlsx');
 }
-function renderAll(){ renderHero(); renderDashboard(); renderCalendar(); renderGroups(); renderKnockout(); renderPredictions(); renderMyWorld(); renderRanking(); renderAdmin(); updateTopSaveButton(); }
+function comparisonFilteredMatches(){
+  if(comparisonFilter === 'all')      return matches;
+  if(comparisonFilter === 'group')    return matches.filter(m => Number(m.stageId) === 1);
+  if(comparisonFilter === 'knockout') return matches.filter(m => Number(m.stageId) > 1);
+  return matches.filter(m => Number(m.stageId) === 1 && m.group === comparisonFilter);
+}
+function renderComparison(){
+  if(!state.participants.length){
+    $('comparison').innerHTML = `<div class="card empty"><h2>Tabla comparativa</h2><p class="muted">Agrega participantes en Admin para ver los pronósticos comparados.</p></div>`;
+    return;
+  }
+  const fms = comparisonFilteredMatches();
+  const totals = state.participants.map(p =>
+    fms.reduce((s,m) => s + scoreBreakdown(state.predictions[key(p.id,m.id)], state.results[m.id]).total, 0)
+  );
+  const filterDefs = [
+    {id:'all', label:'Todos'},
+    {id:'group', label:'Fase grupos'},
+    {id:'knockout', label:'Eliminatorias'},
+    ...groupLetters().map(g => ({id:g, label:`Grp ${g}`}))
+  ];
+  const filterBar = `<div class="cmp-filter-bar">${filterDefs.map(f =>
+    `<button type="button" class="cmp-filter-btn${comparisonFilter===f.id?' active':''}" data-cmpfilter="${f.id}">${esc(f.label)}</button>`
+  ).join('')}</div>`;
+
+  const thead = `<thead><tr>
+    <th class="cmp-th-match">Partido</th>
+    <th class="cmp-th-real">Resultado</th>
+    ${state.participants.map(p=>`<th class="cmp-th-pred">${esc(p.name)}</th>`).join('')}
+  </tr></thead>`;
+
+  const tbody = `<tbody>${fms.map(m => {
+    const res = state.results[m.id];
+    const scored = hasScore(res);
+    const cells = state.participants.map(p => {
+      const pred = state.predictions[key(p.id, m.id)];
+      const s = scoreBreakdown(pred, res);
+      if(!hasScore(pred))   return `<td class="cmp-cell cmp-nopred"><span class="cmp-dash">—</span></td>`;
+      if(!scored)           return `<td class="cmp-cell cmp-wait"><b>${pred.h}-${pred.a}</b></td>`;
+      if(s.total >= 4)      return `<td class="cmp-cell cmp-perfect"><b>${pred.h}-${pred.a}</b><small>4pts</small></td>`;
+      if(s.winner > 0)      return `<td class="cmp-cell cmp-scored"><b>${pred.h}-${pred.a}</b><small>${s.total}pt${s.total!==1?'s':''}</small></td>`;
+      return                       `<td class="cmp-cell cmp-zero"><b>${pred.h}-${pred.a}</b><small>0pts</small></td>`;
+    }).join('');
+    return `<tr>
+      <td class="cmp-match-cell">
+        <span class="cmp-num">#${m.matchNumber}</span>
+        <span class="cmp-teams-line">${flagHtml(m.home)}<b>${esc(m.home.name)}</b><i class="cmp-vs">vs</i>${flagHtml(m.away)}<b>${esc(m.away.name)}</b></span>
+        <span class="cmp-meta">${m.dateCR} · ${esc(m.group ? 'Grp '+m.group : stageES(m.stage))}</span>
+      </td>
+      <td class="cmp-real-cell${scored?' cmp-real-done':''}">
+        ${scored ? `<b>${res.h} - ${res.a}</b>` : '<span class="cmp-dash">—</span>'}
+      </td>
+      ${cells}
+    </tr>`;
+  }).join('')}</tbody>`;
+
+  const tfoot = `<tfoot><tr class="cmp-totals">
+    <td class="cmp-match-cell"><span class="cmp-num">TOTAL</span><span class="cmp-teams-line" style="font-size:.8rem;color:var(--muted)">Puntos acumulados (partidos visibles)</span></td>
+    <td class="cmp-real-cell"></td>
+    ${totals.map(t=>`<td class="cmp-cell cmp-total"><b>${t}</b><small>pts</small></td>`).join('')}
+  </tr></tfoot>`;
+
+  const legend = `<div class="cmp-legend">
+    <span><i class="cl cl-perfect"></i>Exacto (4pts)</span>
+    <span><i class="cl cl-scored"></i>Ganador (1–3pts)</span>
+    <span><i class="cl cl-zero"></i>Error (0pts)</span>
+    <span><i class="cl cl-wait"></i>Sin resultado</span>
+    <span><i class="cl cl-nopred"></i>Sin pronóstico</span>
+  </div>`;
+
+  $('comparison').innerHTML = `
+    <div class="section-head">
+      <div><p class="eyebrow">Partido a partido · todos los jugadores</p><h2>Comparativa</h2></div>
+      <span class="status-chip">${fms.length} partidos · ${state.participants.length} jugadores</span>
+    </div>
+    ${legend}
+    ${filterBar}
+    <div class="card cmp-card">
+      <div class="cmp-wrap">
+        <table class="cmp-table">${thead}${tbody}${tfoot}</table>
+      </div>
+    </div>`;
+  qsa('[data-cmpfilter]').forEach(b => b.onclick = () => { comparisonFilter = b.dataset.cmpfilter; renderComparison(); });
+}
+function renderAll(){ renderHero(); renderDashboard(); renderCalendar(); renderGroups(); renderKnockout(); renderPredictions(); renderMyWorld(); renderRanking(); renderComparison(); renderAdmin(); updateTopSaveButton(); }
 init();

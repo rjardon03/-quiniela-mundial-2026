@@ -131,3 +131,62 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.08;bac
 .toast.toast-in{opacity:1;transform:translateY(0)}
 .toast.toast-ok{border-color:rgba(132,204,22,.40)}
 .toast.toast-err{border-color:rgba(239,68,68,.40);background:linear-gradient(135deg,rgba(30,8,8,.98),rgba(20,5,5,.96));color:#fecaca}
+
+/* V5.5.8 · Comparativa */
+.cmp-legend{display:flex;flex-wrap:wrap;gap:10px 18px;margin-bottom:12px;font-size:.76rem;font-weight:700;color:var(--muted)}
+.cmp-legend span{display:flex;align-items:center;gap:6px}
+.cl{display:inline-block;width:12px;height:12px;border-radius:3px;flex-shrink:0}
+.cl-perfect{background:rgba(132,204,22,.55)}.cl-scored{background:rgba(212,175,55,.55)}.cl-zero{background:rgba(239,68,68,.45)}.cl-wait{background:rgba(0,212,255,.30)}.cl-nopred{background:rgba(148,163,184,.22)}
+
+.cmp-filter-bar{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.cmp-filter-btn{padding:7px 13px;border-radius:999px;font-size:.76rem;font-weight:800;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--muted);cursor:pointer;transition:.15s;white-space:nowrap}
+.cmp-filter-btn:hover{border-color:rgba(0,212,255,.4);color:var(--text)}
+.cmp-filter-btn.active{background:linear-gradient(135deg,var(--magenta),var(--cyan));color:#05111f;border:none}
+
+.cmp-card{padding:0;overflow:hidden}
+.cmp-wrap{overflow:auto;max-height:72vh}
+.cmp-table{border-collapse:collapse;width:max-content;min-width:100%}
+.cmp-table th,.cmp-table td{border-bottom:1px solid var(--line);vertical-align:middle}
+/* sticky header */
+.cmp-table thead th{position:sticky;top:0;background:var(--card2);padding:11px 10px;font-size:.71rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);white-space:nowrap;z-index:4}
+/* sticky footer */
+.cmp-table tfoot td{position:sticky;bottom:0;z-index:4;background:var(--bg2);border-top:2px solid rgba(255,255,255,.16)}
+/* sticky columns */
+.cmp-th-match,.cmp-match-cell{position:sticky;left:0;z-index:3;background:var(--card);min-width:230px;max-width:280px}
+.cmp-th-real,.cmp-real-cell{position:sticky;left:230px;z-index:3;background:var(--bg2);min-width:78px;text-align:center;border-right:1px solid rgba(255,255,255,.12)}
+/* header corners need higher z than body stickies */
+.cmp-table thead .cmp-th-match,.cmp-table thead .cmp-th-real{z-index:6}
+.cmp-table tfoot .cmp-match-cell,.cmp-table tfoot .cmp-real-cell{z-index:6}
+
+/* match cell */
+.cmp-match-cell{padding:9px 12px}
+.cmp-num{display:block;color:var(--gold);font-size:.72rem;font-weight:900;letter-spacing:.04em}
+.cmp-teams-line{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin:4px 0;font-size:.82rem;font-weight:800}
+.cmp-teams-line .flag-img{width:17px;height:17px;vertical-align:-.28em}
+.cmp-teams-line .flag-emoji{width:17px;height:17px;font-size:.78rem}
+i.cmp-vs{font-style:normal;color:var(--muted);font-size:.7rem;font-weight:700}
+.cmp-meta{display:block;color:var(--muted);font-size:.68rem;margin-top:2px}
+/* real result cell */
+.cmp-real-cell{padding:9px;font-weight:900;font-size:1rem;color:var(--muted)}
+.cmp-real-done{color:var(--gold)}
+/* prediction cells */
+.cmp-th-pred{min-width:86px;max-width:110px;text-align:center;padding:11px 6px}
+.cmp-cell{min-width:86px;text-align:center;padding:8px 5px}
+.cmp-cell b{display:block;font-size:.92rem;font-weight:900;line-height:1.1}
+.cmp-cell small{display:block;font-size:.66rem;font-weight:800;margin-top:2px;opacity:.8}
+.cmp-dash{color:var(--muted);font-size:.9rem}
+/* cell states */
+.cmp-perfect{background:rgba(132,204,22,.14)}.cmp-perfect b{color:#d8ff33}.cmp-perfect small{color:#84cc16}
+.cmp-scored{background:rgba(212,175,55,.10)}.cmp-scored b{color:var(--gold)}.cmp-scored small{color:#b8941e}
+.cmp-zero{background:rgba(239,68,68,.09)}.cmp-zero b{color:#fca5a5}.cmp-zero small{color:#ef4444}
+.cmp-wait{background:rgba(0,212,255,.05)}.cmp-wait b{color:var(--cyan)}
+.cmp-nopred{background:transparent}
+/* zebra rows */
+.cmp-table tbody tr:nth-child(even) .cmp-match-cell{background:rgba(23,32,51,.96)}
+.cmp-table tbody tr:nth-child(even) .cmp-real-cell{background:rgba(15,23,42,.96)}
+.cmp-table tbody tr:hover .cmp-match-cell,.cmp-table tbody tr:hover .cmp-real-cell{filter:brightness(1.12)}
+/* totals row */
+.cmp-totals .cmp-match-cell{background:var(--bg2)}
+.cmp-totals .cmp-real-cell{background:var(--bg2)}
+.cmp-total b{font-size:1.05rem;color:var(--cyan)}.cmp-total small{color:var(--muted);font-size:.68rem}
+@media(max-width:720px){.cmp-wrap{max-height:60vh}.cmp-th-match,.cmp-match-cell{min-width:160px}.cmp-th-real,.cmp-real-cell{left:160px}}
