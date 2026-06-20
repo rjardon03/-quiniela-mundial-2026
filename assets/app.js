@@ -4,6 +4,11 @@ let matches = [];
 let teams = [];
 let state = { participants: [], predictions: {}, results: {} };
 let currentParticipant = '';
+let predictionDateFilter = 'all';
+let resultsRealtimeChannel = null;
+let resultsRefreshTimer = null;
+let resultsRefreshInFlight = false;
+let resultsRefreshQueued = false;
 
 const $ = id => document.getElementById(id);
 const qsa = s => [...document.querySelectorAll(s)];
@@ -23,6 +28,53 @@ const groupLetters = () => [...new Set(teams.map(t => t.group).filter(Boolean))]
 const groupMatches = g => matches.filter(m => Number(m.stageId) === 1 && m.group === g).sort((a,b)=>a.matchNumber-b.matchNumber);
 const groupTeams = g => teams.filter(t => t.group === g).sort((a,b)=>a.name.localeCompare(b.name));
 
+
+function parseCRDate(value){
+  const [d,m,y] = String(value || '').split('/').map(Number);
+  return d && m && y ? new Date(Date.UTC(y,m-1,d)) : new Date(0);
+}
+function todayCR(){
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone:'America/Costa_Rica', year:'numeric', month:'2-digit', day:'2-digit'
+  }).formatToParts(new Date());
+  const map = Object.fromEntries(parts.map(p=>[p.type,p.value]));
+  return `${map.day}/${map.month}/${map.year}`;
+}
+function predictionDates(){
+  return [...new Set(matches.map(m=>m.dateCR).filter(Boolean))]
+    .sort((a,b)=>parseCRDate(a)-parseCRDate(b));
+}
+function formatDateLabel(value){
+  const dt = parseCRDate(value);
+  if(!dt.getTime()) return value;
+  return new Intl.DateTimeFormat('es-CR', {
+    timeZone:'UTC', weekday:'short', day:'2-digit', month:'short'
+  }).format(dt).replace('.', '');
+}
+function syncVisiblePredictionInputsToState(){
+  if(!currentParticipant) return;
+  qsa('input[data-type="pred"]').forEach(i => {
+    const k = key(currentParticipant, i.dataset.mid);
+    state.predictions[k] = state.predictions[k] || {};
+    state.predictions[k][i.dataset.side] = val(i.value);
+  });
+}
+function predictionDateToolbar(){
+  const dates = predictionDates();
+  const today = todayCR();
+  const hasToday = dates.includes(today);
+  const options = [
+    `<option value="all" ${predictionDateFilter==='all'?'selected':''}>Todos los partidos</option>`,
+    ...dates.map(d=>`<option value="${esc(d)}" ${predictionDateFilter===d?'selected':''}>${esc(formatDateLabel(d))} · ${esc(d)}</option>`)
+  ].join('');
+  return `<div class="prediction-filter card">
+    <div class="prediction-filter__title"><span>📅</span><div><small>Navegar por fecha</small><b>${predictionDateFilter==='all'?'Todos los partidos':esc(formatDateLabel(predictionDateFilter))}</b></div></div>
+    <select id="predictionDateSelect" aria-label="Filtrar pronósticos por fecha">${options}</select>
+    <button type="button" class="filter-today ${hasToday?'':'is-disabled'}" id="predictionToday" ${hasToday?'':'disabled'}>Hoy</button>
+    <button type="button" class="filter-all" id="predictionAll">Ver todos</button>
+  </div>`;
+}
+
 function store(){ localStorage.setItem('quiniela2026_v5', JSON.stringify(state)); }
 function loadLocal(){ state = JSON.parse(localStorage.getItem('quiniela2026_v5') || JSON.stringify(state)); }
 
@@ -39,6 +91,7 @@ async function init(){
   currentParticipant = state.participants[0]?.id || '';
   bindNav();
   renderAll();
+  if(sb) setupLiveResults();
 }
 
 async function loadRemote(){
@@ -52,6 +105,70 @@ async function loadRemote(){
   (pr.data || []).forEach(x => state.predictions[key(x.participant_id, x.match_id)] = {h:x.home_goals, a:x.away_goals});
   state.results = {};
   (re.data || []).forEach(x => state.results[x.match_id] = {h:x.home_goals, a:x.away_goals});
+}
+
+async function refreshResultsFromSupabase(reason='manual'){
+  if(!sb) return;
+  if(resultsRefreshInFlight){
+    resultsRefreshQueued = true;
+    return;
+  }
+
+  resultsRefreshInFlight = true;
+  try{
+    const { data, error } = await sb.from('results').select('*');
+    if(error) throw error;
+
+    const nextResults = {};
+    (data || []).forEach(x => {
+      nextResults[x.match_id] = { h:x.home_goals, a:x.away_goals };
+    });
+    state.results = nextResults;
+    renderAll();
+    console.info(`[Resultados] Actualizados desde Supabase (${reason}).`);
+  }catch(error){
+    console.error('[Resultados] No se pudieron refrescar:', error);
+  }finally{
+    resultsRefreshInFlight = false;
+    if(resultsRefreshQueued){
+      resultsRefreshQueued = false;
+      setTimeout(() => refreshResultsFromSupabase('queued'), 250);
+    }
+  }
+}
+
+function setupLiveResults(){
+  if(!sb || resultsRealtimeChannel) return;
+
+  resultsRealtimeChannel = sb
+    .channel('quiniela-results-live')
+    .on(
+      'postgres_changes',
+      { event:'*', schema:'public', table:'results' },
+      () => refreshResultsFromSupabase('realtime')
+    )
+    .subscribe((status, error) => {
+      if(error) console.error('[Realtime] Error de suscripción:', error);
+      else console.info(`[Realtime] Estado: ${status}`);
+    });
+
+  // Respaldo: refresca cada 60 segundos cuando la pestaña está visible.
+  resultsRefreshTimer = window.setInterval(() => {
+    if(document.visibilityState === 'visible'){
+      refreshResultsFromSupabase('interval');
+    }
+  }, 60000);
+
+  document.addEventListener('visibilitychange', () => {
+    if(document.visibilityState === 'visible'){
+      refreshResultsFromSupabase('visibility');
+    }
+  });
+
+  window.addEventListener('beforeunload', () => {
+    if(resultsRefreshTimer) window.clearInterval(resultsRefreshTimer);
+    if(resultsRealtimeChannel) sb.removeChannel(resultsRealtimeChannel);
+  }, { once:true });
 }
 
 function bindNav(){
@@ -472,11 +589,19 @@ function predictionProgress(pid){
 function renderPredictions(){
   if(!state.participants.length){ $('predictions').innerHTML = `<div class="card empty"><h2>Primero agrega participantes</h2><p class="muted">Ve a Admin y crea al menos un participante.</p></div>`; return; }
   const p = predictionProgress(currentParticipant);
-  $('predictions').innerHTML = `<div class="section-head predictions-head"><div><p class="eyebrow">Ordenado por número de partido</p><h2>Mis Pronósticos</h2><p class="muted">Selecciona el jugador, completa marcadores y guarda desde el botón superior.</p></div>${participantOptions('participantSelect')}</div>
+  const filteredMatches = predictionDateFilter === 'all'
+    ? matches
+    : matches.filter(m => m.dateCR === predictionDateFilter);
+  $('predictions').innerHTML = `<div class="section-head predictions-head"><div><p class="eyebrow">Ordenado por número de partido</p><h2>Mis Pronósticos</h2><p class="muted">Selecciona el jugador, filtra por fecha, completa marcadores y guarda desde el botón superior.</p></div>${participantOptions('participantSelect')}</div>
+    ${predictionDateToolbar()}
     <div class="card progress-card"><div class="progress-head"><b>${p.done}/${p.total} completados</b><span>${p.pct}%</span></div><div class="progress"><i style="width:${p.pct}%"></i></div></div>
-    <div class="card input-list predictions-list">${matches.map(m=>inputMatchRow(m,'pred')).join('')}</div>
+    <div class="prediction-date-summary"><b>${filteredMatches.length}</b> partido${filteredMatches.length===1?'':'s'} ${predictionDateFilter==='all'?'en total':`el ${esc(predictionDateFilter)}`}</div>
+    <div class="card input-list predictions-list">${filteredMatches.length ? filteredMatches.map(m=>inputMatchRow(m,'pred')).join('') : '<div class="empty"><h3>No hay partidos en esta fecha</h3><p class="muted">Selecciona otra fecha o vuelve a ver todos.</p></div>'}</div>
     <button class="primary fixed-action" id="savePredictions">💾 Guardar pronósticos</button>`;
-  $('participantSelect').onchange = e => { currentParticipant = e.target.value; renderPredictions(); };
+  $('participantSelect').onchange = e => { syncVisiblePredictionInputsToState(); currentParticipant = e.target.value; renderPredictions(); };
+  $('predictionDateSelect').onchange = e => { syncVisiblePredictionInputsToState(); predictionDateFilter = e.target.value; renderPredictions(); };
+  $('predictionToday').onclick = () => { if($('predictionToday').disabled) return; syncVisiblePredictionInputsToState(); predictionDateFilter = todayCR(); renderPredictions(); };
+  $('predictionAll').onclick = () => { syncVisiblePredictionInputsToState(); predictionDateFilter = 'all'; renderPredictions(); };
   $('savePredictions').onclick = savePredictions;
 }
 
