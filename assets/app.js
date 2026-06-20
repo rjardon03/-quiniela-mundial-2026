@@ -4,7 +4,6 @@ let matches = [];
 let teams = [];
 let state = { participants: [], predictions: {}, results: {} };
 let currentParticipant = '';
-let currentView = 'dashboard';
 
 const $ = id => document.getElementById(id);
 const qsa = s => [...document.querySelectorAll(s)];
@@ -31,14 +30,6 @@ function stageES(s){
   return ({'Group Stage':'Fase de grupos','Round of 32':'Dieciseisavos','Round of 16':'Octavos de final','Quarterfinals':'Cuartos de final','Semifinals':'Semifinales','Third Place Playoff':'Tercer lugar','Final':'Final'})[s] || s;
 }
 
-function toast(msg, type='ok', duration=3200){
-  const t = document.createElement('div');
-  t.className = 'toast toast-' + type;
-  t.textContent = msg;
-  document.body.appendChild(t);
-  requestAnimationFrame(() => t.classList.add('toast-in'));
-  setTimeout(() => { t.classList.remove('toast-in'); setTimeout(() => t.remove(), 400); }, duration);
-}
 async function init(){
   matches = await fetch('data/matches.json').then(r=>r.json());
   teams = await fetch('data/teams.json').then(r=>r.json());
@@ -63,17 +54,6 @@ async function loadRemote(){
   (re.data || []).forEach(x => state.results[x.match_id] = {h:x.home_goals, a:x.away_goals});
 }
 
-function renderView(viewId){
-  renderHero();
-  if(viewId==='dashboard')   renderDashboard();
-  else if(viewId==='calendar')    renderCalendar();
-  else if(viewId==='predictions') renderPredictions();
-  else if(viewId==='groups')      renderGroups();
-  else if(viewId==='knockout')    renderKnockout();
-  else if(viewId==='myworld')     renderMyWorld();
-  else if(viewId==='ranking')     renderRanking();
-  else if(viewId==='admin')       renderAdmin();
-}
 function bindNav(){
   qsa('.nav button[data-view]').forEach(btn => btn.onclick = () => {
     qsa('.nav button[data-view],.view').forEach(x=>x.classList.remove('active'));
@@ -81,7 +61,7 @@ function bindNav(){
     currentView = btn.dataset.view;
     $(currentView).classList.add('active');
     updateTopSaveButton();
-    renderView(currentView);
+    renderAll();
   });
   const topSave = $('topSavePredictions');
   if(topSave){ topSave.onclick = () => savePredictions(); }
@@ -410,21 +390,9 @@ function matchCard(m){
 }
 function renderCalendar(){
   const groups = groupLetters();
-  const koStages = [
-    {id:2,label:'Dieciseisavos de final'},{id:3,label:'Octavos de final'},
-    {id:4,label:'Cuartos de final'},{id:5,label:'Semifinales'},
-    {id:6,label:'Tercer lugar'},{id:7,label:'Final'},
-  ];
-  const koCards = koStages.map(s=>{
-    const ms = matches.filter(m=>Number(m.stageId)===s.id).sort((a,b)=>a.matchNumber-b.matchNumber);
-    return ms.length ? `<div class="card"><div class="group-title"><h3>${s.label}</h3><span>${ms.length} partido${ms.length>1?'s':''}</span></div><div class="match-grid">${ms.map(matchCard).join('')}</div></div>` : '';
-  }).join('');
   $('calendar').innerHTML = `
-    <div class="section-head"><div><p class="eyebrow">Todos los horarios en Costa Rica</p><h2>Calendario completo</h2></div><span class="status-chip">${matches.length} partidos</span></div>
-    <div class="section-head" style="margin-top:20px"><div><p class="eyebrow">72 partidos · 12 grupos</p><h2 style="font-size:1.4rem">Fase de grupos</h2></div></div>
-    ${groups.map(g=>`<div class="card"><div class="group-title"><h3>Grupo ${g}</h3><span>${groupMatches(g).length} partidos</span></div><div class="match-grid">${groupMatches(g).map(matchCard).join('')}</div></div>`).join('')}
-    <div class="section-head" style="margin-top:20px"><div><p class="eyebrow">32 partidos · eliminación directa</p><h2 style="font-size:1.4rem">Fase eliminatoria</h2></div></div>
-    ${koCards}`;
+    <div class="section-head"><div><p class="eyebrow">Todos los horarios en Costa Rica</p><h2>Calendario</h2></div></div>
+    ${groups.map(g=>`<div class="card"><div class="group-title"><h3>Grupo ${g}</h3><span>${groupMatches(g).length} partidos</span></div><div class="match-grid">${groupMatches(g).map(matchCard).join('')}</div></div>`).join('')}`;
 }
 function statusBadge(type){
   if(type === 'direct') return `<span class="badge direct">Clasifica</span>`;
@@ -566,19 +534,80 @@ function renderRanking(){
     <div class="podium">${rows.slice(0,3).map((r,i)=>`<div class="podium-card"><span>${['🥇','🥈','🥉'][i]}</span><b>${esc(r.name)}</b><strong>${r.pts} pts</strong><small>${r.exact} exactos · ${r.accuracy}%</small></div>`).join('')}</div>
     <div class="card table-wrap"><table><thead><tr><th>#</th><th>Participante</th><th>Pts</th><th>Exactos</th><th>Ganador</th><th>Pronósticos</th><th>% ganador</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td>${i+1}</td><td><b>${esc(r.name)}</b></td><td>${r.pts}</td><td>${r.exact}</td><td>${r.winner}</td><td>${r.predicted}</td><td>${r.accuracy}%</td></tr>`).join('')}</tbody></table></div>`;
 }
+
+async function callScoreApi(mode){
+  if(!sb) return alert('La sincronización requiere Supabase.');
+  const pin = $('adminPin')?.value || prompt('PIN administrador');
+  if(!pin) return;
+  const forceManual = Boolean($('forceManualSync')?.checked);
+  if(mode === 'apply'){
+    const warning = forceManual
+      ? 'Esto sobrescribirá también resultados marcados como corrección manual. ¿Continuar?'
+      : 'Se actualizarán únicamente partidos terminados y sin corrección manual. ¿Continuar?';
+    if(!confirm(warning)) return;
+  }
+  const output = $('syncApiOutput');
+  const buttons = [$('testScoreApi'), $('applyScoreApi')].filter(Boolean);
+  buttons.forEach(b=>b.disabled=true);
+  if(output) output.textContent = mode === 'preview' ? 'Consultando API y validando 104 partidos…' : 'Sincronizando resultados…';
+  try{
+    const base = String(cfg.supabaseUrl || '').replace(/\/$/, '');
+    if(!base) throw new Error('Falta supabaseUrl en config.js');
+    const headers = {'Content-Type':'application/json'};
+    if(cfg.supabaseAnonKey){
+      headers.apikey = cfg.supabaseAnonKey;
+      headers.Authorization = `Bearer ${cfg.supabaseAnonKey}`;
+    }
+    const response = await fetch(`${base}/functions/v1/sync-worldcup-results`, {
+      method:'POST', headers,
+      body:JSON.stringify({mode, adminPin:pin, forceManual})
+    });
+    const text = await response.text();
+    let data;
+    try{ data = JSON.parse(text); } catch{ data = {ok:false, error:text || `HTTP ${response.status}`}; }
+    if(output) output.textContent = JSON.stringify(data, null, 2);
+    if(!response.ok || !data.ok) throw new Error(data.error || `HTTP ${response.status}`);
+    if(mode === 'apply'){
+      await loadRemote();
+      alert(data.note || 'Sincronización completada.');
+      renderAll();
+    }
+  }catch(error){
+    const message = error?.message || String(error);
+    if(output && !output.textContent.includes(message)) output.textContent += `
+
+ERROR: ${message}`;
+    alert(`No se pudo completar la sincronización: ${message}`);
+  }finally{
+    buttons.forEach(b=>b.disabled=false);
+  }
+}
+
 function renderAdmin(){
   $('admin').innerHTML = `<div class="section-head"><div><p class="eyebrow">Administración</p><h2>Panel Admin</h2></div></div>
     <div class="grid two"><div class="card"><h3>Participantes</h3><div class="admin-line"><input id="playerName" placeholder="Nombre del participante"><button id="addPlayer" class="primary">Agregar</button></div><div class="mini-list">${state.participants.map(p=>`<div><b>${esc(p.name)}</b><button class="danger" data-del="${p.id}">Eliminar</button></div>`).join('') || '<p class="muted">Sin participantes.</p>'}</div></div>
     <div class="card"><h3>Exportar</h3><button id="exportExcel" class="primary">Exportar Excel</button></div></div>
-    <div class="card"><h3>Resultados oficiales</h3><p class="muted">Ordenados por número de partido. Estos resultados alimentan grupos, ranking y clasificados.</p><input id="adminPin" class="pin" placeholder="PIN administrador" type="password" value="${sessionStorage.getItem('adminPin')||''}"> <div class="input-list">${matches.map(m=>inputMatchRow(m,'real')).join('')}</div><button class="primary fixed-action" id="saveResults">Guardar resultados</button></div>`;
+    <div class="card api-sync-card">
+      <div class="section-head compact"><div><p class="eyebrow">Fuente automática</p><h3>Marcadores WorldCup26 API</h3></div><span class="status-chip">Prueba antes de aplicar</span></div>
+      <p class="muted">La vista previa consulta <code>/get/games</code>, valida los IDs 1–104 y compara los equipos. No modifica datos. Aplicar solo guarda partidos terminados.</p>
+      <div class="api-sync-actions">
+        <button id="testScoreApi" class="secondary">🔎 Probar API</button>
+        <button id="applyScoreApi" class="primary">↻ Sincronizar resultados</button>
+        <label class="force-sync"><input id="forceManualSync" type="checkbox"> Sobrescribir correcciones manuales</label>
+      </div>
+      <pre id="syncApiOutput" class="sync-output">Todavía no se ha ejecutado una prueba.</pre>
+    </div>
+    <div class="card"><h3>Resultados oficiales</h3><p class="muted">Ordenados por número de partido. Los cambios manuales quedan protegidos frente a la API.</p><input id="adminPin" class="pin" placeholder="PIN administrador" type="password"> <div class="input-list">${matches.map(m=>inputMatchRow(m,'real')).join('')}</div><button class="primary fixed-action" id="saveResults">Guardar resultados</button></div>`;
   $('addPlayer').onclick = addParticipant;
   $('saveResults').onclick = saveResults;
   $('exportExcel').onclick = exportExcel;
+  $('testScoreApi').onclick = () => callScoreApi('preview');
+  $('applyScoreApi').onclick = () => callScoreApi('apply');
   qsa('[data-del]').forEach(b=>b.onclick=()=>delParticipant(b.dataset.del));
 }
 async function addParticipant(){
   const name = $('playerName').value.trim(); if(!name) return;
-  if(sb){ const {data,error}=await sb.from('participants').insert({name}).select().single(); if(error){ toast(error.message,'err'); return; } state.participants.push({id:data.id,name:data.name}); }
+  if(sb){ const {data,error}=await sb.from('participants').insert({name}).select().single(); if(error) return alert(error.message); state.participants.push({id:data.id,name:data.name}); }
   else { state.participants.push({id:crypto.randomUUID(),name}); store(); }
   currentParticipant = state.participants.at(-1).id; renderAll();
 }
@@ -594,22 +623,22 @@ async function delParticipant(id){
   currentParticipant = state.participants[0]?.id || ''; renderAll();
 }
 async function savePredictions(){
-  const pid = currentParticipant; if(!pid){ toast('Selecciona un participante','err'); return; }
+  const pid = currentParticipant; if(!pid) return alert('Selecciona un participante.');
   qsa('input[data-type="pred"]').forEach(i => { const k=key(pid,i.dataset.mid); state.predictions[k]=state.predictions[k]||{}; state.predictions[k][i.dataset.side]=val(i.value); });
   if(sb){
     const rows = matches.map(m=>({participant_id:pid, match_id:m.id, home_goals:state.predictions[key(pid,m.id)]?.h, away_goals:state.predictions[key(pid,m.id)]?.a, updated_at:new Date().toISOString()}));
-    const {error}=await sb.from('predictions').upsert(rows,{onConflict:'participant_id,match_id'}); if(error){ toast(error.message,'err'); return; }
+    const {error}=await sb.from('predictions').upsert(rows,{onConflict:'participant_id,match_id'}); if(error) return alert(error.message);
   } else store();
-  toast('✅ Pronósticos guardados'); renderAll();
+  alert('Pronósticos guardados'); renderAll();
 }
 async function saveResults(){
   qsa('input[data-type="real"]').forEach(i => { state.results[i.dataset.mid]=state.results[i.dataset.mid]||{}; state.results[i.dataset.mid][i.dataset.side]=val(i.value); });
   if(sb){
     const admin_pin = $('adminPin')?.value || prompt('PIN administrador'); if(!admin_pin) return;
     const payload = Object.entries(state.results).map(([mid,r])=>({match_id:Number(mid), home_goals:r.h, away_goals:r.a}));
-    const {error}=await sb.rpc('admin_upsert_results', {admin_pin, payload}); if(error){ toast(error.message,'err'); return; } await loadRemote();
+    const {error}=await sb.rpc('admin_upsert_results', {admin_pin, payload}); if(error) return alert(error.message); await loadRemote();
   } else store();
-  toast('✅ Resultados guardados'); renderAll();
+  alert('Resultados guardados'); renderAll();
 }
 function exportExcel(){
   const wb = XLSX.utils.book_new();
