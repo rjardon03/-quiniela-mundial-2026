@@ -125,3 +125,9 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.08;bac
 .prediction-date-summary{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:.86rem;margin:0 2px 10px}.prediction-date-summary b{color:var(--cyan);font-size:1.05rem}
 @media(max-width:900px){.prediction-filter{grid-template-columns:1fr 1fr}.prediction-filter__title{grid-column:1/-1}.prediction-filter select{grid-column:1/-1}.prediction-filter button{width:100%}}
 @media(max-width:520px){.prediction-filter{grid-template-columns:1fr}.prediction-filter__title,.prediction-filter select{grid-column:auto}.prediction-filter button{width:100%}}
+
+/* Toast notifications */
+.toast{position:fixed;bottom:28px;right:28px;z-index:9999;min-width:220px;max-width:380px;padding:14px 18px;border-radius:18px;border:1px solid rgba(132,204,22,.32);background:linear-gradient(135deg,rgba(12,30,12,.98),rgba(8,20,8,.96));color:#e8ffd8;font-size:.9rem;font-weight:700;box-shadow:0 18px 45px rgba(0,0,0,.45);opacity:0;transform:translateY(16px);transition:opacity .3s ease,transform .3s ease;pointer-events:none}
+.toast.toast-in{opacity:1;transform:translateY(0)}
+.toast.toast-ok{border-color:rgba(132,204,22,.40)}
+.toast.toast-err{border-color:rgba(239,68,68,.40);background:linear-gradient(135deg,rgba(30,8,8,.98),rgba(20,5,5,.96));color:#fecaca}

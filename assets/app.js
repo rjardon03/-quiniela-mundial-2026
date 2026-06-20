@@ -4,6 +4,7 @@ let matches = [];
 let teams = [];
 let state = { participants: [], predictions: {}, results: {} };
 let currentParticipant = '';
+let currentView = 'dashboard';
 let predictionDateFilter = 'all';
 let resultsRealtimeChannel = null;
 let resultsRefreshTimer = null;
@@ -11,6 +12,14 @@ let resultsRefreshInFlight = false;
 let resultsRefreshQueued = false;
 
 const $ = id => document.getElementById(id);
+function toast(msg, type='ok', duration=3200){
+  const t = document.createElement('div');
+  t.className = 'toast toast-' + type;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  requestAnimationFrame(() => t.classList.add('toast-in'));
+  setTimeout(() => { t.classList.remove('toast-in'); setTimeout(() => t.remove(), 400); }, duration);
+}
 const qsa = s => [...document.querySelectorAll(s)];
 const key = (pid, mid) => `${pid}_${mid}`;
 const val = x => x === '' || x == null ? null : Number(x);
@@ -171,6 +180,17 @@ function setupLiveResults(){
   }, { once:true });
 }
 
+function renderView(viewId){
+  renderHero();
+  if(viewId==='dashboard')        renderDashboard();
+  else if(viewId==='calendar')    renderCalendar();
+  else if(viewId==='predictions') renderPredictions();
+  else if(viewId==='groups')      renderGroups();
+  else if(viewId==='knockout')    renderKnockout();
+  else if(viewId==='myworld')     renderMyWorld();
+  else if(viewId==='ranking')     renderRanking();
+  else if(viewId==='admin')       renderAdmin();
+}
 function bindNav(){
   qsa('.nav button[data-view]').forEach(btn => btn.onclick = () => {
     qsa('.nav button[data-view],.view').forEach(x=>x.classList.remove('active'));
@@ -178,7 +198,7 @@ function bindNav(){
     currentView = btn.dataset.view;
     $(currentView).classList.add('active');
     updateTopSaveButton();
-    renderAll();
+    renderView(currentView);
   });
   const topSave = $('topSavePredictions');
   if(topSave){ topSave.onclick = () => savePredictions(); }
@@ -313,12 +333,12 @@ function winnerOfMatch(matchId, customResults=null, memo={}){
   memo.__stack.add(id);
   const m = matches.find(x=>Number(x.id)===id || Number(x.matchNumber)===id);
   if(!m){ memo.__stack.delete(id); return cloneTeam(null, `W${id}`); }
-  const teams = resolvedTeamsForMatch(m, customResults, memo);
+  const resolvedTeams = resolvedTeamsForMatch(m, customResults, memo);
   const res = (customResults || state.results)[m.id];
   let winner;
   if(hasScore(res)){
-    if(res.h > res.a) winner = {...teams.home, slot:`W${m.matchNumber}`};
-    else if(res.a > res.h) winner = {...teams.away, slot:`W${m.matchNumber}`};
+    if(res.h > res.a) winner = {...resolvedTeams.home, slot:`W${m.matchNumber}`};
+    else if(res.a > res.h) winner = {...resolvedTeams.away, slot:`W${m.matchNumber}`};
     else winner = cloneTeam(null, `W${m.matchNumber}`);
   } else {
     winner = cloneTeam(null, `W${m.matchNumber}`);
@@ -334,12 +354,12 @@ function loserOfMatch(matchId, customResults=null, memo={}){
   memo.__stack.add(id);
   const m = matches.find(x=>Number(x.id)===id || Number(x.matchNumber)===id);
   if(!m){ memo.__stack.delete(id); return cloneTeam(null, `RU${id}`); }
-  const teams = resolvedTeamsForMatch(m, customResults, memo);
+  const resolvedTeams = resolvedTeamsForMatch(m, customResults, memo);
   const res = (customResults || state.results)[m.id];
   let loser = cloneTeam(null, `RU${m.matchNumber}`);
   if(hasScore(res)){
-    if(res.h > res.a) loser = {...teams.away, slot:`RU${m.matchNumber}`};
-    else if(res.a > res.h) loser = {...teams.home, slot:`RU${m.matchNumber}`};
+    if(res.h > res.a) loser = {...resolvedTeams.away, slot:`RU${m.matchNumber}`};
+    else if(res.a > res.h) loser = {...resolvedTeams.home, slot:`RU${m.matchNumber}`};
   }
   memo.__stack.delete(id);
   return loser;
@@ -474,7 +494,7 @@ function renderDashboard(){
   const groupFinished = matches.filter(x=>Number(x.stageId)===1 && hasScore(state.results[x.id])).length;
   const participantProgress = state.participants.length ? Math.round(predictionCompleteness().reduce((s,p)=>s+p.done,0)/(state.participants.length*matches.length)*100) : 0;
   $('dashboard').innerHTML = `
-    <div class="section-head"><div><p class="eyebrow">Panel general · V5.4</p><h2>Dashboard avanzado</h2></div><span class="status-chip">${sb ? 'Modo grupo · Supabase' : 'Modo local'}</span></div>
+    <div class="section-head"><div><p class="eyebrow">Panel general · V5.5.7</p><h2>Dashboard avanzado</h2></div><span class="status-chip">${sb ? 'Modo grupo · Supabase' : 'Modo local'}</span></div>
     <div class="kpi-grid advanced">
       ${statCard('Participantes', state.participants.length, 'Jugadores inscritos', 'tone-cyan')}
       ${statCard('Partidos jugados', m.finished.length, `${matches.length - m.finished.length} pendientes`, 'tone-gold')}
@@ -490,7 +510,7 @@ function renderDashboard(){
     ${renderAdvancedAnalytics()}`;
 }
 function renderMiniRanking(){
-  const rows = rankingRows().slice(0,5);
+  const rows = rankingRows().slice(0,6);
   if(!rows.length) return `<p class="muted">Aún no hay participantes.</p>`;
   return `<div class="mini-list">${rows.map((r,i)=>`<div><b>${['🥇','🥈','🥉'][i] || '#'+(i+1)} ${esc(r.name)}</b><span>${r.pts} pts</span></div>`).join('')}</div>`;
 }
@@ -507,9 +527,20 @@ function matchCard(m){
 }
 function renderCalendar(){
   const groups = groupLetters();
+  const koStages = [
+    {id:2,label:'Dieciseisavos de final'},{id:3,label:'Octavos de final'},
+    {id:4,label:'Cuartos de final'},{id:5,label:'Semifinales'},
+    {id:6,label:'Tercer lugar'},{id:7,label:'Final'},
+  ];
+  const koCards = koStages.map(s=>{
+    const ms = matches.filter(m=>Number(m.stageId)===s.id).sort((a,b)=>a.matchNumber-b.matchNumber);
+    return ms.length ? `<div class="card"><div class="group-title"><h3>${s.label}</h3><span>${ms.length} partido${ms.length>1?'s':''}</span></div><div class="match-grid">${ms.map(matchCard).join('')}</div></div>` : '';
+  }).join('');
   $('calendar').innerHTML = `
-    <div class="section-head"><div><p class="eyebrow">Todos los horarios en Costa Rica</p><h2>Calendario</h2></div></div>
-    ${groups.map(g=>`<div class="card"><div class="group-title"><h3>Grupo ${g}</h3><span>${groupMatches(g).length} partidos</span></div><div class="match-grid">${groupMatches(g).map(matchCard).join('')}</div></div>`).join('')}`;
+    <div class="section-head"><div><p class="eyebrow">Todos los horarios en Costa Rica</p><h2>Calendario</h2></div><span class="status-chip">${matches.length} partidos</span></div>
+    ${groups.map(g=>`<div class="card"><div class="group-title"><h3>Grupo ${g}</h3><span>${groupMatches(g).length} partidos</span></div><div class="match-grid">${groupMatches(g).map(matchCard).join('')}</div></div>`).join('')}
+    <div class="section-head" style="margin-top:20px"><div><p class="eyebrow">Fase final</p><h2>Eliminatorias</h2></div></div>
+    ${koCards}`;
 }
 function statusBadge(type){
   if(type === 'direct') return `<span class="badge direct">Clasifica</span>`;
@@ -661,9 +692,10 @@ function renderRanking(){
 }
 
 async function callScoreApi(mode){
-  if(!sb) return alert('La sincronización requiere Supabase.');
-  const pin = $('adminPin')?.value || prompt('PIN administrador');
+  if(!sb) return toast('La sincronización requiere Supabase configurado.', 'err');
+  const pin = $('adminPin')?.value || sessionStorage.getItem('adminPin') || prompt('PIN administrador');
   if(!pin) return;
+  sessionStorage.setItem('adminPin', pin);
   const forceManual = Boolean($('forceManualSync')?.checked);
   if(mode === 'apply'){
     const warning = forceManual
@@ -694,7 +726,7 @@ async function callScoreApi(mode){
     if(!response.ok || !data.ok) throw new Error(data.error || `HTTP ${response.status}`);
     if(mode === 'apply'){
       await loadRemote();
-      alert(data.note || 'Sincronización completada.');
+      toast(data.note || 'Sincronización completada ✓');
       renderAll();
     }
   }catch(error){
@@ -702,7 +734,7 @@ async function callScoreApi(mode){
     if(output && !output.textContent.includes(message)) output.textContent += `
 
 ERROR: ${message}`;
-    alert(`No se pudo completar la sincronización: ${message}`);
+    toast(`Error: ${message}`, 'err', 5000);
   }finally{
     buttons.forEach(b=>b.disabled=false);
   }
@@ -722,7 +754,7 @@ function renderAdmin(){
       </div>
       <pre id="syncApiOutput" class="sync-output">Todavía no se ha ejecutado una prueba.</pre>
     </div>
-    <div class="card"><h3>Resultados oficiales</h3><p class="muted">Ordenados por número de partido. Los cambios manuales quedan protegidos frente a la API.</p><input id="adminPin" class="pin" placeholder="PIN administrador" type="password"> <div class="input-list">${matches.map(m=>inputMatchRow(m,'real')).join('')}</div><button class="primary fixed-action" id="saveResults">Guardar resultados</button></div>`;
+    <div class="card"><h3>Resultados oficiales</h3><p class="muted">Ordenados por número de partido. Los cambios manuales quedan protegidos frente a la API.</p><input id="adminPin" class="pin" placeholder="PIN administrador" type="password" value="${sessionStorage.getItem('adminPin')||''}"> <div class="input-list">${matches.map(m=>inputMatchRow(m,'real')).join('')}</div><button class="primary fixed-action" id="saveResults">Guardar resultados</button></div>`;
   $('addPlayer').onclick = addParticipant;
   $('saveResults').onclick = saveResults;
   $('exportExcel').onclick = exportExcel;
@@ -732,15 +764,16 @@ function renderAdmin(){
 }
 async function addParticipant(){
   const name = $('playerName').value.trim(); if(!name) return;
-  if(sb){ const {data,error}=await sb.from('participants').insert({name}).select().single(); if(error) return alert(error.message); state.participants.push({id:data.id,name:data.name}); }
+  if(sb){ const {data,error}=await sb.from('participants').insert({name}).select().single(); if(error) return toast(error.message,'err'); state.participants.push({id:data.id,name:data.name}); }
   else { state.participants.push({id:crypto.randomUUID(),name}); store(); }
   currentParticipant = state.participants.at(-1).id; renderAll();
 }
 async function delParticipant(id){
   if(!confirm('¿Eliminar participante y sus pronósticos?')) return;
   if(sb){
-    const admin_pin = $('adminPin')?.value || prompt('PIN administrador'); if(!admin_pin) return;
-    const {error} = await sb.rpc('admin_delete_participant', {admin_pin, participant:id}); if(error) return alert(error.message); await loadRemote();
+    const admin_pin = $('adminPin')?.value || sessionStorage.getItem('adminPin') || prompt('PIN administrador'); if(!admin_pin) return;
+    sessionStorage.setItem('adminPin', admin_pin);
+    const {error} = await sb.rpc('admin_delete_participant', {admin_pin, participant:id}); if(error) return toast(error.message,'err'); await loadRemote();
   } else {
     state.participants = state.participants.filter(p=>p.id!==id);
     Object.keys(state.predictions).forEach(k=>{ if(k.startsWith(id+'_')) delete state.predictions[k]; }); store();
@@ -748,22 +781,23 @@ async function delParticipant(id){
   currentParticipant = state.participants[0]?.id || ''; renderAll();
 }
 async function savePredictions(){
-  const pid = currentParticipant; if(!pid) return alert('Selecciona un participante.');
+  const pid = currentParticipant; if(!pid) return toast('Selecciona un participante.','err');
   qsa('input[data-type="pred"]').forEach(i => { const k=key(pid,i.dataset.mid); state.predictions[k]=state.predictions[k]||{}; state.predictions[k][i.dataset.side]=val(i.value); });
   if(sb){
     const rows = matches.map(m=>({participant_id:pid, match_id:m.id, home_goals:state.predictions[key(pid,m.id)]?.h, away_goals:state.predictions[key(pid,m.id)]?.a, updated_at:new Date().toISOString()}));
-    const {error}=await sb.from('predictions').upsert(rows,{onConflict:'participant_id,match_id'}); if(error) return alert(error.message);
+    const {error}=await sb.from('predictions').upsert(rows,{onConflict:'participant_id,match_id'}); if(error) return toast(error.message,'err');
   } else store();
-  alert('Pronósticos guardados'); renderAll();
+  toast('Pronósticos guardados ✓'); renderAll();
 }
 async function saveResults(){
   qsa('input[data-type="real"]').forEach(i => { state.results[i.dataset.mid]=state.results[i.dataset.mid]||{}; state.results[i.dataset.mid][i.dataset.side]=val(i.value); });
   if(sb){
-    const admin_pin = $('adminPin')?.value || prompt('PIN administrador'); if(!admin_pin) return;
+    const admin_pin = $('adminPin')?.value || sessionStorage.getItem('adminPin') || prompt('PIN administrador'); if(!admin_pin) return;
+    sessionStorage.setItem('adminPin', admin_pin);
     const payload = Object.entries(state.results).map(([mid,r])=>({match_id:Number(mid), home_goals:r.h, away_goals:r.a}));
-    const {error}=await sb.rpc('admin_upsert_results', {admin_pin, payload}); if(error) return alert(error.message); await loadRemote();
+    const {error}=await sb.rpc('admin_upsert_results', {admin_pin, payload}); if(error) return toast(error.message,'err'); await loadRemote();
   } else store();
-  alert('Resultados guardados'); renderAll();
+  toast('Resultados guardados ✓'); renderAll();
 }
 function exportExcel(){
   const wb = XLSX.utils.book_new();
@@ -771,7 +805,7 @@ function exportExcel(){
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(matches.map(m=>({No:m.matchNumber, Fase:stageES(m.stage), Grupo:m.group, Fecha:m.dateCR, HoraCR:m.timeCR, Local:m.home.name, Visitante:m.away.name, RealLocal:state.results[m.id]?.h ?? '', RealVisitante:state.results[m.id]?.a ?? ''}))), 'Partidos');
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(groupLetters().flatMap(g=>standingsForGroup(g).map((r,i)=>({Grupo:g, Pos:i+1, Equipo:r.name, PJ:r.pj, G:r.g, E:r.e, P:r.p, GF:r.gf, GC:r.gc, DG:r.dg, PTS:r.pts})))), 'Grupos');
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rankingRows()), 'Ranking');
-  XLSX.writeFile(wb, 'quiniela_mundial_2026_v54.xlsx');
+  XLSX.writeFile(wb, 'quiniela_mundial_2026_v557.xlsx');
 }
 function renderAll(){ renderHero(); renderDashboard(); renderCalendar(); renderGroups(); renderKnockout(); renderPredictions(); renderMyWorld(); renderRanking(); renderAdmin(); updateTopSaveButton(); }
 init();
