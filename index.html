@@ -46,6 +46,25 @@
     </main>
   </div>
 
+  <!-- Welcome modal: YouTube Short popup -->
+  <div id="welcomeModal" class="wm-overlay" role="dialog" aria-modal="true" aria-label="Bienvenida a la Quiniela 2026">
+    <div class="wm-backdrop" id="wmBackdrop"></div>
+    <div class="wm-card">
+      <div class="wm-video-wrap">
+        <iframe id="wmIframe"
+          allow="autoplay; encrypted-media; picture-in-picture"
+          allowfullscreen
+          frameborder="0"
+          title="Quiniela Mundialista 2026 · Bienvenida"></iframe>
+      </div>
+      <div class="wm-gradient"></div>
+      <div class="wm-actions">
+        <button class="wm-enter" id="wmEnter" type="button">🏆 Entrar a la quiniela</button>
+      </div>
+      <button class="wm-close" id="wmClose" type="button" aria-label="Cerrar">✕</button>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="config.js"></script>
