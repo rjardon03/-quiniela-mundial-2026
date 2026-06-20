@@ -92,6 +92,34 @@ function stageES(s){
   return ({'Group Stage':'Fase de grupos','Round of 32':'Dieciseisavos','Round of 16':'Octavos de final','Quarterfinals':'Cuartos de final','Semifinals':'Semifinales','Third Place Playoff':'Tercer lugar','Final':'Final'})[s] || s;
 }
 
+function initWelcomeModal(){
+  // Solo una vez por sesión del navegador
+  if(sessionStorage.getItem('wmShown')) return;
+  const modal   = $('welcomeModal');
+  const iframe  = $('wmIframe');
+  if(!modal || !iframe) return;
+
+  // Parámetros del embed oficial de YouTube:
+  // autoplay=1  mute=1  rel=0  loop=1  playlist repite el mismo short
+  const VIDEO_ID = 'oXigiOdAS4Q';
+  const SRC = `https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&mute=1&rel=0&loop=1&playlist=${VIDEO_ID}&playsinline=1`;
+
+  function close(){
+    iframe.src = '';               // detiene la reproducción
+    modal.classList.add('wm-hidden');
+    sessionStorage.setItem('wmShown', '1');
+  }
+
+  iframe.src = SRC;
+
+  $('wmClose').onclick    = close;
+  $('wmEnter').onclick    = close;
+  $('wmBackdrop').onclick = close;
+  document.addEventListener('keydown', function onEsc(e){
+    if(e.key === 'Escape'){ close(); document.removeEventListener('keydown', onEsc); }
+  });
+}
+
 async function init(){
   matches = await fetch('data/matches.json').then(r=>r.json());
   teams = await fetch('data/teams.json').then(r=>r.json());
@@ -102,6 +130,7 @@ async function init(){
   bindNav();
   renderAll();
   if(sb) setupLiveResults();
+  initWelcomeModal();
 }
 
 async function loadRemote(){
