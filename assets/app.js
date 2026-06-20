@@ -111,6 +111,7 @@ function initWelcomeModal(){
   }
 
   iframe.src = SRC;
+  modal.classList.remove('wm-hidden');   // mostrar solo si aplica
 
   $('wmClose').onclick    = close;
   $('wmEnter').onclick    = close;
