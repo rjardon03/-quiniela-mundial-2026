@@ -163,7 +163,26 @@ async function refreshResultsFromSupabase(reason='manual'){
       nextResults[x.match_id] = { h:x.home_goals, a:x.away_goals };
     });
     state.results = nextResults;
-    renderAll();
+
+    if(currentView === 'predictions'){
+      // No re-renderizar pronósticos: borraría los inputs que el usuario está completando.
+      // Solo actualiza el hero y los badges de puntos de cada fila visible.
+      renderHero();
+      const seen = new Set();
+      qsa('input[data-type="pred"]').forEach(input => {
+        const mid = input.dataset.mid;
+        if(seen.has(mid)) return;
+        seen.add(mid);
+        const row = input.closest('.prediction-row');
+        if(!row) return;
+        const m = matches.find(x => String(x.id) === String(mid));
+        if(!m) return;
+        const panel = row.querySelector('.points-panel');
+        if(panel) panel.outerHTML = predictionPointsBadge(m);
+      });
+    } else {
+      renderAll();
+    }
     console.info(`[Resultados] Actualizados desde Supabase (${reason}).`);
   }catch(error){
     console.error('[Resultados] No se pudieron refrescar:', error);
@@ -635,11 +654,13 @@ function inputMatchRow(m,type){
   const pid = currentParticipant;
   const v = type === 'real' ? state.results[m.id] || {} : state.predictions[key(pid,m.id)] || {};
   const points = type === 'pred' ? predictionPointsBadge(m) : '';
+  // Para eliminatorias: resolver los equipos reales según resultados ya cargados
+  const teams = resolvedTeamsForMatch(m);
   return `<article class="input-row ${type === 'pred' ? 'prediction-row' : ''}">
     <div class="match-index"><b>#${m.matchNumber}</b><small>${m.dateCR} · ${m.timeCR} CR</small></div>
-    <label>${flagHtml(m.home)} ${esc(m.home.name)}<input type="number" min="0" inputmode="numeric" data-type="${type}" data-mid="${m.id}" data-side="h" value="${v.h ?? ''}"></label>
+    <label>${flagHtml(teams.home)} ${esc(teams.home.name)}<input type="number" min="0" inputmode="numeric" data-type="${type}" data-mid="${m.id}" data-side="h" value="${v.h ?? ''}"></label>
     <span class="vs-small">-</span>
-    <label>${flagHtml(m.away)} ${esc(m.away.name)}<input type="number" min="0" inputmode="numeric" data-type="${type}" data-mid="${m.id}" data-side="a" value="${v.a ?? ''}"></label>
+    <label>${flagHtml(teams.away)} ${esc(teams.away.name)}<input type="number" min="0" inputmode="numeric" data-type="${type}" data-mid="${m.id}" data-side="a" value="${v.a ?? ''}"></label>
     ${points}
   </article>`;
 }
