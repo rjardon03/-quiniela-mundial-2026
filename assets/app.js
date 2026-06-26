@@ -568,9 +568,10 @@ function renderMiniRanking(){
 function teamLine(t){ return `<span class="team-line">${flagHtml(t)}<b>${esc(t.name)}</b><small>${esc(t.code)}</small></span>`; }
 function matchCard(m){
   const r = state.results[m.id];
+  const t = resolvedTeamsForMatch(m);
   return `<article class="match-card">
     <div class="match-top"><span>#${m.matchNumber}</span><span>${stageES(m.stage)}</span></div>
-    <div class="teams-vs"><div>${flagHtml(m.home)}<b>${esc(m.home.name)}</b></div><span>VS</span><div>${flagHtml(m.away)}<b>${esc(m.away.name)}</b></div></div>
+    <div class="teams-vs"><div>${flagHtml(t.home)}<b>${esc(t.home.name)}</b></div><span>VS</span><div>${flagHtml(t.away)}<b>${esc(t.away.name)}</b></div></div>
     <div class="match-meta"><span>🗓️ ${m.dateCR}</span><span>🕒 ${m.timeCR} CR</span><span>🏟️ ${esc(m.venue)}</span><span>📍 ${esc(m.city)}</span></div>
     <div class="result ${hasScore(r)?'done':'pending'}">${hasScore(r) ? `${r.h} - ${r.a}` : '⏳ Pendiente'}</div>
   </article>`;
@@ -862,7 +863,7 @@ function exportExcel(){
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(state.participants), 'Participantes');
 
   // Hoja 2: Partidos
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(matches.map(m=>({No:m.matchNumber, Fase:stageES(m.stage), Grupo:m.group||'', Fecha:m.dateCR, HoraCR:m.timeCR, Local:m.home.name, Visitante:m.away.name, RealLocal:state.results[m.id]?.h??'', RealVisitante:state.results[m.id]?.a??''}))), 'Partidos');
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(matches.map(m=>{const t=resolvedTeamsForMatch(m);return {No:m.matchNumber, Fase:stageES(m.stage), Grupo:m.group||'', Fecha:m.dateCR, HoraCR:m.timeCR, Local:t.home.name, Visitante:t.away.name, RealLocal:state.results[m.id]?.h??'', RealVisitante:state.results[m.id]?.a??''};})), 'Partidos');
 
   // Hoja 3: Grupos
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(groupLetters().flatMap(g=>standingsForGroup(g).map((r,i)=>({Grupo:g, Pos:i+1, Equipo:r.name, PJ:r.pj, G:r.g, E:r.e, P:r.p, GF:r.gf, GC:r.gc, DG:r.dg, PTS:r.pts})))), 'Grupos');
@@ -938,6 +939,7 @@ function renderComparison(){
   const tbody = `<tbody>${fms.map(m => {
     const res = state.results[m.id];
     const scored = hasScore(res);
+    const t = resolvedTeamsForMatch(m);
     const cells = state.participants.map(p => {
       const pred = state.predictions[key(p.id, m.id)];
       const s = scoreBreakdown(pred, res);
@@ -951,7 +953,7 @@ function renderComparison(){
     return `<tr>
       <td class="cmp-match-cell">
         <span class="cmp-num">#${m.matchNumber}</span>
-        <span class="cmp-teams-line">${flagHtml(m.home)}<b>${esc(m.home.name)}</b><i class="cmp-vs">vs</i>${flagHtml(m.away)}<b>${esc(m.away.name)}</b></span>
+        <span class="cmp-teams-line">${flagHtml(t.home)}<b>${esc(t.home.name)}</b><i class="cmp-vs">vs</i>${flagHtml(t.away)}<b>${esc(t.away.name)}</b></span>
         <span class="cmp-meta">${m.dateCR} · ${esc(m.group ? 'Grp '+m.group : stageES(m.stage))}</span>
       </td>
       <td class="cmp-real-cell${scored?' cmp-real-done':''}">
