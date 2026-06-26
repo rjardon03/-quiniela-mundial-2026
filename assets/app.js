@@ -93,32 +93,31 @@ function stageES(s){
 }
 
 function initWelcomeModal(){
-  // Solo una vez por sesión del navegador
-  if(sessionStorage.getItem('wmShown')) return;
-  const modal   = $('welcomeModal');
-  const iframe  = $('wmIframe');
+  const modal  = $('welcomeModal');
+  const iframe = $('wmIframe');
   if(!modal || !iframe) return;
 
-  // Parámetros del embed oficial de YouTube:
-  // autoplay=1  mute=1  rel=0  loop=1  playlist repite el mismo short
   const VIDEO_ID = 'oXigiOdAS4Q';
   const SRC = `https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&mute=1&rel=0&loop=1&playlist=${VIDEO_ID}&playsinline=1`;
 
-  function close(){
-    iframe.src = '';               // detiene la reproducción
-    modal.classList.add('wm-hidden');
-    sessionStorage.setItem('wmShown', '1');
+  function openModal(){
+    iframe.src = SRC;
+    modal.classList.remove('wm-hidden');
+    document.addEventListener('keydown', onEsc);
   }
+  function closeModal(){
+    iframe.src = '';
+    modal.classList.add('wm-hidden');
+    document.removeEventListener('keydown', onEsc);
+  }
+  function onEsc(e){ if(e.key === 'Escape') closeModal(); }
 
-  iframe.src = SRC;
-  modal.classList.remove('wm-hidden');   // mostrar solo si aplica
+  $('wmClose').onclick    = closeModal;
+  $('wmEnter').onclick    = closeModal;
+  $('wmBackdrop').onclick = closeModal;
 
-  $('wmClose').onclick    = close;
-  $('wmEnter').onclick    = close;
-  $('wmBackdrop').onclick = close;
-  document.addEventListener('keydown', function onEsc(e){
-    if(e.key === 'Escape'){ close(); document.removeEventListener('keydown', onEsc); }
-  });
+  const btn = $('btnWakaWaka');
+  if(btn) btn.onclick = openModal;
 }
 
 async function init(){
@@ -446,8 +445,6 @@ function renderBracket(customResults=null){
 function scoreBreakdown(pred,res){
   if(!hasScore(pred) || !hasScore(res)) return {winner:0,home:0,away:0,exact:0,total:0};
   const winner = Math.sign(pred.h-pred.a) === Math.sign(res.h-res.a) ? 1 : 0;
-  // Sin ganador correcto → 0pts en todo (Ganador 1-3pts / Error 0pts)
-  if(!winner) return {winner:0,home:0,away:0,exact:0,total:0};
   const home = pred.h === res.h ? 1 : 0;
   const away = pred.a === res.a ? 1 : 0;
   const exact = home && away ? 1 : 0;
@@ -886,6 +883,7 @@ function renderComparison(){
       if(!scored)           return `<td class="cmp-cell cmp-wait"><b>${pred.h}-${pred.a}</b></td>`;
       if(s.total >= 4)      return `<td class="cmp-cell cmp-perfect"><b>${pred.h}-${pred.a}</b><small>4pts</small></td>`;
       if(s.winner > 0)      return `<td class="cmp-cell cmp-scored"><b>${pred.h}-${pred.a}</b><small>${s.total}pt${s.total!==1?'s':''}</small></td>`;
+      if(s.total > 0)       return `<td class="cmp-cell cmp-partial"><b>${pred.h}-${pred.a}</b><small>${s.total}pt${s.total!==1?'s':''}</small></td>`;
       return                       `<td class="cmp-cell cmp-zero"><b>${pred.h}-${pred.a}</b><small>0pts</small></td>`;
     }).join('');
     return `<tr>
@@ -910,6 +908,7 @@ function renderComparison(){
   const legend = `<div class="cmp-legend">
     <span><i class="cl cl-perfect"></i>Exacto (4pts)</span>
     <span><i class="cl cl-scored"></i>Ganador (1–3pts)</span>
+    <span><i class="cl cl-partial"></i>Parcial sin ganador</span>
     <span><i class="cl cl-zero"></i>Error (0pts)</span>
     <span><i class="cl cl-wait"></i>Sin resultado</span>
     <span><i class="cl cl-nopred"></i>Sin pronóstico</span>
