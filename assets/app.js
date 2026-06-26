@@ -446,9 +446,11 @@ function renderBracket(customResults=null){
 function scoreBreakdown(pred,res){
   if(!hasScore(pred) || !hasScore(res)) return {winner:0,home:0,away:0,exact:0,total:0};
   const winner = Math.sign(pred.h-pred.a) === Math.sign(res.h-res.a) ? 1 : 0;
+  // Sin ganador correcto → 0pts en todo (Ganador 1-3pts / Error 0pts)
+  if(!winner) return {winner:0,home:0,away:0,exact:0,total:0};
   const home = pred.h === res.h ? 1 : 0;
   const away = pred.a === res.a ? 1 : 0;
-  const exact = pred.h === res.h && pred.a === res.a ? 1 : 0;
+  const exact = home && away ? 1 : 0;
   return {winner, home, away, exact, total:winner+home+away+exact};
 }
 function rankingRows(){
