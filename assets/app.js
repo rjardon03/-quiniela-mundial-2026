@@ -670,6 +670,30 @@ function predictionProgress(pid){
   const done = matches.filter(m => hasScore(state.predictions[key(pid,m.id)])).length;
   return {done,total,pct: total ? Math.round(done/total*100) : 0};
 }
+function copyPredictionsToClipboard(){
+  const pid = currentParticipant;
+  const pName = state.participants.find(p=>p.id===pid)?.name || 'Jugador';
+  const filtered = predictionDateFilter === 'all'
+    ? matches.filter(m => hasScore(state.predictions[key(pid, m.id)]))
+    : matches.filter(m => m.dateCR === predictionDateFilter);
+  if(!filtered.length){ toast('No hay partidos para copiar.','err'); return; }
+  const dateLabel = predictionDateFilter === 'all'
+    ? 'todos los partidos'
+    : formatDateLabel(predictionDateFilter);
+  const lines = [`🎯 Pronósticos de ${pName} · ${dateLabel}`, ''];
+  filtered.forEach(m => {
+    const t = resolvedTeamsForMatch(m);
+    const pred = state.predictions[key(pid, m.id)];
+    const homeFlag = t.home.flag || '🏳️';
+    const awayFlag = t.away.flag || '🏳️';
+    const score = hasScore(pred) ? `${pred.h} - ${pred.a}` : '? - ?';
+    lines.push(`#${m.matchNumber} · ${homeFlag} ${t.home.name}  ${score}  ${t.away.name} ${awayFlag}`);
+  });
+  navigator.clipboard.writeText(lines.join('\n'))
+    .then(()  => toast('Pronósticos copiados al portapapeles 📋'))
+    .catch(()  => toast('No se pudo copiar.','err'));
+}
+
 function renderPredictions(){
   if(!state.participants.length){ $('predictions').innerHTML = `<div class="card empty"><h2>Primero agrega participantes</h2><p class="muted">Ve a Admin y crea al menos un participante.</p></div>`; return; }
   const p = predictionProgress(currentParticipant);
@@ -679,7 +703,7 @@ function renderPredictions(){
   $('predictions').innerHTML = `<div class="section-head predictions-head"><div><p class="eyebrow">Ordenado por número de partido</p><h2>Mis Pronósticos</h2><p class="muted">Selecciona el jugador, filtra por fecha, completa marcadores y guarda desde el botón superior.</p></div>${participantOptions('participantSelect')}</div>
     ${predictionDateToolbar()}
     <div class="card progress-card"><div class="progress-head"><b>${p.done}/${p.total} completados</b><span>${p.pct}%</span></div><div class="progress"><i style="width:${p.pct}%"></i></div></div>
-    <div class="prediction-date-summary"><b>${filteredMatches.length}</b> partido${filteredMatches.length===1?'':'s'} ${predictionDateFilter==='all'?'en total':`el ${esc(predictionDateFilter)}`}</div>
+    <div class="prediction-date-summary"><b>${filteredMatches.length}</b> partido${filteredMatches.length===1?'':'s'} ${predictionDateFilter==='all'?'en total':`el ${esc(predictionDateFilter)}`}<button type="button" id="copyPredictions" class="copy-preds-btn">📋 Copiar pronósticos</button></div>
     <div class="card input-list predictions-list">${filteredMatches.length ? filteredMatches.map(m=>inputMatchRow(m,'pred')).join('') : '<div class="empty"><h3>No hay partidos en esta fecha</h3><p class="muted">Selecciona otra fecha o vuelve a ver todos.</p></div>'}</div>
     <button type="button" class="primary fixed-action" id="savePredictions">💾 Guardar pronósticos</button>`;
   $('participantSelect').onchange = e => { syncVisiblePredictionInputsToState(); currentParticipant = e.target.value; renderPredictions(); };
@@ -687,6 +711,7 @@ function renderPredictions(){
   $('predictionToday').onclick = () => { if($('predictionToday').disabled) return; syncVisiblePredictionInputsToState(); predictionDateFilter = todayCR(); renderPredictions(); };
   $('predictionAll').onclick = () => { syncVisiblePredictionInputsToState(); predictionDateFilter = 'all'; renderPredictions(); };
   $('savePredictions').onclick = savePredictions;
+  $('copyPredictions').onclick = copyPredictionsToClipboard;
 }
 
 function customResultsForParticipant(pid){
