@@ -660,7 +660,7 @@ function renderPredictions(){
     <div class="card progress-card"><div class="progress-head"><b>${p.done}/${p.total} completados</b><span>${p.pct}%</span></div><div class="progress"><i style="width:${p.pct}%"></i></div></div>
     <div class="prediction-date-summary"><b>${filteredMatches.length}</b> partido${filteredMatches.length===1?'':'s'} ${predictionDateFilter==='all'?'en total':`el ${esc(predictionDateFilter)}`}</div>
     <div class="card input-list predictions-list">${filteredMatches.length ? filteredMatches.map(m=>inputMatchRow(m,'pred')).join('') : '<div class="empty"><h3>No hay partidos en esta fecha</h3><p class="muted">Selecciona otra fecha o vuelve a ver todos.</p></div>'}</div>
-    <button class="primary fixed-action" id="savePredictions">💾 Guardar pronósticos</button>`;
+    <button type="button" class="primary fixed-action" id="savePredictions">💾 Guardar pronósticos</button>`;
   $('participantSelect').onchange = e => { syncVisiblePredictionInputsToState(); currentParticipant = e.target.value; renderPredictions(); };
   $('predictionDateSelect').onchange = e => { syncVisiblePredictionInputsToState(); predictionDateFilter = e.target.value; renderPredictions(); };
   $('predictionToday').onclick = () => { if($('predictionToday').disabled) return; syncVisiblePredictionInputsToState(); predictionDateFilter = todayCR(); renderPredictions(); };
@@ -819,7 +819,11 @@ async function savePredictions(){
     const rows = matches.map(m=>({participant_id:pid, match_id:m.id, home_goals:state.predictions[key(pid,m.id)]?.h, away_goals:state.predictions[key(pid,m.id)]?.a, updated_at:new Date().toISOString()}));
     const {error}=await sb.from('predictions').upsert(rows,{onConflict:'participant_id,match_id'}); if(error) return toast(error.message,'err');
   } else store();
-  toast('Pronósticos guardados ✓'); renderAll();
+  toast('Pronósticos guardados ✓');
+  // Actualiza solo la barra de progreso — NO re-renderiza los inputs para no perder los valores
+  const p = predictionProgress(pid);
+  const card = document.querySelector('#predictions .progress-card');
+  if(card) card.innerHTML = `<div class="progress-head"><b>${p.done}/${p.total} completados</b><span>${p.pct}%</span></div><div class="progress"><i style="width:${p.pct}%"></i></div>`;
 }
 async function saveResults(){
   qsa('input[data-type="real"]').forEach(i => { state.results[i.dataset.mid]=state.results[i.dataset.mid]||{}; state.results[i.dataset.mid][i.dataset.side]=val(i.value); });
