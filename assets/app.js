@@ -670,6 +670,23 @@ function predictionProgress(pid){
   const done = matches.filter(m => hasScore(state.predictions[key(pid,m.id)])).length;
   return {done,total,pct: total ? Math.round(done/total*100) : 0};
 }
+// Convierte código FIFA → emoji de bandera vía ISO 3166-1 alpha-2
+function teamFlagEmoji(t){
+  const FIFA_TO_ISO2 = {
+    MEX:'MX', RSA:'ZA', KOR:'KR', CZE:'CZ', CAN:'CA', BIH:'BA', QAT:'QA',
+    SUI:'CH', BRA:'BR', MAR:'MA', HAI:'HT', SCO:'GB', USA:'US', PAR:'PY',
+    AUS:'AU', TUR:'TR', GER:'DE', CUR:'CW', CIV:'CI', ECU:'EC', NED:'NL',
+    JPN:'JP', SWE:'SE', TUN:'TN', BEL:'BE', EGY:'EG', IRN:'IR', NZL:'NZ',
+    ESP:'ES', CPV:'CV', KSA:'SA', URU:'UY', FRA:'FR', SEN:'SN', IRQ:'IQ',
+    NOR:'NO', ARG:'AR', ALG:'DZ', AUT:'AT', JOR:'JO', POR:'PT', COD:'CD',
+    UZB:'UZ', COL:'CO', ENG:'GB', CRO:'HR', GHA:'GH', PAN:'PA',
+  };
+  const iso2 = FIFA_TO_ISO2[t?.code || ''];
+  if(!iso2) return '';
+  // Regional Indicator: offset = 0x1F1E6 - 65
+  return [...iso2.toUpperCase()].map(c => String.fromCodePoint(c.charCodeAt(0) + 0x1F1A5)).join('');
+}
+
 function copyPredictionsToClipboard(){
   const pid = currentParticipant;
   const pName = state.participants.find(p=>p.id===pid)?.name || 'Jugador';
@@ -684,8 +701,8 @@ function copyPredictionsToClipboard(){
   filtered.forEach(m => {
     const t = resolvedTeamsForMatch(m);
     const pred = state.predictions[key(pid, m.id)];
-    const homeFlag = t.home.flag || '🏳️';
-    const awayFlag = t.away.flag || '🏳️';
+    const homeFlag = teamFlagEmoji(t.home);
+    const awayFlag = teamFlagEmoji(t.away);
     const score = hasScore(pred) ? `${pred.h} - ${pred.a}` : '? - ?';
     lines.push(`#${m.matchNumber} · ${homeFlag} ${t.home.name}  ${score}  ${t.away.name} ${awayFlag}`);
   });
