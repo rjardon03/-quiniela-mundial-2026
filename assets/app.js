@@ -857,11 +857,52 @@ async function saveResults(){
 }
 function exportExcel(){
   const wb = XLSX.utils.book_new();
+
+  // Hoja 1: Participantes
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(state.participants), 'Participantes');
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(matches.map(m=>({No:m.matchNumber, Fase:stageES(m.stage), Grupo:m.group, Fecha:m.dateCR, HoraCR:m.timeCR, Local:m.home.name, Visitante:m.away.name, RealLocal:state.results[m.id]?.h ?? '', RealVisitante:state.results[m.id]?.a ?? ''}))), 'Partidos');
+
+  // Hoja 2: Partidos
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(matches.map(m=>({No:m.matchNumber, Fase:stageES(m.stage), Grupo:m.group||'', Fecha:m.dateCR, HoraCR:m.timeCR, Local:m.home.name, Visitante:m.away.name, RealLocal:state.results[m.id]?.h??'', RealVisitante:state.results[m.id]?.a??''}))), 'Partidos');
+
+  // Hoja 3: Grupos
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(groupLetters().flatMap(g=>standingsForGroup(g).map((r,i)=>({Grupo:g, Pos:i+1, Equipo:r.name, PJ:r.pj, G:r.g, E:r.e, P:r.p, GF:r.gf, GC:r.gc, DG:r.dg, PTS:r.pts})))), 'Grupos');
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rankingRows()), 'Ranking');
-  XLSX.writeFile(wb, 'quiniela_mundial_2026_v557.xlsx');
+
+  // Hoja 4: Ranking
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rankingRows().map((r,i)=>({Pos:i+1, Jugador:state.participants.find(p=>p.id===r.id)?.name||r.id, Puntos:r.pts, Exactos:r.exact, Ganadores:r.winner, Pronosticados:r.predicted}))), 'Ranking');
+
+  // Hoja 5: Comparativa — pronósticos y puntos por partido y jugador
+  const parts = state.participants;
+  const compRows = matches.map(m => {
+    const res = state.results[m.id];
+    const teams = resolvedTeamsForMatch(m);
+    const row = {
+      '#': m.matchNumber,
+      Fase: stageES(m.stage),
+      Grupo: m.group || '',
+      Fecha: m.dateCR,
+      Local: teams.home.name,
+      Visitante: teams.away.name,
+      Resultado: hasScore(res) ? `${res.h}-${res.a}` : '',
+    };
+    parts.forEach(p => {
+      const pred = state.predictions[key(p.id, m.id)];
+      const predStr = hasScore(pred) ? `${pred.h}-${pred.a}` : '';
+      const s = scoreBreakdown(pred, res);
+      row[`${p.name}_Pronóstico`] = predStr;
+      row[`${p.name}_Pts`] = hasScore(pred) && hasScore(res) ? s.total : '';
+    });
+    return row;
+  });
+  // Fila de totales al final
+  const totals = { '#':'', Fase:'TOTAL', Grupo:'', Fecha:'', Local:'', Visitante:'', Resultado:'' };
+  parts.forEach(p => {
+    totals[`${p.name}_Pronóstico`] = '';
+    totals[`${p.name}_Pts`] = rankingRows().find(r=>r.id===p.id)?.pts ?? '';
+  });
+  compRows.push(totals);
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(compRows), 'Comparativa');
+
+  XLSX.writeFile(wb, 'quiniela_mundial_2026.xlsx');
 }
 function comparisonFilteredMatches(){
   if(comparisonFilter === 'all')      return matches;
