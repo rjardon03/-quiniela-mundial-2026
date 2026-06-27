@@ -6,6 +6,7 @@ let state = { participants: [], predictions: {}, results: {} };
 let currentParticipant = '';
 let currentView = 'dashboard';
 let predictionDateFilter = 'all';
+let calendarDateFilter = 'all';
 let comparisonFilter = 'all';
 let resultsRealtimeChannel = null;
 let resultsRefreshTimer = null;
@@ -576,6 +577,43 @@ function matchCard(m){
     <div class="result ${hasScore(r)?'done':'pending'}">${hasScore(r) ? `${r.h} - ${r.a}` : '⏳ Pendiente'}</div>
   </article>`;
 }
+function calendarDates(){
+  return [...new Set(matches.map(m=>m.dateCR).filter(Boolean))].sort((a,b)=>parseCRDate(a)-parseCRDate(b));
+}
+function calendarToolbar(){
+  const dates = calendarDates();
+  const today = todayCR();
+  const hasToday = dates.includes(today);
+  const options = [
+    `<option value="all" ${calendarDateFilter==='all'?'selected':''}>Todos los partidos</option>`,
+    ...dates.map(d=>`<option value="${esc(d)}" ${calendarDateFilter===d?'selected':''}>${esc(formatDateLabel(d))} · ${esc(d)}</option>`)
+  ].join('');
+  return `<div class="prediction-filter card cal-filter">
+    <div class="prediction-filter__title"><span>📅</span><div><small>Filtrar por fecha</small><b>${calendarDateFilter==='all'?'Todos los partidos':esc(formatDateLabel(calendarDateFilter))}</b></div></div>
+    <select id="calendarDateSelect">${options}</select>
+    <button type="button" class="filter-today ${hasToday?'':'is-disabled'}" id="calendarToday" ${hasToday?'':'disabled'}>Hoy</button>
+    <button type="button" class="filter-all" id="calendarAll">Ver todos</button>
+    <button type="button" class="copy-preds-btn" id="copyCalendarDay">📋 Copiar día</button>
+  </div>`;
+}
+function copyCalendarDay(){
+  const f = calendarDateFilter;
+  const src = f === 'all' ? todayCR() : f;
+  const day = matches.filter(m=>m.dateCR===src).sort((a,b)=>a.matchNumber-b.matchNumber);
+  if(!day.length){ toast('No hay partidos para copiar.','err'); return; }
+  const label = formatDateLabel(src);
+  const lines = [`⚽ Partidos · ${label}`, ''];
+  day.forEach(m=>{
+    const t = resolvedTeamsForMatch(m);
+    const r = state.results[m.id];
+    const hf = teamFlagEmoji(t.home), af = teamFlagEmoji(t.away);
+    const score = hasScore(r) ? `${r.h} - ${r.a}` : m.timeCR+' CR';
+    lines.push(`#${m.matchNumber} · ${hf} ${t.home.name}  ${score}  ${t.away.name} ${af}`);
+  });
+  navigator.clipboard.writeText(lines.join('\n'))
+    .then(()=>toast('Partidos copiados al portapapeles 📋'))
+    .catch(()=>toast('No se pudo copiar.','err'));
+}
 function renderCalendar(){
   const groups = groupLetters();
   const koStages = [
@@ -583,15 +621,34 @@ function renderCalendar(){
     {id:4,label:'Cuartos de final'},{id:5,label:'Semifinales'},
     {id:6,label:'Tercer lugar'},{id:7,label:'Final'},
   ];
-  const koCards = koStages.map(s=>{
-    const ms = matches.filter(m=>Number(m.stageId)===s.id).sort((a,b)=>a.matchNumber-b.matchNumber);
-    return ms.length ? `<div class="card"><div class="group-title"><h3>${s.label}</h3><span>${ms.length} partido${ms.length>1?'s':''}</span></div><div class="match-grid">${ms.map(matchCard).join('')}</div></div>` : '';
-  }).join('');
+
+  let content;
+  if(calendarDateFilter !== 'all'){
+    const day = matches.filter(m=>m.dateCR===calendarDateFilter).sort((a,b)=>a.matchNumber-b.matchNumber);
+    content = day.length
+      ? `<div class="prediction-date-summary"><b>${day.length}</b> partido${day.length!==1?'s':''} el ${esc(calendarDateFilter)}</div>
+         <div class="match-grid">${day.map(matchCard).join('')}</div>`
+      : `<p class="muted" style="padding:20px 4px">No hay partidos en esta fecha.</p>`;
+  } else {
+    const koCards = koStages.map(s=>{
+      const ms = matches.filter(m=>Number(m.stageId)===s.id).sort((a,b)=>a.matchNumber-b.matchNumber);
+      return ms.length ? `<div class="card"><div class="group-title"><h3>${s.label}</h3><span>${ms.length} partido${ms.length>1?'s':''}</span></div><div class="match-grid">${ms.map(matchCard).join('')}</div></div>` : '';
+    }).join('');
+    content = `
+      ${groups.map(g=>`<div class="card"><div class="group-title"><h3>Grupo ${g}</h3><span>${groupMatches(g).length} partidos</span></div><div class="match-grid">${groupMatches(g).map(matchCard).join('')}</div></div>`).join('')}
+      <div class="section-head" style="margin-top:20px"><div><p class="eyebrow">Fase final</p><h2>Eliminatorias</h2></div></div>
+      ${koCards}`;
+  }
+
   $('calendar').innerHTML = `
     <div class="section-head"><div><p class="eyebrow">Todos los horarios en Costa Rica</p><h2>Calendario</h2></div><span class="status-chip">${matches.length} partidos</span></div>
-    ${groups.map(g=>`<div class="card"><div class="group-title"><h3>Grupo ${g}</h3><span>${groupMatches(g).length} partidos</span></div><div class="match-grid">${groupMatches(g).map(matchCard).join('')}</div></div>`).join('')}
-    <div class="section-head" style="margin-top:20px"><div><p class="eyebrow">Fase final</p><h2>Eliminatorias</h2></div></div>
-    ${koCards}`;
+    ${calendarToolbar()}
+    ${content}`;
+
+  $('calendarDateSelect').onchange = e=>{ calendarDateFilter=e.target.value; renderCalendar(); };
+  $('calendarToday').onclick = ()=>{ if($('calendarToday').disabled) return; calendarDateFilter=todayCR(); renderCalendar(); };
+  $('calendarAll').onclick = ()=>{ calendarDateFilter='all'; renderCalendar(); };
+  $('copyCalendarDay').onclick = copyCalendarDay;
 }
 function statusBadge(type){
   if(type === 'direct') return `<span class="badge direct">Clasifica</span>`;

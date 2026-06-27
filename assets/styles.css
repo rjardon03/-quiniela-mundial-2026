@@ -130,6 +130,7 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.08;bac
 
 /* V5.5.6 · Filtro de fecha en Pronósticos */
 .prediction-filter{display:grid;grid-template-columns:minmax(220px,1fr) minmax(280px,1.25fr) auto auto;gap:12px;align-items:center;margin-bottom:14px;padding:14px 16px;border-color:rgba(0,212,255,.22)}
+.cal-filter{grid-template-columns:minmax(200px,1fr) minmax(260px,1.25fr) auto auto auto}
 .prediction-filter__title{display:flex;align-items:center;gap:11px}.prediction-filter__title>span{display:grid;place-items:center;width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,rgba(233,64,255,.25),rgba(0,212,255,.22));font-size:1.2rem}.prediction-filter__title small,.prediction-filter__title b{display:block}.prediction-filter__title small{color:var(--muted);text-transform:uppercase;letter-spacing:.10em;font-size:.66rem;font-weight:900}.prediction-filter__title b{margin-top:3px;font-size:1rem}.prediction-filter select{margin:0;min-height:46px;font-weight:800;border-color:rgba(255,255,255,.16)}
 .prediction-filter button{min-height:44px;padding:10px 16px}.filter-today{background:linear-gradient(135deg,var(--lime),var(--cyan));color:#06111c;border:0}.filter-all{background:rgba(255,255,255,.06)}.filter-today.is-disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.5)}
 .prediction-date-summary{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:.86rem;margin:0 2px 10px}.prediction-date-summary b{color:var(--cyan);font-size:1.05rem}
