@@ -905,7 +905,9 @@ function winnerOfMatch(matchId, customResults=null, memo={}){
   const res = (customResults || state.results)[m.id];
   let winner;
   if(hasScore(res)){
-    if(res.h > res.a) winner = {...resolvedTeams.home, slot:`W${m.matchNumber}`};
+    if(res.winner_side === 'home') winner = {...resolvedTeams.home, slot:`W${m.matchNumber}`};
+    else if(res.winner_side === 'away') winner = {...resolvedTeams.away, slot:`W${m.matchNumber}`};
+    else if(res.h > res.a) winner = {...resolvedTeams.home, slot:`W${m.matchNumber}`};
     else if(res.a > res.h) winner = {...resolvedTeams.away, slot:`W${m.matchNumber}`};
     else winner = cloneTeam(null, `W${m.matchNumber}`);
   } else {
@@ -981,7 +983,12 @@ function renderBracket(customResults=null){
 
 function scoreBreakdown(pred,res){
   if(!hasScore(pred) || !hasScore(res)) return {winner:0,home:0,away:0,exact:0,total:0};
-  const winner = Math.sign(pred.h-pred.a) === Math.sign(res.h-res.a) ? 1 : 0;
+  // Ganador real: si hay winner_side (ET/penales), tiene precedencia sobre la diferencia de goles
+  const actualOutcome = res.winner_side === 'home' ? 'home'
+    : res.winner_side === 'away' ? 'away'
+    : res.h > res.a ? 'home' : res.a > res.h ? 'away' : 'draw';
+  const predOutcome = pred.h > pred.a ? 'home' : pred.a > pred.h ? 'away' : 'draw';
+  const winner = predOutcome === actualOutcome ? 1 : 0;
   const home = pred.h === res.h ? 1 : 0;
   const away = pred.a === res.a ? 1 : 0;
   const exact = home && away ? 1 : 0;
