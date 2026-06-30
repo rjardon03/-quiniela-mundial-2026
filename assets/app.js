@@ -144,7 +144,7 @@ async function loadRemote(){
   state.predictions = {};
   (pr.data || []).forEach(x => state.predictions[key(x.participant_id, x.match_id)] = {h:x.home_goals, a:x.away_goals});
   state.results = {};
-  (re.data || []).forEach(x => state.results[x.match_id] = {h:x.home_goals, a:x.away_goals});
+  (re.data || []).forEach(x => state.results[x.match_id] = {h:x.home_goals, a:x.away_goals, winner_side: x.winner_side ?? null});
 }
 
 async function refreshResultsFromSupabase(reason='manual'){
@@ -161,7 +161,7 @@ async function refreshResultsFromSupabase(reason='manual'){
 
     const nextResults = {};
     (data || []).forEach(x => {
-      nextResults[x.match_id] = { h:x.home_goals, a:x.away_goals };
+      nextResults[x.match_id] = { h:x.home_goals, a:x.away_goals, winner_side: x.winner_side ?? null };
     });
     state.results = nextResults;
 
